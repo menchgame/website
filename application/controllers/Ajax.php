@@ -2649,7 +2649,7 @@ class Ajax extends CI_Controller
                 //Delete ALL previous answers that are not currently selected, if any:
                 $already_answered = array();
                 foreach($this->X_model->fetch(array(
-                    'i__type NOT IN (' . join(',', $this->config->item('n___41055')) . ')' => null, //Ignore paid answers since they cannot be removed!
+                    'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type' => 7712, //Input Choice
                     'x__player' => $player_e['e__id'],
@@ -2666,18 +2666,19 @@ class Ajax extends CI_Controller
                         'x__privacy' => 6173, //Transaction Deleted
                     ), $player_e['e__id'], 12129 /* DISCOVERY ANSWER DELETED */);
 
-                    //Remove discovery:
-                    foreach($this->X_model->fetch(array(
-                        'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
-                        'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
-                        'x__previous' => $x_selection['i__id'],
-                        'x__player' => $player_e['e__id'],
-                    ), array(), 0) as $x_discovery){
 
-                        $this->X_model->update($x_discovery['x__id'], array(
-                            'x__privacy' => 6173, //Transaction Deleted
-                        ), $player_e['e__id'], 12129 /* DISCOVERY ANSWER DELETED */);
-
+                    //Remove discovery if we can:
+                    if(!in_array($x_selection['i__type'], $this->config->item('n___42905'))){
+                        foreach($this->X_model->fetch(array(
+                            'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
+                            'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
+                            'x__previous' => $x_selection['i__id'],
+                            'x__player' => $player_e['e__id'],
+                        ), array(), 0) as $x_discovery){
+                            $this->X_model->update($x_discovery['x__id'], array(
+                                'x__privacy' => 6173, //Transaction Deleted
+                            ), $player_e['e__id'], 12129 /* DISCOVERY ANSWER DELETED */);
+                        }
                     }
                 }
 
