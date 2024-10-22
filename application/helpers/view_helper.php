@@ -1574,7 +1574,7 @@ function view_card_i($x__type, $i, $previous_i = null, $target_i__hashtag = null
         $href = view_memory(42903,30795).$i['i__hashtag'].'/'.view_memory(6404,4235);
     } elseif($is_locked) {
         $href = null;
-    } elseif($target_i__hashtag){
+    } elseif($discovery_mode && $target_i__hashtag){
         $href = view_memory(42903,30795).$target_i__hashtag.'/'.$i['i__hashtag'];
     } elseif($discovery_mode) {
         $href = view_memory(42903,33286).$i['i__hashtag'];
