@@ -744,7 +744,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
                'x__type IN (' . join(',', $CI->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
                'x__following IN (' . join(',', $list_config[34513]) . ')' => null,
                'x__next !=' => $i['i__id'],
-               'i__privacy IN (' . join(',', $CI->config->item('n___42948')) . ')' => null, //Public Ideas
+               'i__privacy IN (' . join(',', $CI->config->item('n___31871')) . ')' => null, //ACTIVE
            ), array('x__next'), 0, 0, array('x__weight' => 'ASC', 'i__message' => 'ASC')) as $link_i){
                array_push($column_i, $link_i);
            }
