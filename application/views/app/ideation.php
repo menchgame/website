@@ -23,8 +23,5 @@ echo '<a href="#" onclick="openPopUp(\''.i_redirect_url($focus_i).'\')">'.i_redi
     $(document).ready(function () {
         load_hashtag_menu();
         show_more(<?= $focus_i['i__id'] ?>);
-
-
-
     });
 </script>

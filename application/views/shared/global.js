@@ -464,29 +464,17 @@ function e_sort_load(x__type) {
 
 
 window.onpopstate = function(event) {
-    load_hashtag_menu();
+    load_hashtag_menu(null, false);
 };
 
-function load_hashtag_menu(load_hashtag = null){
+function load_hashtag_menu(load_hashtag = null, is_first_load = true){
     if(load_hashtag){
-        toggle_pills(load_hashtag);
+        toggle_pills(load_hashtag, is_first_load);
     } else if(document.location.hash){
         var hashtag = document.location.hash.substr(1);
         if(hashtag && hashtag.length>0){
-            toggle_pills(hashtag);
+            toggle_pills(hashtag, is_first_load);
         }
-    }
-}
-
-
-function set_hashtag_if_empty(x__type_hash){
-
-    load_hashtag_menu(x__type_hash);
-    return false;
-    //Will only set the hashtag if not already set
-    //This prevents the default tab to override a specific hashtag load request...
-    if(!window.location.hash || !$('.handle_nav_'+document.location.hash.substr(1)).attr('x__type')) {
-        window.location.hash = '#'+x__type_hash;
     }
 }
 
@@ -498,7 +486,7 @@ function set_hashtag_if_empty(x__type_hash){
 var loading_in_progress = false;
 var pills_loading = null;
 var loaded_pills = [];
-function toggle_pills(x__type_hash){
+function toggle_pills(x__type_hash, is_first_load){
 
     console.log('Toggle Pill: '+x__type_hash);
 
@@ -552,7 +540,7 @@ function toggle_pills(x__type_hash){
         //Set focus tab:
         console.log('focus_x__group Updated from '+focus_x__group+' to '+x__type);
         focus_x__group = x__type;
-        if(!window.location.hash || window.location.hash!=$('.thepill' + x__type+' .nav-link').attr('href')) {
+        if(!is_first_load && (!window.location.hash || window.location.hash!=$('.thepill' + x__type+' .nav-link').attr('href'))) {
             window.location.hash = $('.thepill' + x__type+' .nav-link').attr('href');
         }
 

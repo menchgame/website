@@ -1474,19 +1474,19 @@ function view_i_nav($discovery_mode, $focus_i){
     if($ideation_pen || 1){
         //Focus on next:
         $focus_tab = 12840;
-        $ui .= '<script> $(document).ready(function () { set_hashtag_if_empty(\'Next\'); }); </script>';
+        $ui .= '<script> $(document).ready(function () { load_hashtag_menu(\'Next\'); }); </script>';
     } else {
         $focus_tab = 0;
         foreach($e___loading_order as $x__type => $m) { //Load Focus Tab:
             if(isset($coins_count[$x__type]) && $coins_count[$x__type] > 0){
                 $focus_tab = $x__type;
-                $ui .= '<script> $(document).ready(function () { set_hashtag_if_empty(\''.$m['m__handle'].'\'); }); </script>';
+                $ui .= '<script> $(document).ready(function () { load_hashtag_menu(\''.$m['m__handle'].'\'); }); </script>';
                 break;
             }
         }
         if(!$focus_tab){
             foreach($e___loading_order as $x__type => $m) { //Load Focus Tab:
-                $ui .= '<script> $(document).ready(function () { set_hashtag_if_empty(\''.$m['m__handle'].'\'); }); </script>';
+                $ui .= '<script> $(document).ready(function () { load_hashtag_menu(\''.$m['m__handle'].'\'); }); </script>';
                 break;
             }
         }
