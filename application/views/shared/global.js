@@ -480,6 +480,8 @@ function load_hashtag_menu(load_hashtag = null){
 
 
 function set_hashtag_if_empty(x__type_hash){
+
+    load_hashtag_menu(x__type_hash);
     return false;
     //Will only set the hashtag if not already set
     //This prevents the default tab to override a specific hashtag load request...
