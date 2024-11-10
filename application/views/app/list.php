@@ -25,8 +25,8 @@ $count_totals = array(
 //Generate list & settings:
 $list_settings = list_settings($_GET['i__hashtag']);
 
-echo '<h1>' . view_i_title($list_settings['i']) . '</h1>';
-echo '<div class="center-frame hide-subline maxwidth hideIfEmpty remove_first_line">' . view_i__links($list_settings['i'], ( isset($player_e['e__id']) ? $player_e['e__id'] : 0 )) . '</div>';
+echo '<h1>' . view__i_title($list_settings['i']) . '</h1>';
+echo '<div class="center-frame hide-subline maxwidth hideIfEmpty remove_first_line">' . view__i__links($list_settings['i'], ( isset($player_e['e__id']) ? $player_e['e__id'] : 0 )) . '</div>';
 
 echo 'Filter:';
 
@@ -63,7 +63,7 @@ foreach($list_settings['query_string_filtered'] as $x){
             }
         }
 
-        $i_content .= '<td title="'.$x['e__title'].' x '.view_i_title($i_var, true).'">'.( count($discoveries) ? ( strlen($discoveries[0]['x__message']) > 0 ? ( isset($_GET['expand']) ? '<p title="'.view_i_title($i_var, true).': '.$discoveries[0]['x__message'].'" data-placement="top" '.$underdot_class.'>'.convertURLs($discoveries[0]['x__message']).'</p>' : '<span title="'.view_i_title($i_var, true).': '.$discoveries[0]['x__message'].' ['.$discoveries[0]['x__time'].']" '.$underdot_class.'>✔️</span>'  ) : '<span title="'.view_i_title($i_var, true).' ['.$discoveries[0]['x__time'].']">✔️</span>' ).( $discoveries[0]['x__type']==26595 && $x__metadata['mc_gross']!=0 && strlen($x__metadata['txn_id'])>0 ? '<a href="https://www.paypal.com/activity/payment/'.$x__metadata['txn_id'].'" target="_blank" data-toggle="tooltip" data-placement="top" title="View Paypal Transaction"><i class="fab fa-paypal" style="font-size:1em !important;"></i></a> ' : '' )  : '').'</td>';
+        $i_content .= '<td title="'.$x['e__title'].' x '.view__i_title($i_var, true).'">'.( count($discoveries) ? ( strlen($discoveries[0]['x__message']) > 0 ? ( isset($_GET['expand']) ? '<p title="'.view__i_title($i_var, true).': '.$discoveries[0]['x__message'].'" data-placement="top" '.$underdot_class.'>'.$discoveries[0]['x__message'].'</p>' : '<span title="'.view__i_title($i_var, true).': '.$discoveries[0]['x__message'].' ['.$discoveries[0]['x__time'].']" '.$underdot_class.'>✔️</span>'  ) : '<span title="'.view__i_title($i_var, true).' ['.$discoveries[0]['x__time'].']">✔️</span>' ).( $discoveries[0]['x__type']==26595 && $x__metadata['mc_gross']!=0 && strlen($x__metadata['txn_id'])>0 ? '<a href="https://www.paypal.com/activity/payment/'.$x__metadata['txn_id'].'" target="_blank" data-toggle="tooltip" data-placement="top" title="View Paypal Transaction"><i class="fab fa-paypal" style="font-size:1em !important;"></i></a> ' : '' )  : '').'</td>';
 
 
         if(count($discoveries) && (!count($i_var['must_follow']) || count($i_var['must_follow'])!=count($this->X_model->fetch(array(
@@ -87,7 +87,7 @@ foreach($list_settings['query_string_filtered'] as $x){
 
     $plus_info = ' '.( $this_quantity > 0 ? '+'.$this_quantity : '' );
 
-    $body_content .= '<td style="padding-top: 2px;"><span class="icon-block-xs">'.view_cover($x['e__cover'], true).'</span><a href="'.view_memory(42903,42902).$x['e__handle'].'" style="font-weight:bold;">'.$x['e__title'].'</a>'.$name.$plus_info.'</td>';
+    $body_content .= '<td style="padding-top: 2px;"><span class="icon-block-xs">'.view__cover($x['e__cover'], true).'</span><a href="'.view__memory(42903,42902).$x['e__handle'].'" style="font-weight:bold;">'.$x['e__title'].'</a>'.$name.$plus_info.'</td>';
 
 
 
@@ -113,17 +113,17 @@ foreach($list_settings['query_string_filtered'] as $x){
             if(strlen($fetch_data[0]['x__message'])){
                 if(filter_var($fetch_data[0]['x__message'], FILTER_VALIDATE_URL)){
                     //Sheet Click to Expand
-                    $message_clean = '<a '.$underdot_class.' href="'.$fetch_data[0]['x__message'].'" target="_blank" title="Open in a New Window">'.view_cover($e['e__cover'], '🔗️', ' ').'</a>';
+                    $message_clean = '<a '.$underdot_class.' href="'.$fetch_data[0]['x__message'].'" target="_blank" title="Open in a New Window">'.view__cover($e['e__cover'], '🔗️', ' ').'</a>';
                 } elseif(!isset($_GET['expand']) && in_array($e['e__id'], $this->config->item('n___40945'))){
                     //Sheet Click to Expand
-                    $message_clean = '<span class="click_2_see_'.$e['e__id'].'_'.$fetch_data[0]['x__id'].'"><a href="javascript:void(0);" onclick="$(\'.click_2_see_'.$e['e__id'].'_'.$fetch_data[0]['x__id'].'\').toggleClass(\'hidden\')" '.$underdot_class.' title="'.$fetch_data[0]['x__message'].' [Click to Expand]">'.view_cover($e['e__cover'], '✔️', ' ').'</a></span><span class="click_2_see_'.$e['e__id'].'_'.$fetch_data[0]['x__id'].' hidden">'.$fetch_data[0]['x__message'].'</span>';
+                    $message_clean = '<span class="click_2_see_'.$e['e__id'].'_'.$fetch_data[0]['x__id'].'"><a href="javascript:void(0);" onclick="$(\'.click_2_see_'.$e['e__id'].'_'.$fetch_data[0]['x__id'].'\').toggleClass(\'hidden\')" '.$underdot_class.' title="'.$fetch_data[0]['x__message'].' [Click to Expand]">'.view__cover($e['e__cover'], '✔️', ' ').'</a></span><span class="click_2_see_'.$e['e__id'].'_'.$fetch_data[0]['x__id'].' hidden">'.$fetch_data[0]['x__message'].'</span>';
                 } elseif(isset($_GET['expand']) || $require_writing){
                     $message_clean = $fetch_data[0]['x__message'];
                 } else {
-                    $message_clean = '<span '.$underdot_class.' title="'.$fetch_data[0]['x__message'].'">'.view_cover($e['e__cover'], '✔️', ' ').'</span>';
+                    $message_clean = '<span '.$underdot_class.' title="'.$fetch_data[0]['x__message'].'">'.view__cover($e['e__cover'], '✔️', ' ').'</span>';
                 }
             } else {
-                $message_clean = '<span class="icon-block-xs">'.view_cover($e['e__cover'], '✔️', ' ').'</span>';
+                $message_clean = '<span class="icon-block-xs">'.view__cover($e['e__cover'], '✔️', ' ').'</span>';
             }
         }
 
@@ -161,7 +161,7 @@ echo '<tr style="font-weight:bold; vertical-align: baseline;">';
 echo '<th id="th_primary" style="width:200px;">'.$count.' Sources</th>';
 foreach($list_settings['column_e'] as $e){
     array_push($table_sortable, '#th_e_'.$e['e__id']);
-    echo '<th id="th_e_'.$e['e__id'].'"><div><span class="icon-block-xs">'.$e___6177[$e['e__privacy']]['m__cover'].'</span></div><a class="icon-block-xs" href="'.view_memory(42903,42902).$e['e__handle'].'" target="_blank" title="Open in New Window">'.view_cover($e['e__cover'], '✔️', ' ').'</a><span class="vertical_col"><span class="col_stat">'.( isset($count_totals['e'][$e['e__id']]) ? str_replace('.00','',number_format($count_totals['e'][$e['e__id']], 2)) : '0' ).'</span><i class="far fa-sort"></i>'.$e['e__title'].'</span></th>';
+    echo '<th id="th_e_'.$e['e__id'].'"><div><span class="icon-block-xs">'.$e___6177[$e['e__privacy']]['m__cover'].'</span></div><a class="icon-block-xs" href="'.view__memory(42903,42902).$e['e__handle'].'" target="_blank" title="Open in New Window">'.view__cover($e['e__cover'], '✔️', ' ').'</a><span class="vertical_col"><span class="col_stat">'.( isset($count_totals['e'][$e['e__id']]) ? str_replace('.00','',number_format($count_totals['e'][$e['e__id']], 2)) : '0' ).'</span><i class="far fa-sort"></i>'.$e['e__title'].'</span></th>';
 }
 foreach($list_settings['column_i'] as $i_var){
 
@@ -176,7 +176,7 @@ foreach($list_settings['column_i'] as $i_var){
 
     array_push($table_sortable, '#th_i_'.$i_var['i__id']);
 
-    echo '<th id="th_i_'.$i_var['i__id'].'"><div></div><a class="icon-block-xs" href="'.view_memory(42903,33286).$i_var['i__hashtag'].'" target="_blank" title="Open in New Window">'.$e___4737[$i_var['i__type']]['m__cover'].'</a><span class="vertical_col"><span class="col_stat '.( $max_limit ? ( $current_x>=$max_limit ? ''  : ( ($current_x/$max_limit)>=0.5 ? 'isgold' : 'isred' ) ) : '' ).'">'.$current_x.( $max_limit ? '/'.$max_limit : '').'</span><i class="far fa-sort"></i>'.( strlen($i_var['x__message']) ? $i_var['x__message'] : view_i_title($i_var, true) ).'</span></th>';
+    echo '<th id="th_i_'.$i_var['i__id'].'"><div></div><a class="icon-block-xs" href="'.view__memory(42903,33286).$i_var['i__hashtag'].'" target="_blank" title="Open in New Window">'.$e___4737[$i_var['i__type']]['m__cover'].'</a><span class="vertical_col"><span class="col_stat '.( $max_limit ? ( $current_x>=$max_limit ? ''  : ( ($current_x/$max_limit)>=0.5 ? 'isgold' : 'isred' ) ) : '' ).'">'.$current_x.( $max_limit ? '/'.$max_limit : '').'</span><i class="far fa-sort"></i>'.( strlen($i_var['x__message']) ? $i_var['x__message'] : view__i_title($i_var, true) ).'</span></th>';
 
 }
 echo '</tr>';
@@ -288,7 +288,7 @@ echo '</table>';
             $('.x__player_' + modify_data['e__id'] + '_' + modify_data['x__player']).html('<i class="fas fa-yin-yang fa-spin"></i>');
 
             //Check email and validate:
-            $.post("/ajax/e_toggle_e", modify_data, function (data) {
+            $.post("/app/e_toggle_e", modify_data, function (data) {
 
                 if (data.status) {
 

@@ -200,10 +200,10 @@ $e___11035 = $this->config->item('e___11035'); //Encyclopedia
     function x_4341(x_filters, x_joined_by, page_num){
 
         //Show spinner:
-        $('#x_page_'+page_num).html('<div class="main__title center"><span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>' + js_view_shuffle_message(12694) +  '</div>').hide().fadeIn();
+        $('#x_page_'+page_num).html('<div class="main__title center"><span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>' + js_view__shuffle_message(12694) +  '</div>').hide().fadeIn();
 
         //Load report based on input fields:
-        $.post("/ajax/x_4341", {
+        $.post("/app/x_4341", {
             x_filters: x_filters,
             x_joined_by: x_joined_by,
             x__message_find:x__message_find,
@@ -409,7 +409,7 @@ echo '</tr></table>';
 echo '<input type="submit" class="btn" value="Apply" />';
 
 if($has_filters){
-    echo ' &nbsp;<a href="'.view_app_link(4341).'" style="font-size: 0.8em;">Remove Filters</a>';
+    echo ' &nbsp;<a href="'.view__app_link(4341).'" style="font-size: 0.8em;">Remove Filters</a>';
 }
 
 echo '</form>';

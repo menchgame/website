@@ -13,7 +13,7 @@ if(!isset($_GET['e__handle']) || !strlen($_GET['e__handle'])){
 
 //Generate list & settings:
 $list_settings = list_settings($_GET['i__hashtag']);
-echo '<h1>' . view_i_title($list_settings['i']) . '</h1>';
+echo '<h1>' . view__i_title($list_settings['i']) . '</h1>';
 
 
 foreach($this->E_model->fetch(array(

@@ -51,7 +51,7 @@ if($search_for_set){
                 }
             }
 
-            echo view_card_e(12730, $en, null);
+            echo view__card_e(12730, $en, null);
         }
         echo '</div>';
 

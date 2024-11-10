@@ -8,7 +8,7 @@ $cron_jobs = $this->X_model->fetch(array(
     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
     'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
     'x__following' => 7274,
-), array('x__follower'), view_memory(6404,11064), 0, array('x__weight' => 'ASC'));
+), array('x__follower'), view__memory(6404,11064), 0, array('x__weight' => 'ASC'));
 foreach($cron_jobs as $cron_job){
     if(strlen($cron_job['x__message']) > $longest_time){
         $longest_time = strlen($cron_job['x__message']);
@@ -23,7 +23,7 @@ echo '<textarea class="mono-space" readonly style="background-color: #FFFFFF; co
 echo '# APPS WITH CRON JOBS:'."\n"."\n";
 foreach($cron_jobs as $cron_job){
     if(strlen($cron_job['x__message'])){
-        echo str_pad($cron_job['x__message'], $longest_time, " ", STR_PAD_RIGHT).' '.view_memory(6404,7274).' '.str_pad($cron_job['e__id'], $longest_id, " ", STR_PAD_RIGHT).' #'.$cron_job['e__title']."\n";
+        echo str_pad($cron_job['x__message'], $longest_time, " ", STR_PAD_RIGHT).' '.view__memory(6404,7274).' '.str_pad($cron_job['e__id'], $longest_id, " ", STR_PAD_RIGHT).' #'.$cron_job['e__title']."\n";
     }
 }
 echo '</textarea>';

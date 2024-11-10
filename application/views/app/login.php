@@ -7,7 +7,7 @@ if(isset($_GET['i__hashtag']) && strlen($_GET['i__hashtag'])){
         'LOWER(i__hashtag)' => strtolower($_GET['i__hashtag']),
     ));
 }
-$next_url = ( isset($_GET['url']) ? urldecode($_GET['url']) : ( count($sign_i) ? view_memory(42903,33286) . $sign_i[0]['i__hashtag'] : home_url()) );
+$next_url = ( isset($_GET['url']) ? urldecode($_GET['url']) : ( count($sign_i) ? view__memory(42903,33286) . $sign_i[0]['i__hashtag'] : home_url()) );
 $e___14870 = $this->config->item('e___14870'); //Website Partner
 
 //Check to see if they are previously logged in?
@@ -178,7 +178,7 @@ if(superpower_unlocked()) {
             $('#flash_message').html(''); //Delete previous errors, if any
 
             //Check email and validate:
-            $.post("/ajax/e_verify_contact", {
+            $.post("/app/e_verify_contact", {
 
                 account_email_phone: account_email_phone,
                 sign_i__id: sign_i__id,
@@ -245,7 +245,7 @@ if(superpower_unlocked()) {
             $('#input_code').prop('disabled', true);
 
             //Check email/phone and validate:
-            $.post("/ajax/e_contact_auth", {
+            $.post("/app/e_contact_auth", {
                 account_id: $('#account_id').val(), //Might be zero if new account
                 account_email_phone: $('#account_email_phone').val(),
                 new_account_email: $('#new_account_email').val(),
@@ -308,7 +308,7 @@ if(superpower_unlocked()) {
                 if(strlen(website_setting(14881)) && strlen(website_setting(14882))){
                     echo '<div class="social-frame">';
                     echo '<div class="mid-text-line"><span>OR</span></div>';
-                    echo '<div class="full-width-btn center top-margin"><a href="'.view_app_link(14436).'" onclick="load_away()" class="btn btn-large btn-default">';
+                    echo '<div class="full-width-btn center top-margin"><a href="'.view__app_link(14436).'" onclick="load_away()" class="btn btn-large btn-default">';
                     echo $e___11035[14436]['m__title'].' '.$e___11035[14436]['m__cover'];
                     echo '</a></div>';
                     echo '</div>';
@@ -317,10 +317,10 @@ if(superpower_unlocked()) {
 
 
                 //ANONYMOUS LOGIN:
-                if(intval(view_memory(6404,14938)) && count($sign_i)){
+                if(intval(view__memory(6404,14938)) && count($sign_i)){
                     echo '<div class="social-frame">';
                     echo '<div class="mid-text-line"><span>OR</span></div>';
-                    echo '<div class="full-width-btn center top-margin"><a href="'.view_app_link(14938).view_memory(42903,33286) . $sign_i[0]['i__hashtag'] . '" onclick="load_away()" class="btn btn-large btn-default">';
+                    echo '<div class="full-width-btn center top-margin"><a href="'.view__app_link(14938).view__memory(42903,33286) . $sign_i[0]['i__hashtag'] . '" onclick="load_away()" class="btn btn-large btn-default">';
                     echo $e___11035[14938]['m__title'].' '.$e___11035[14938]['m__cover'];
                     echo ( strlen($e___11035[14938]['m__message']) ? ': '.$e___11035[14938]['m__message'] : '' );
                     echo '</a></div>';

@@ -204,7 +204,7 @@ function x_mass_apply_preview(apply_id, s__id){
 
     //Load Ppeview:
     $('#modal'+apply_id+' .x_mass_apply_preview').html('<span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>Loading');
-    $.post("/ajax/x_mass_apply_preview", {
+    $.post("/app/x_mass_apply_preview", {
         apply_id: apply_id,
         s__id: s__id,
         js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -250,7 +250,7 @@ function load_editor(){
         },
         templates: {
             suggestion: function (suggestion) {
-                return view_s_js_line(suggestion);
+                return view__s_js_line(suggestion);
             },
             empty: function (data) {
                 return '<div class="main__title"><i class="far fa-exclamation-circle"></i> No Sources Found</div>';
@@ -282,7 +282,7 @@ function load_editor(){
         },
         templates: {
             suggestion: function (suggestion) {
-                return view_s_js_line(suggestion);
+                return view__s_js_line(suggestion);
             },
             empty: function (data) {
                 return '<div class="main__title"><i class="far fa-exclamation-circle"></i> No Ideas Found</div>';
@@ -293,18 +293,18 @@ function load_editor(){
 }
 
 
-function view_s__title(suggestion){
+function view__s__title(suggestion){
     var title = ( suggestion._highlightResult && suggestion._highlightResult.s__title.value ? suggestion._highlightResult.s__title.value : suggestion.s__title );
     var max_limit = 89;
     return htmlentitiesjs( title.length>=max_limit ? title.substring(0,max_limit)+'...' : title );
 }
 
 
-function view_s_js_line(suggestion, default_handle = '@'){
+function view__s_js_line(suggestion, default_handle = '@'){
     if(suggestion.s__type==12273){
-        return '<span class="grey">#' + suggestion.s__handle + '</span>&nbsp;<span class="main__title">' + view_s__title(suggestion) + '</span>';
+        return '<span class="grey">#' + suggestion.s__handle + '</span>&nbsp;<span class="main__title">' + view__s__title(suggestion) + '</span>';
     } else if(suggestion.s__type==12274){
-        return '<span class="icon-block-xs">'+ view_cover_js(suggestion.s__cover) +'</span><span class="grey">' + default_handle + suggestion.s__handle + '</span>&nbsp;<span class="main__title">' + view_s__title(suggestion) + '</span>';
+        return '<span class="icon-block-xs">'+ view__cover_js(suggestion.s__cover) +'</span><span class="grey">' + default_handle + suggestion.s__handle + '</span>&nbsp;<span class="main__title">' + view__s__title(suggestion) + '</span>';
     }
 }
 
@@ -336,7 +336,7 @@ function i_load_finder(x__type) {
     });
 }
 
-function view_s_js_cover(x__type, suggestion, action_id){
+function view__s_js_cover(x__type, suggestion, action_id){
 
     if(!js_n___26010.includes(x__type)){
         alert('Missing type in JS UI');
@@ -350,7 +350,7 @@ function view_s_js_cover(x__type, suggestion, action_id){
         if(validURL(suggestion.s__cover)){
             background_image = 'style="background-image:url(\''+suggestion.s__cover+'\')"';
         } else {
-            icon_image = view_cover_js(suggestion.s__cover);
+            icon_image = view__cover_js(suggestion.s__cover);
         }
     }
 
@@ -366,8 +366,8 @@ function view_s_js_cover(x__type, suggestion, action_id){
     }
 
 }
-function view_s_mini_js(s__cover,s__title){
-    return '<span class="block-cover" title="'+s__title+'">'+ view_cover_js(s__cover) +'</span>';
+function view__s_mini_js(s__cover,s__title){
+    return '<span class="block-cover" title="'+s__title+'">'+ view__cover_js(s__cover) +'</span>';
 }
 
 
@@ -554,7 +554,7 @@ function toggle_pills(x__type_hash, is_first_load){
 
             if(focus__node==12273){
 
-                var loading_url = "/ajax/i_view_body";
+                var loading_url = "/app/view__i_body";
                 var loading_data = {
                     focus__node:focus__node,
                     x__type:x__type,
@@ -565,7 +565,7 @@ function toggle_pills(x__type_hash, is_first_load){
 
             } else if(focus__node==12274){
 
-                var loading_url = "/ajax/e_view_body";
+                var loading_url = "/app/view__e_body";
                 var loading_data = {
                     focus__node:focus__node,
                     x__type:x__type,
@@ -602,7 +602,7 @@ function toggle_pills(x__type_hash, is_first_load){
                     $win.scroll(function () {
                         //Download loading from bottom:
                         if (parseInt($(document).height() - ($win.height() + $win.scrollTop())) < 377) {
-                            x_view_load_page();
+                            x_view__load_page();
                         }
                     });
                 });
@@ -639,7 +639,7 @@ function toggle_pills(x__type_hash, is_first_load){
 function i_copy(i__id, do_recursive){
 
     //Go ahead and delete:
-    $.post("/ajax/i_copy", {
+    $.post("/app/i_copy", {
         i__id:i__id,
         do_recursive:do_recursive,
         js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -672,7 +672,7 @@ function e_copy(e__id){
     }
 
     //Go ahead and delete:
-    $.post("/ajax/e_copy", {
+    $.post("/app/e_copy", {
         e__id:e__id,
         copy_source_title:copy_source_title,
         js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -691,7 +691,7 @@ function e_copy(e__id){
 
 
 
-function js_view_shuffle_message(e__id){
+function js_view__shuffle_message(e__id){
     var messages = js_e___12687[e__id]['m__message'].split("\n");
     if(messages.length==1){
         //Return message:
@@ -730,7 +730,7 @@ function x_remove(x__id, x__type, i__hashtag){
     }
 
     //Save changes:
-    $.post("/ajax/x_remove", {
+    $.post("/app/x_remove", {
         x__id:x__id,
         js_request_uri: js_request_uri, //Always append to AJAX Calls
     }, function (data) {
@@ -771,7 +771,7 @@ function update__cover(new_cover, changed = true){
     }
 }
 function image_cover(cover_preview, cover_apply, new_title){
-    return '<a href="javascript:void(0);" onclick="update__cover(\''+cover_apply+'\')">' + view_s_mini_js(cover_preview, new_title) + '</a>';
+    return '<a href="javascript:void(0);" onclick="update__cover(\''+cover_apply+'\')">' + view__s_mini_js(cover_preview, new_title) + '</a>';
 }
 
 
@@ -795,7 +795,7 @@ function e_load_cover(x__type, e__id, counter, first_segment){
 
     $('.coins_e_'+e__id+'_'+x__type).html('<span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>');
 
-    $.post("/ajax/e_load_cover", {
+    $.post("/app/e_load_cover", {
         x__type:x__type,
         e__id:e__id,
         counter:counter,
@@ -816,7 +816,7 @@ function i_load_cover(x__type, i__id, counter, first_segment, current_e){
 
     $('.coins_i_'+i__id+'_'+x__type).html('<span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>');
 
-    $.post("/ajax/i_load_cover", {
+    $.post("/app/i_load_cover", {
         x__type:x__type,
         i__id:i__id,
         counter:counter,
@@ -1017,7 +1017,7 @@ function activate_popover(){
         html: true,
         //title: '<a class="close" href="javascript:void(0);" style="display: block;">Close</a>',
         content: function (inner_content) {
-            $.post("/ajax/load_popover", {
+            $.post("/app/load_popover", {
                 handle_string:inner_content.innerText,
                 js_request_uri: js_request_uri, //Always append to AJAX Calls
             }, function (data) {
@@ -1173,7 +1173,7 @@ $(document).ready(function () {
                         });
                 },
                 template: function (suggestion) {
-                    return view_s_js_line(suggestion);
+                    return view__s_js_line(suggestion);
                 },
                 replace: function (suggestion) {
                     return ' #' + suggestion.s__handle + ' ';
@@ -1196,7 +1196,7 @@ $(document).ready(function () {
                         });
                 },
                 template: function (suggestion) {
-                    return view_s_js_line(suggestion);
+                    return view__s_js_line(suggestion);
                 },
                 replace: function (suggestion) {
                     return ' !#' + suggestion.s__handle + ' ';
@@ -1222,7 +1222,7 @@ $(document).ready(function () {
                         });
                 },
                 template: function (suggestion) {
-                    return view_s_js_line(suggestion);
+                    return view__s_js_line(suggestion);
                 },
                 replace: function (suggestion) {
                     return ' @' + suggestion.s__handle + ' ';
@@ -1248,7 +1248,7 @@ $(document).ready(function () {
                         });
                 },
                 template: function (suggestion) {
-                    return view_s_js_line(suggestion, '/');
+                    return view__s_js_line(suggestion, '/');
                 },
                 replace: function (suggestion) {
                     return '/' + suggestion.s__handle + ' @';
@@ -1274,7 +1274,7 @@ $(document).ready(function () {
                         });
                 },
                 template: function (suggestion) {
-                    return view_s_js_line(suggestion, '/');
+                    return view__s_js_line(suggestion, '/');
                 },
                 replace: function (suggestion) {
                     return '/' + suggestion.s__handle + ' @';
@@ -1374,7 +1374,7 @@ $(document).ready(function () {
                     var item_key = suggestion.s__type+'_'+suggestion.s__id;
                     if(!icons_listed.includes(item_key)) {
                         icons_listed.push(item_key);
-                        $("#container_finder .row").append(view_s_js_cover(26011, suggestion, 0));
+                        $("#container_finder .row").append(view__s_js_cover(26011, suggestion, 0));
                     }
                     return false;
                 },
@@ -1407,7 +1407,7 @@ function update_cover_main(cover_code, target_css){
     }
 }
 
-function view_cover_js(cover_code){
+function view__cover_js(cover_code){
     if(cover_code && cover_code.length){
         if(validURL(cover_code)){
             return '<img src="'+cover_code+'" />';
@@ -1423,22 +1423,24 @@ function view_cover_js(cover_code){
 
 function update_cover_mini(cover_code, target_css){
     //Update:
-    $(target_css).html(view_cover_js(cover_code));
+    $(target_css).html(view__cover_js(cover_code));
 }
 
 
 
 function i_editor_switch(link_x__type = 0, next_i__id = 0, previous_i__id = 0, do_checks = 0){
+
     console.log('SWITCHING TO '+link_x__type+'/'+next_i__id+'/'+previous_i__id+'/'+do_checks+'/'+$('#modal31911 .save_i__message').val()+'/'+parseInt($('#modal31911 .created_i__id').val()));
 
+    /*
     if(!next_i__id && !previous_i__id && !link_x__type && !do_checks){
-        /*
         var r = confirm("Are you sure you want to unlink this idea?");
         if (!(r==true)) {
             return false;
         }
-        */
     }
+    */
+
     //Will switch the nature/direction of the link:
     return i_editor_load(0, 0, link_x__type, next_i__id, previous_i__id, do_checks, $('#modal31911 .save_i__message').val(), parseInt($('#modal31911 .created_i__id').val()));
 }
@@ -1447,7 +1449,7 @@ function display_media(mediaframe_id, uploader_id, i__id){
     console.log('display_media: '+mediaframe_id+'/'+uploader_id+'/'+i__id);
     $(".ui_i__cache_"+i__id+" .media_display").each(function () {
         $('#'+mediaframe_id).append('<div id="'+$(this).attr('id')+'" class="media_item" media_e__id="" playback_code="" e__id="0"  e__cover=""></div>');
-        cloudinary_preview_source(uploader_id, $(this).attr('id'), $(this).attr('media_e__id'), $(this).attr('playback_code'), $(this).attr('e__cover'), $(this).attr('e__title'), $(this).attr('e__id'));
+        cloudinary_preview__source(uploader_id, $(this).attr('id'), $(this).attr('media_e__id'), $(this).attr('playback_code'), $(this).attr('e__cover'), $(this).attr('e__title'), $(this).attr('e__id'));
     });
     sort_media(mediaframe_id);
 }
@@ -1645,7 +1647,7 @@ function load_i_dynamic(i__id, x__id, current_i__type, initial_loading){
     $(".dynamic_editing_loading").removeClass('hidden');
     var created_i__id = 0;
 
-    $.post("/ajax/i_editor_load", {
+    $.post("/app/i_editor_load", {
         i__id: i__id,
         x__id: x__id,
         current_i__type: current_i__type,
@@ -1802,7 +1804,7 @@ function i_editor_save(){
         }
     }
 
-    $.post("/ajax/i_editor_save", modify_data, function (data) {
+    $.post("/app/i_editor_save", modify_data, function (data) {
 
         //Load Images:
         i_saving = false;
@@ -2106,7 +2108,7 @@ function load_cloudinary(uploader_id, s__id, uploader_tags = [], loading_button 
                 //Append this to the main source:
                 if(media_e__id) {
 
-                    cloudinary_preview_source(uploader_id, result.info.id, media_e__id, playback_code, ( result.info.thumbnail_url ? result.info.thumbnail_url.replaceAll('c_limit,h_60,w_90','c_fill,h_377,w_377') : null ), ( result.info.original_filename ? js_e___42294[media_e__id]['m__title']+' '+result.info.original_filename.replaceAll('_',' ').replaceAll('-',' ').replaceAll('  ',' ').replaceAll('  ',' ').replaceAll('  ',' ') : js_e___42294[media_e__id]['m__title']+' File' ));
+                    cloudinary_preview__source(uploader_id, result.info.id, media_e__id, playback_code, ( result.info.thumbnail_url ? result.info.thumbnail_url.replaceAll('c_limit,h_60,w_90','c_fill,h_377,w_377') : null ), ( result.info.original_filename ? js_e___42294[media_e__id]['m__title']+' '+result.info.original_filename.replaceAll('_',' ').replaceAll('-',' ').replaceAll('  ',' ').replaceAll('  ',' ').replaceAll('  ',' ') : js_e___42294[media_e__id]['m__title']+' File' ));
 
                     media_cache[uploader_id][result.info.id] = result.info;
                     console.log('MEDIA CACHE:');
@@ -2167,7 +2169,7 @@ function play_video(public_id){
     cld.source(public_id);
 }
 
-function cloudinary_preview_source(uploader_id, info_id, media_e__id, playback_code, e__cover, e__title, e__id = 0){
+function cloudinary_preview__source(uploader_id, info_id, media_e__id, playback_code, e__cover, e__title, e__id = 0){
 
     //Update meta variables:
     $('#'+info_id).attr('media_e__id',media_e__id).attr('playback_code',playback_code).attr('e__id',e__id).attr('e__cover',e__cover);
@@ -2254,7 +2256,7 @@ function e_editor_load(e__id = 0, x__id = 0, bar_title = null, x__message = null
 
 
 
-    $.post("/ajax/e_editor_load", {
+    $.post("/app/e_editor_load", {
         e__id: e__id,
         x__id: x__id,
         js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -2390,7 +2392,7 @@ function e_editor_save(){
         }
     }
 
-    $.post("/ajax/e_editor_save", modify_data, function (data) {
+    $.post("/app/e_editor_save", modify_data, function (data) {
 
         e_saving = false;
         $(".e_editor_save").html('SAVE');
@@ -2472,7 +2474,7 @@ function e_editor_save(){
 
 var busy_loading = false;
 var current_page = [];
-function x_view_load_page() {
+function x_view__load_page() {
 
     if(!focus_x__group){
         return false;
@@ -2495,7 +2497,7 @@ function x_view_load_page() {
 
     current_page[focus_x__group]++; //Now we can increment current page
     $('<div class="load-more"><span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>Loading More</div>').insertAfter('#list-in-'+focus_x__group);
-    $.post("/ajax/x_view_load_page", {
+    $.post("/app/x_view__load_page", {
         focus__node: parseInt($('#focus__node').val()),
         focus__id: parseInt($('#focus__id').val()),
         x__type: focus_x__group,
@@ -2560,7 +2562,7 @@ function e__add(x__type, e_existing_id) {
     }
 
     //Add via Ajax:
-    $.post("/ajax/e__add", {
+    $.post("/app/e__add", {
 
         focus__node: parseInt($('#focus__node').val()),
         x__type: x__type,
@@ -2648,7 +2650,7 @@ function i__add(x__type, link_i__id) {
     add_to_list(x__type, sort_i_grabr, '<div id="tempLoader" class="col-6 col-md-4 no-padding show_all_i"><div class="cover-wrapper"><div class="black-background-obs cover-link"><div class="cover-btn"><i class="fas fa-yin-yang fa-spin"></i></div></div></div></div>', 0);
 
     //Update backend:
-    $.post("/ajax/i__add", {
+    $.post("/app/i__add", {
         x__type: x__type,
         focus__node: parseInt($('#focus__node').val()),
         focus__id: parseInt($('#focus__id').val()),
@@ -2691,7 +2693,7 @@ function e_delete(x__id, x__type) {
 
     var r = confirm("Unlink this source?");
     if (r==true) {
-        $.post("/ajax/e_delete", {
+        $.post("/app/e_delete", {
 
             x__id: x__id,
             js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -2723,7 +2725,7 @@ function x_link_toggle(x__type, i__id){
 
     if(!x__id){
         //Add:
-        $.post("/ajax/x_link_toggle", {
+        $.post("/app/x_link_toggle", {
             x__type:x__type,
             i__id:i__id,
             target_i__id:$('#target_i__id').val(),
@@ -2739,7 +2741,7 @@ function x_link_toggle(x__type, i__id){
         });
     } else {
         //REMOVE
-        $.post("/ajax/x_remove", {
+        $.post("/app/x_remove", {
             x__id:x__id,
             js_request_uri: js_request_uri, //Always append to AJAX Calls
         }, function (data) {
@@ -2828,7 +2830,7 @@ function x_set_text(this_grabr){
 
     //Grey background to indicate saving
     var target_element = '.text__'+modify_data['cache_e__id']+'_'+modify_data['s__id'];
-    $.post("/ajax/x_set_text", modify_data, function (data) {
+    $.post("/app/x_set_text", modify_data, function (data) {
 
         if (!data.status) {
 
@@ -2925,7 +2927,7 @@ function i_sort_load(x__type){
 
                     //Update order:
                     if(sort_rank > 0){
-                        $.post("/ajax/i_sort_load", {
+                        $.post("/app/i_sort_load", {
                             new_x_order:new_x_order,
                             x__type:x__type,
                             js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -2998,7 +3000,7 @@ function e_select_apply(focus__id, selected_e__id, enable_mulitiselect, down_e__
         $('.radio-'+focus__id+' .item-'+selected_e__id+' .inner_headline').after('<span class="icon-block-sm checked_icon"><i class="far fa-check"></i></span>');
     }
 
-    $.post("/ajax/e_select_apply", {
+    $.post("/app/e_select_apply", {
         focus__id: focus__id,
         down_e__id: down_e__id,
         right_i__id: right_i__id,
@@ -3174,7 +3176,7 @@ function x_update_instant_select(element_id, new_e__id, o__id = 0, x__id = 0, sh
     }
     $('.dropd_instant_'+element_id+'_'+o__id+'_'+x__id+' .btn').html('<span class="icon-block-sm"><i class="fas fa-yin-yang fa-spin"></i></span>');
 
-    $.post("/ajax/x_update_instant_select", {
+    $.post("/app/x_update_instant_select", {
         focus__id:parseInt($('#focus__id').val()),
         o__id: o__id,
         element_id: element_id,
@@ -3247,7 +3249,7 @@ function e_sort_save(x__type) {
     //It might be zero for lists that have jsut been emptied
     if (sort_rank > 0) {
         //Update backend:
-        $.post("/ajax/e_sort_save", {
+        $.post("/app/e_sort_save", {
             e__id: parseInt($('#focus__id').val()),
             x__type:x__type,
             new_x__weight: new_x__weight,
@@ -3273,7 +3275,7 @@ function x_reset_sorting(){
         var focus_handle = $('#focus_handle').val();
 
         //Update via call:
-        $.post("/ajax/x_reset_sorting", {
+        $.post("/app/x_reset_sorting", {
             focus__node: focus__node,
             focus__id: focus__id,
             js_request_uri: js_request_uri, //Always append to AJAX Calls
@@ -3365,7 +3367,7 @@ function go_next(do_skip, i_popup_url = ''){
     $('.go_next_btn').html('<span class="icon-block" style="margin:5px 0 -5px;"><i class="fas fa-yin-yang fa-spin"></i></span>');
 
     //Submit to go next:
-    $.post("/ajax/go_next", {
+    $.post("/app/go_next", {
         target_i__hashtag: $('#target_i__hashtag').val(),
         target_i__id: parseInt($('#target_i__id').val()),
         focus_i_data: {

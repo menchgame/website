@@ -19,7 +19,7 @@ if($client_id && $client_secret && $server_name){
         'domain' => 'mench.auth0.com',
         'client_id' => $client_id,
         'client_secret' => $client_secret,
-        'redirect_uri' => 'https://'.$server_name.view_app_link(14564),
+        'redirect_uri' => 'https://'.$server_name.view__app_link(14564),
         'scope' => 'openid profile email',
     ]);
 
@@ -28,7 +28,7 @@ if($client_id && $client_secret && $server_name){
 
     echo '<div class="center-info">';
     echo '<div class="text-center platform-large">'.get_domain('m__cover').'</div>';
-    echo '<p style="margin-top:13px; text-align: center;">'.view_shuffle_message(12694).'</p>';
+    echo '<p style="margin-top:13px; text-align: center;">'.view__shuffle_message(12694).'</p>';
     echo '</div>';
 
     js_php_redirect(sprintf('http://%s/v2/logout?client_id=%s&returnTo=%s', 'mench.auth0.com', $client_id, 'https://'.$server_name), 987);
@@ -36,7 +36,7 @@ if($client_id && $client_secret && $server_name){
 
 } else {
 
-    js_php_redirect(view_memory(42903,14565), 987);
+    js_php_redirect(view__memory(42903,14565), 987);
 
 }
 

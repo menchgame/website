@@ -63,7 +63,7 @@ class CI_Loader {
 	 *
 	 * @var	array
 	 */
-	protected $_ci_view_paths =	array(VIEWPATH	=> TRUE);
+	protected $_ci_view__paths =	array(VIEWPATH	=> TRUE);
 
 	/**
 	 * List of paths to load libraries from
@@ -778,7 +778,7 @@ class CI_Loader {
 		array_unshift($this->_ci_model_paths, $path);
 		array_unshift($this->_ci_helper_paths, $path);
 
-		$this->_ci_view_paths = array($path.'views/' => $view_cascade) + $this->_ci_view_paths;
+		$this->_ci_view__paths = array($path.'views/' => $view_cascade) + $this->_ci_view__paths;
 
 		// Add config file path
 		$config =& $this->_ci_get_component('config');
@@ -823,7 +823,7 @@ class CI_Loader {
 			array_shift($this->_ci_library_paths);
 			array_shift($this->_ci_model_paths);
 			array_shift($this->_ci_helper_paths);
-			array_shift($this->_ci_view_paths);
+			array_shift($this->_ci_view__paths);
 			array_pop($config->_config_paths);
 		}
 		else
@@ -837,9 +837,9 @@ class CI_Loader {
 				}
 			}
 
-			if (isset($this->_ci_view_paths[$path.'views/']))
+			if (isset($this->_ci_view__paths[$path.'views/']))
 			{
-				unset($this->_ci_view_paths[$path.'views/']);
+				unset($this->_ci_view__paths[$path.'views/']);
 			}
 
 			if (($key = array_search($path, $config->_config_paths)) !== FALSE)
@@ -852,7 +852,7 @@ class CI_Loader {
 		$this->_ci_library_paths = array_unique(array_merge($this->_ci_library_paths, array(APPPATH, BASEPATH)));
 		$this->_ci_helper_paths = array_unique(array_merge($this->_ci_helper_paths, array(APPPATH, BASEPATH)));
 		$this->_ci_model_paths = array_unique(array_merge($this->_ci_model_paths, array(APPPATH)));
-		$this->_ci_view_paths = array_merge($this->_ci_view_paths, array(APPPATH.'views/' => TRUE));
+		$this->_ci_view__paths = array_merge($this->_ci_view__paths, array(APPPATH.'views/' => TRUE));
 		$config->_config_paths = array_unique(array_merge($config->_config_paths, array(APPPATH)));
 
 		return $this;
@@ -894,11 +894,11 @@ class CI_Loader {
 			$_ci_ext = pathinfo($_ci_view, PATHINFO_EXTENSION);
 			$_ci_file = ($_ci_ext === '') ? $_ci_view.'.php' : $_ci_view;
 
-			foreach ($this->_ci_view_paths as $_ci_view_file => $cascade)
+			foreach ($this->_ci_view__paths as $_ci_view__file => $cascade)
 			{
-				if (file_exists($_ci_view_file.$_ci_file))
+				if (file_exists($_ci_view__file.$_ci_file))
 				{
-					$_ci_path = $_ci_view_file.$_ci_file;
+					$_ci_path = $_ci_view__file.$_ci_file;
 					$file_exists = TRUE;
 					break;
 				}

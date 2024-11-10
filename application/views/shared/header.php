@@ -1,7 +1,7 @@
 <?php
 $player_e = superpower_unlocked();
 $first_segment = $this->uri->segment(1);
-$e_segment = view_valid_handle_e($first_segment);
+$e_segment = view__valid_handle_e($first_segment);
 $second_segment = $this->uri->segment(2);
 $e___11035 = $this->config->item('e___11035'); //Encyclopedia
 $e___14870 = $this->config->item('e___14870'); //Website Partner
@@ -85,14 +85,14 @@ if($website_id==39599){
     //Do we have Google Analytics?
     $google_analytics_code = website_setting(30033);
     if(strlen($google_analytics_code) > 0){
-        echo view_google_tag($google_analytics_code);
+        echo view__google_tag($google_analytics_code);
     }
 
 
     //Do we have Google Tags or second google analytics?
     $google_tag_code = website_setting(38216);
     if(strlen($google_tag_code) > 0){
-        echo view_google_tag($google_tag_code);
+        echo view__google_tag($google_tag_code);
     }
 
 
@@ -121,7 +121,7 @@ if($website_id==39599){
 
 
     //Latest version of twitter bootstrap:
-    echo view_memory(6404,4523);
+    echo view__memory(6404,4523);
     ?>
 
     <link href="/application/views/shared/global.css?cache_time=<?= $this->config->item('cache_time') ?>" rel="stylesheet">
@@ -382,12 +382,12 @@ if(strlen($discovery_i__hashtag) && superpower_unlocked(12700)) {
     //Ideation Mode:
     $_GET['i__hashtag'] = $discovery_i__hashtag;
     $i_view = 30795;
-    $quick_href = view_memory(42903, 33286);
+    $quick_href = view__memory(42903, 33286);
 
 } elseif(!strlen($first_segment) && superpower_unlocked(12700)) {
 
     //Edit Website Home Page:
-    $quick_href = view_memory(42903, 42902);
+    $quick_href = view__memory(42903, 42902);
     $quick_id = 33287;
 
 } elseif($e_segment && $e_segment==$e___14870[$website_id]['m__handle']) {
@@ -401,7 +401,7 @@ if(strlen($discovery_i__hashtag) && superpower_unlocked(12700)) {
     //Ideation Mode:
     $_GET['i__hashtag'] = substr($first_segment, 1);
     $i_view = 33286;
-    $quick_href = view_memory(42903, 33286);
+    $quick_href = view__memory(42903, 33286);
 
 } elseif(array_key_exists(strtolower($first_segment), $this->config->item('handle___6287'))) {
 
@@ -411,7 +411,7 @@ if(strlen($discovery_i__hashtag) && superpower_unlocked(12700)) {
     } else {
         $quick_id = 33287;
     }
-    $quick_href = view_memory(42903, 42902);
+    $quick_href = view__memory(42903, 42902);
 
 } elseif($e_segment && array_key_exists(strtolower($e_segment), $this->config->item('handle___6287'))) {
 
@@ -421,18 +421,18 @@ if(strlen($discovery_i__hashtag) && superpower_unlocked(12700)) {
     } else {
         $quick_id = 6287;
     }
-    $quick_href = view_memory(42903, 6287);
+    $quick_href = view__memory(42903, 6287);
 
 } elseif(isset($_GET['e__handle']) && strlen($_GET['e__handle'])) {
 
     //Source Mode:
-    $quick_href = view_memory(42903, 42902);
+    $quick_href = view__memory(42903, 42902);
     $quick_id = 33287;
 
 } elseif(isset($_GET['i__hashtag']) && strlen($_GET['i__hashtag'])) {
 
     //Ideation Mode:
-    $quick_href = view_memory(42903, 33286);
+    $quick_href = view__memory(42903, 33286);
     $quick_id = 33286;
 
 }
@@ -506,7 +506,7 @@ if(!$basic_header_footer){
 
                     echo '<td>';
 
-                    echo '<div class="logo_frame">'.( strlen($domain_cover) ? '<a href="'.view_memory(42903,14565).'" class="icon-block logo_cover">'.view_cover($domain_logo).'</a>' : '') . '<a href="'.view_memory(42903,14565).'" class="main__title logo_title">'.get_domain('m__title').'</a>'.'</div>';
+                    echo '<div class="logo_frame">'.( strlen($domain_cover) ? '<a href="'.view__memory(42903,14565).'" class="icon-block logo_cover">'.view__cover($domain_logo).'</a>' : '') . '<a href="'.view__memory(42903,14565).'" class="main__title logo_title">'.get_domain('m__title').'</a>'.'</div>';
 
 
                     //SEARCH
@@ -574,7 +574,7 @@ if(!$basic_header_footer){
 
                     echo '<div class="dropdown inline-block">';
                     echo '<button type="button" class="btn no-side-padding dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">';
-                    echo '<span class="e_cover e_cover_mini menu-cover">' . ( $player_e && strlen($player_e['e__cover']) ? view_cover($player_e['e__cover'], 1) : $e___11035[$menu_type]['m__cover'] ) .'</span>';
+                    echo '<span class="e_cover e_cover_mini menu-cover">' . ( $player_e && strlen($player_e['e__cover']) ? view__cover($player_e['e__cover'], 1) : $e___11035[$menu_type]['m__cover'] ) .'</span>';
                     echo '</button>';
                     echo '<div class="dropdown-menu">';
                     foreach($this->config->item('e___'.$menu_type) as $x__type => $m) {
@@ -595,9 +595,9 @@ if(!$basic_header_footer){
                         if($x__type==26105 && $player_e) {
 
                             //Profile View
-                            $m['m__cover'] = view_cover($player_e['e__cover'], 1);
+                            $m['m__cover'] = view__cover($player_e['e__cover'], 1);
                             $m['m__title'] = '<div class="type_head main__title">'.$player_e['e__title'].'</div><div class="grey type_handle">@'.$player_e['e__handle'].'</div>';
-                            $href = 'href="'.view_memory(42903,42902).$player_e['e__handle'].'" ';
+                            $href = 'href="'.view__memory(42903,42902).$player_e['e__handle'].'" ';
 
                         } elseif($x__type==42246 && $player_e) {
 
@@ -625,7 +625,7 @@ if(!$basic_header_footer){
                         } elseif(in_array($x__type, $this->config->item('n___6287'))){
 
                             //APP
-                            $href = 'href="'.view_app_link($x__type).( $x__type==4269 ? ( isset($_SERVER['REQUEST_URI']) ? '?url='.urlencode($_SERVER['REQUEST_URI']) /* Append current URL for redirects */ : '' ) : '' ).'"';
+                            $href = 'href="'.view__app_link($x__type).( $x__type==4269 ? ( isset($_SERVER['REQUEST_URI']) ? '?url='.urlencode($_SERVER['REQUEST_URI']) /* Append current URL for redirects */ : '' ) : '' ).'"';
 
                         } else {
 
@@ -694,14 +694,14 @@ $player_e = superpower_unlocked();
 if($player_e){
     //For profile editing only:
     echo '<div class="hidden">';
-    echo view_card_e(42287, $player_e, null);
+    echo view__card_e(42287, $player_e, null);
     echo '</div>';
 }
 
 if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
     $dynamic_edit = '';
-    for ($p = 1; $p <= view_memory(6404,42206); $p++) {
+    for ($p = 1; $p <= view__memory(6404,42206); $p++) {
         $dynamic_edit .= '<div class="dynamic_item hidden dynamic_' . $p . '" d__id="" d_x__id="">';
         $dynamic_edit .= '<div class="inner_dynamic">';
         $dynamic_edit .= '<div class="text_content">';
@@ -718,7 +718,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
         <div class="modal fade" id="modal4997" tabindex="-1" role="dialog" aria-labelledby="modal4997Label" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content long_flat">
-                    <form method="POST" action="<?= view_app_link(27196) ?>?focus__id=12274">
+                    <form method="POST" action="<?= view__app_link(27196) ?>?focus__id=12274">
                         <div class="modal-header">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             <button type="submit" class="btn btn-default">APPLY</button>
@@ -878,7 +878,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
             <div class="modal-dialog" role="document">
                 <div class="modal-content long_flat">
 
-                    <form method="POST" action="<?= view_app_link(27196) ?>?focus__id=12273">
+                    <form method="POST" action="<?= view__app_link(27196) ?>?focus__id=12273">
 
                         <div class="modal-header">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -976,7 +976,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
                             <!-- Idea Links -->
                             <div class="dynamic_editing_input idea_link_type hidden hidden_superpower__10939" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view_single_select_form(4486, 4228, false, false); ?></div>
+                                <div class="dynamic_selector"><?= view__single_select_form(4486, 4228, false, false); ?></div>
                             </div>
 
                             <!-- Unlink -->
@@ -1015,12 +1015,12 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                                 'x__type' => 41011, //PINNED FOLLOWER
                                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                             ), array('x__follower'), 0, 0, array('x__weight' => 'ASC', 'x__id' => 'DESC')) as $x_pinned) {
-                                echo '<div class="creator_headline"><span class="icon-block">'.view_cover($x_pinned['e__cover']).'</span><b>'.$x_pinned['e__title'].'</b><span class="grey mini-font mini-padded mini-frame">@'.$x_pinned['e__handle'].'</span></div>';
+                                echo '<div class="creator_headline"><span class="icon-block">'.view__cover($x_pinned['e__cover']).'</span><b>'.$x_pinned['e__title'].'</b><span class="grey mini-font mini-padded mini-frame">@'.$x_pinned['e__handle'].'</span></div>';
                                 //TODO maybe give the option to remove?
                             }
 
                             //Always append current user:
-                            echo '<div class="creator_headline first_headline"><span class="icon-block">'.view_cover($player_e['e__cover']).'</span></div>';
+                            echo '<div class="creator_headline first_headline"><span class="icon-block">'.view__cover($player_e['e__cover']).'</span></div>';
                             ?>
                         </div>
 
@@ -1055,12 +1055,12 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
                             <!-- Idea Privacy -->
                             <div class="dynamic_editing_input" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view_single_select_form(31004, 31005, false, true); ?></div>
+                                <div class="dynamic_selector"><?= view__single_select_form(31004, 31005, false, true); ?></div>
                             </div>
 
                             <!-- Idea Type -->
                             <div class="dynamic_editing_input hidden_superpower__10939" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view_single_select_form(4737, 6677, false, true); ?></div>
+                                <div class="dynamic_selector"><?= view__single_select_form(4737, 6677, false, true); ?></div>
                             </div>
 
                             <div class="doclear">&nbsp;</div>
@@ -1078,7 +1078,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                             <!-- Idea Hashtag -->
                             <div class="dynamic_editing_input single_line hash_group" title="<?= $e___6201[32337]['m__title'] ?>">
                                 <h3 class="mini-font"><span class="icon-block-sm"><?= $e___6201[32337]['m__cover']  ?></span></h3>
-                                <input type="text" class="form-control unsaved_warning save_i__hashtag" placeholder="<?= $e___6201[32337]['m__title'] ?>" maxlength="<?= view_memory(6404,41985) ?>">
+                                <input type="text" class="form-control unsaved_warning save_i__hashtag" placeholder="<?= $e___6201[32337]['m__title'] ?>" maxlength="<?= view__memory(6404,41985) ?>">
                             </div>
 
                             <!-- Link Note -->
@@ -1135,7 +1135,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                         <!-- Source Privacy -->
                         <div class="dynamic_editing_input">
                             <h3 class="mini-font"><?= '<span class="icon-block">'.$e___6206[6177]['m__cover'].'</span>'.$e___6206[6177]['m__title'].': ';  ?></h3>
-                            <div class="dynamic_selector"><?= view_single_select_form(6177, 6181, true, true); ?></div>
+                            <div class="dynamic_selector"><?= view__single_select_form(6177, 6181, true, true); ?></div>
                         </div>
 
                         <!-- SOURCE COVER -->

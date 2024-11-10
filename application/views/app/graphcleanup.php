@@ -23,10 +23,10 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
         'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
     ), 0) as $i_fix){
 
-        $view_sync_links = view_sync_links($i_fix['i__message'], true, $i_fix['i__id']);
+        $view_sync_links = view__sync_links($i_fix['i__message'], true, $i_fix['i__id']);
 
         /*
-        echo '<a href="'.view_memory(42903,33286).$i_fix['i__hashtag'].'">#'.$i_fix['i__hashtag'].'</a><br />';
+        echo '<a href="'.view__memory(42903,33286).$i_fix['i__hashtag'].'">#'.$i_fix['i__hashtag'].'</a><br />';
         echo nl2br(htmlentities($i_fix['i__message'])).'<br />';
 
         if(count($view_sync_links['replace_from'])){
@@ -46,7 +46,7 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
             }
 
             if($starting_message!=$i_fix['i__message']){
-                //view_sync_links($starting_message, true, $i_fix['i__id']);
+                //view__sync_links($starting_message, true, $i_fix['i__id']);
                 $edited++;
             }
 
@@ -116,7 +116,7 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
                 'i__privacy' => 42626,
             ));
         }
-        echo '<div>'.view_i_title($prev_i).' @'.$prev_i['i__privacy'].'</div>';
+        echo '<div>'.view__i_title($prev_i).' @'.$prev_i['i__privacy'].'</div>';
     }
     echo $count;
 

@@ -4,7 +4,7 @@ $e___11035 = $this->config->item('e___11035'); //Encyclopedia
 
 /*
 if(access_level_i($focus_i['i__hashtag'], 0, $focus_i)){
-    echo '<div class="alert alert-default" role="alert"><span class="icon-block-sm">'.$e___11035[33286]['m__cover'].'</span>You can edit this idea in <a href="'.view_memory(42903,33286).$focus_i['i__hashtag'].'"><b><u>'.$e___11035[33286]['m__title'].'</u></b></a></div>';
+    echo '<div class="alert alert-default" role="alert"><span class="icon-block-sm">'.$e___11035[33286]['m__cover'].'</span>You can edit this idea in <a href="'.view__memory(42903,33286).$focus_i['i__hashtag'].'"><b><u>'.$e___11035[33286]['m__title'].'</u></b></a></div>';
 }
 */
 
@@ -40,7 +40,7 @@ if($x__player && $target_i__hashtag!=$focus_i['i__hashtag']){
             ), array('x__next'), 0, 0, array('x__weight' => 'ASC'), '*', null, true);
 
             $breadcrum_content .= '<li class="breadcrumb-item">';
-            $breadcrum_content .= '<a href="'.view_memory(42903,30795).$target_i__hashtag.'/'.( $followings_i['i__hashtag']==$target_i__hashtag ? 'start' : $followings_i['i__hashtag'] ).'"><u>'.view_i_title($followings_i, true).'</u></a>';
+            $breadcrum_content .= '<a href="'.view__memory(42903,30795).$target_i__hashtag.'/'.( $followings_i['i__hashtag']==$target_i__hashtag ? 'start' : $followings_i['i__hashtag'] ).'"><u>'.view__i_title($followings_i, true).'</u></a>';
 
             //Do we have more sub-items in this branch? Must have more than 1 to show, otherwise the 1 will be included in the main branch:
             if(count($query_subset) >= 2){
@@ -58,10 +58,10 @@ if($x__player && $target_i__hashtag!=$focus_i['i__hashtag']){
                         'x__player' => $x__player,
                         'x__previous' => $i_subset['i__id'],
                     )))){
-                        $breadcrum_content .= '<a href="'.view_memory(42903,30795).$target_i__hashtag.'/'.$i_subset['i__hashtag'].'" class="dropdown-item '.( in_array($i_subset['i__id'], $main_branch) ? ' active ' : '' ).'">'.view_i_title($i_subset, true).'</a>';
+                        $breadcrum_content .= '<a href="'.view__memory(42903,30795).$target_i__hashtag.'/'.$i_subset['i__hashtag'].'" class="dropdown-item '.( in_array($i_subset['i__id'], $main_branch) ? ' active ' : '' ).'">'.view__i_title($i_subset, true).'</a>';
                     } else {
                         //Locked
-                        $breadcrum_content .= '<div class="dropdown-item is_locked '.( in_array($i_subset['i__id'], $main_branch) ? ' active ' : '' ).'" title="'.$e___11035[43010]['m__title'].'" data-toggle="tooltip" data-placement="top"><span class="icon-block-sm">'.$e___11035[43010]['m__cover'].'</span>'.view_i_title($i_subset, true).'</div>';
+                        $breadcrum_content .= '<div class="dropdown-item is_locked '.( in_array($i_subset['i__id'], $main_branch) ? ' active ' : '' ).'" title="'.$e___11035[43010]['m__title'].'" data-toggle="tooltip" data-placement="top"><span class="icon-block-sm">'.$e___11035[43010]['m__cover'].'</span>'.view__i_title($i_subset, true).'</div>';
                     }
 
                 }
@@ -108,7 +108,7 @@ if($player_e){
 
 //Focus Discovery:
 echo '<div class="main_item row justify-content">';
-echo view_card_i(43007, $focus_i);
+echo view__card_i(43007, $focus_i);
 echo '</div>';
 
 
@@ -116,7 +116,7 @@ echo '</div>';
 
 //Main Navigation
 if($player_e || isset($_GET['open'])){
-    echo view_i_nav(true, $focus_i);
+    echo view__i_nav(true, $focus_i);
 }
 
 

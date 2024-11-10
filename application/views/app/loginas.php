@@ -8,7 +8,7 @@ if(!count($this->X_model->fetch(array(
     'x__follower' => $focus_e['e__id'],
 )))){
 
-    return view_json(array(
+    return view__json(array(
         'status' => 0,
         'message' => 'Source is not an interested member',
     ));
@@ -20,6 +20,6 @@ if(!count($this->X_model->fetch(array(
     //Assign session & log transaction:
     $this->E_model->activate_session($focus_e);
 
-    js_php_redirect(view_memory(42903,42902).$focus_e['e__handle'], 1597);
+    js_php_redirect(view__memory(42903,42902).$focus_e['e__handle'], 1597);
 
 }

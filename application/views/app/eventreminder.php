@@ -16,7 +16,7 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
             foreach($this->I_model->fetch(array(
                 'i__id' => $x['x__next'],
             )) as $i_from){
-                echo '<h1><a href="'.view_memory(42903,33286).$i_from['i__hashtag'].'"><u>' . view_i_title($i_from, true) . '</u></a></h1>';
+                echo '<h1><a href="'.view__memory(42903,33286).$i_from['i__hashtag'].'"><u>' . view__i_title($i_from, true) . '</u></a></h1>';
             }
 
             if(isset($_GET['submit'])){
@@ -31,7 +31,7 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
                 foreach($this->I_model->fetch(array(
                     'i__id' => $x['x__previous'],
                 )) as $i_go){
-                    echo '<div class="alert alert-success" role="alert"><span class="icon-block"><i class="far fa-check-circle"></i></span>Successfully cancelled event. You can continue to <a href="'.view_memory(42903,33286).$i_go['i__hashtag'].'">'.view_i_title($i_go, true).'</a>.</div>';
+                    echo '<div class="alert alert-success" role="alert"><span class="icon-block"><i class="far fa-check-circle"></i></span>Successfully cancelled event. You can continue to <a href="'.view__memory(42903,33286).$i_go['i__hashtag'].'">'.view__i_title($i_go, true).'</a>.</div>';
                 }
 
             } else {
@@ -108,7 +108,7 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
                     }
 
                     array_push($i_scanned, $i['i__id']);
-                    $title = view_i_title($i, true);
+                    $title = view__i_title($i, true);
                     $total_sent = 0;
 
                     //The time is here! Send event reminders to those who successfully discovered this:
@@ -130,16 +130,16 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
                         }
 
                         $user_website = user_website($x['e__id']);
-                        $subject = 'Reminder: '.$title.' Starts in '.view_time_difference($time_starts);
+                        $subject = 'Reminder: '.$title.' Starts in '.view__time_difference($time_starts);
                         $html_message = 'This is a friendly reminder about an upcoming event you signed up for:'.
                             "\n".
                             "\n".$i['i__message'].
                             "\n".'Start Time: '.date("D M j G:i:s T", $time_starts).
                             ( count($time_ends) && strtotime($time_ends[0]['x__message']) ? "\n".'End Time: '.date("D M j G:i:s T", strtotime($time_ends[0]['x__message'])) : '' ).
-                            "\n".'https://'.get_domain('m__message', $x['e__id'], $user_website).view_memory(42903,33286).$i['i__hashtag'].
+                            "\n".'https://'.get_domain('m__message', $x['e__id'], $user_website).view__memory(42903,33286).$i['i__hashtag'].
                             "\n".
                             "\n".'If you cannot attend this event please inform us by cancelling here:'.
-                            "\n".'https://'.get_domain('m__message', $x['e__id'], $user_website).view_app_link(42216).'?x__id='.$x['x__id'].'&e__handle='.$x['e__handle'].'&e__time='.time().'&e__hash='.view__hash(time().$x['e__handle']);
+                            "\n".'https://'.get_domain('m__message', $x['e__id'], $user_website).view__app_link(42216).'?x__id='.$x['x__id'].'&e__handle='.$x['e__handle'].'&e__time='.time().'&e__hash='.view__hash(time().$x['e__handle']);
 
                         //Send message:
                         $send_dm = $this->X_model->send_dm($x['e__id'], $subject, $html_message, array(
@@ -228,7 +228,7 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
         //Now let's see who will receive this:
         $total_sent = 0;
         $list_settings = list_settings($i['i__hashtag']);
-        $subject_line = view_i_title($i, true);
+        $subject_line = view__i_title($i, true);
 
         foreach ($list_settings['query_string_filtered'] as $x) {
 
@@ -242,7 +242,7 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
                 continue;
             }
 
-            $content_message = view_i__links($i, $x['e__id']);
+            $content_message = view__i__links($i, $x['e__id']);
             if (!(substr($subject_line, 0, 1) == '#' && !substr_count($subject_line, ' '))) {
                 //Let's remove the first line since it's used in the title:
                 $content_message = delete_all_between('<div class="line first_line">', '</div>', $content_message);
@@ -260,8 +260,8 @@ if(isset($_GET['x__id']) && isset($_GET['e__handle']) && isset($_GET['e__hash'])
                     'x__previous' => $down_or['i__id'],
                 ));
                 //Has this user discovered this idea or no?
-                $html_message .= view_i_title($down_or, true) . ":\n";
-                $html_message .= 'https://' . get_domain('m__message', $x['e__id'], $i['x__website']) . view_memory(42903,33286) . $down_or['i__hashtag'] . (!count($discoveries) ? '?e__handle=' . $x['e__handle'] . '&e__time='.time().'&e__hash=' . view__hash(time().$x['e__handle']) : '') . "\n\n";
+                $html_message .= view__i_title($down_or, true) . ":\n";
+                $html_message .= 'https://' . get_domain('m__message', $x['e__id'], $i['x__website']) . view__memory(42903,33286) . $down_or['i__hashtag'] . (!count($discoveries) ? '?e__handle=' . $x['e__handle'] . '&e__time='.time().'&e__hash=' . view__hash(time().$x['e__handle']) : '') . "\n\n";
 
             }
 

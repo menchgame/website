@@ -40,7 +40,7 @@ foreach($this->X_model->fetch(array(
     $list_settings = list_settings($i['i__hashtag']);
     $total_sent = $this->X_model->send_i_mass_dm($list_settings['query_string_filtered'], $i, $i['x__website'], true, $demo_only);
 
-    echo view_i_title($i).' Sent '.$total_sent.' Messages to '.count($list_settings['query_string_filtered']).' Members<hr />';
+    echo view__i_title($i).' Sent '.$total_sent.' Messages to '.count($list_settings['query_string_filtered']).' Members<hr />';
 
     //Mark this as complete?
     if(!$demo_only && (!$end_sending || $end_sending<time())){

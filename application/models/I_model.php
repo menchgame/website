@@ -56,7 +56,7 @@ class I_model extends CI_Model
         ));
 
         //Sync messages:
-        $view_sync_links = view_sync_links($add_fields['i__message'], true, $add_fields['i__id']);
+        $view_sync_links = view__sync_links($add_fields['i__message'], true, $add_fields['i__id']);
 
         //Fetch to return the complete source data:
         $is = $this->I_model->fetch(array(
@@ -210,7 +210,7 @@ class I_model extends CI_Model
 
                     $x__type = 41997; //Idea Access Updated
                     $e___31004 = $this->config->item('e___31004'); //Idea Access
-                    $x__message = view_db_field($key) . ' updated from [' . $e___31004[$before_data[0][$key]]['m__title'] . '] to [' . $e___31004[$value]['m__title'] . ']';
+                    $x__message = view__db_field($key) . ' updated from [' . $e___31004[$before_data[0][$key]]['m__title'] . '] to [' . $e___31004[$value]['m__title'] . ']';
                     $x__following = $value;
                     $x__follower = $before_data[0][$key];
 
@@ -218,7 +218,7 @@ class I_model extends CI_Model
 
                     $x__type = 10648; //Idea updated Status
                     $e___4737 = $this->config->item('e___4737'); //Idea Types
-                    $x__message = view_db_field($key) . ' updated from [' . $e___4737[$before_data[0][$key]]['m__title'] . '] to [' . $e___4737[$value]['m__title'] . ']';
+                    $x__message = view__db_field($key) . ' updated from [' . $e___4737[$before_data[0][$key]]['m__title'] . '] to [' . $e___4737[$value]['m__title'] . ']';
                     $x__following = $value;
                     $x__follower = $before_data[0][$key];
 
@@ -591,14 +591,14 @@ class I_model extends CI_Model
                 'message' => 'Unknown mass action',
             );
 
-        } elseif(in_array($action_e__id , array(12591,12592,27080,27985,27081,27986,27082,27083,27084,27085,27086,27087)) && !view_valid_handle_e($action_command1)){
+        } elseif(in_array($action_e__id , array(12591,12592,27080,27985,27081,27986,27082,27083,27084,27085,27086,27087)) && !view__valid_handle_e($action_command1)){
 
             return array(
                 'status' => 0,
                 'message' => 'Unknown Source. Format must be: @SourceHandle',
             );
 
-        } elseif(in_array($action_e__id , array(12611,12612,27240,28801)) && !view_valid_handle_i($action_command1)){
+        } elseif(in_array($action_e__id , array(12611,12612,27240,28801)) && !view__valid_handle_i($action_command1)){
 
             return array(
                 'status' => 0,
@@ -628,11 +628,11 @@ class I_model extends CI_Model
 
             //Logic here must match items in e_mass_actions config variable
 
-            if(in_array($action_e__id , array(12591,12592,27080,27985,27081,27986,27082,27083,27084,27085,27086,27087)) && view_valid_handle_e($action_command1)){
+            if(in_array($action_e__id , array(12591,12592,27080,27985,27081,27986,27082,27083,27084,27085,27086,27087)) && view__valid_handle_e($action_command1)){
 
                 //Check if it has this item:
                 foreach($this->E_model->fetch(array(
-                    'LOWER(e__handle)' => strtolower(view_valid_handle_e($action_command1)),
+                    'LOWER(e__handle)' => strtolower(view__valid_handle_e($action_command1)),
                 )) as $e){
 
                     $i_has_e = $this->X_model->fetch(array(
@@ -675,10 +675,10 @@ class I_model extends CI_Model
                     }
                 }
 
-            } elseif(in_array($action_e__id , array(12611,12612,27240,28801)) && view_valid_handle_i($action_command1)){
+            } elseif(in_array($action_e__id , array(12611,12612,27240,28801)) && view__valid_handle_i($action_command1)){
 
                 foreach($this->I_model->fetch(array(
-                    'LOWER(i__hashtag)' => strtolower(view_valid_handle_i($action_command1)),
+                    'LOWER(i__hashtag)' => strtolower(view__valid_handle_i($action_command1)),
                 )) as $i){
 
                     if($action_e__id==27240){

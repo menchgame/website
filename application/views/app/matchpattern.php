@@ -5,7 +5,7 @@ if(isset($_GET['i__hashtag'])){
         'LOWER(i__hashtag)' => strtolower($_GET['i__hashtag']),
     )) as $i){
 
-        echo '<h2>' . view_i_title($i) . '</h2>';
+        echo '<h2>' . view__i_title($i) . '</h2>';
 
         $preg_query = $this->X_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC

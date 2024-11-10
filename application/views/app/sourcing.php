@@ -2,8 +2,8 @@
 
 
 //Focus Source:
-echo '<div class="main_item view_12274 row justify-content">';
-echo view_card_e(42287, $focus_e, null);
+echo '<div class="main_item view__12274 row justify-content">';
+echo view__card_e(42287, $focus_e, null);
 echo '</div>';
 
 
@@ -21,7 +21,7 @@ foreach($this->config->item('e___31916') as $x__type => $m) {
         continue;
     }
 
-    $coins_count[$x__type] = view_e_covers($x__type, $focus_e['e__id'], 0, false);
+    $coins_count[$x__type] = view__e_covers($x__type, $focus_e['e__id'], 0, false);
     if(!$coins_count[$x__type] && in_array($x__type, $this->config->item('n___12144'))){ continue; }
 
     $input_content = '';
@@ -34,7 +34,7 @@ foreach($this->config->item('e___31916') as $x__type => $m) {
                     <div class="input-group border">
                         <input type="text"
                                class="form-control form-control-thick algolia_finder algolia__e algolia__ce dotransparent add-input"
-                               maxlength="' . view_memory(6404,6197) . '"
+                               maxlength="' . view__memory(6404,6197) . '"
                                placeholder="Search or Link @sources">
                     </div></div></div></div>';
             $body_content .= '<script> $(document).ready(function () { e_load_finder('.$x__type.'); }); </script>';
@@ -46,7 +46,7 @@ foreach($this->config->item('e___31916') as $x__type => $m) {
                     <div class="input-group border">
                         <input type="text"
                                class="form-control form-control-thick algolia_finder algolia__i algolia__ci dotransparent add-input"
-                               maxlength="' . view_memory(6404,6197) . '"
+                               maxlength="' . view__memory(6404,6197) . '"
                                placeholder="Search or Link #ideas">
                     </div></div></div></div>';
             $body_content .= '<script> $(document).ready(function () { i_load_finder('.$x__type.'); }); </script>';
@@ -59,7 +59,7 @@ foreach($this->config->item('e___31916') as $x__type => $m) {
 
         $body_content .= '<div class="headlinebody pillbody headline_body_'.$x__type.' hidden" read-counter="'.$coins_count[$x__type].'">'.$input_content.'<div class="tab_content"></div></div>';
 
-        echo '<li class="nav-item thepill'.$x__type.'"><a class="nav-link handle_nav_'.$m['m__handle'].'" x__type="'.$x__type.'" href="#'.$m['m__handle'].'" title="'.number_format($coins_count[$x__type], 0).' '.$m['m__title'].'">&nbsp;<span class="icon-block">'.$m['m__cover'].'</span><span class="main__title hideIfEmpty xtypecounter'.$x__type.'">'. view_number($coins_count[$x__type]) . '</span><span class="main__title hidden xtypetitle xtypetitle_'.$x__type.'">&nbsp;'. $m['m__title'] . '&nbsp;</span></a></li>';
+        echo '<li class="nav-item thepill'.$x__type.'"><a class="nav-link handle_nav_'.$m['m__handle'].'" x__type="'.$x__type.'" href="#'.$m['m__handle'].'" title="'.number_format($coins_count[$x__type], 0).' '.$m['m__title'].'">&nbsp;<span class="icon-block">'.$m['m__cover'].'</span><span class="main__title hideIfEmpty xtypecounter'.$x__type.'">'. view__number($coins_count[$x__type]) . '</span><span class="main__title hidden xtypetitle xtypetitle_'.$x__type.'">&nbsp;'. $m['m__title'] . '&nbsp;</span></a></li>';
 
     }
 }

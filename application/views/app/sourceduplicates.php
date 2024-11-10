@@ -32,7 +32,7 @@ if(isset($_GET['e__handle'])){
 
 } elseif(!isset($_GET['search_by_name'])){
 
-    echo '<p>Either enter ?e__id= in URL to search specific source Follower Message Duplicates (Finding duplicate emails for example) or <a href="'.view_app_link(7268).'?search_by_name=1"><b>Find Duplicate Sources by Name</b></a></p>.';
+    echo '<p>Either enter ?e__id= in URL to search specific source Follower Message Duplicates (Finding duplicate emails for example) or <a href="'.view__app_link(7268).'?search_by_name=1"><b>Find Duplicate Sources by Name</b></a></p>.';
 
 } else {
 
@@ -52,7 +52,7 @@ if(isset($_GET['e__handle'])){
                 $prev_title = $en['e__title'];
             }
 
-            echo '<span data-toggle="tooltip" data-placement="right" title="'.$e___6177[$en['e__privacy']]['m__title'].': '.$e___6177[$en['e__privacy']]['m__message'].'">' . $e___6177[$en['e__privacy']]['m__cover'] . '</span> <a href="'.view_memory(42903,42902) . $en['e__handle'] . '"><b>' . $en['e__title'] . '</b></a> @' . $en['e__id'] . '<br />';
+            echo '<span data-toggle="tooltip" data-placement="right" title="'.$e___6177[$en['e__privacy']]['m__title'].': '.$e___6177[$en['e__privacy']]['m__message'].'">' . $e___6177[$en['e__privacy']]['m__cover'] . '</span> <a href="'.view__memory(42903,42902) . $en['e__handle'] . '"><b>' . $en['e__title'] . '</b></a> @' . $en['e__id'] . '<br />';
         }
 
     } else {

@@ -20,7 +20,7 @@ if(!isset($_GET['x__id']) || !intval($_GET['x__id'])){
 
     } elseif(!superpower_unlocked(12701)) {
 
-        echo view_unauthorized_message(12701);
+        echo view__unauthorized_message(12701);
 
     } else {
 
@@ -30,7 +30,7 @@ if(!isset($_GET['x__id']) || !intval($_GET['x__id'])){
         }
 
         //Print on scree:
-        view_json($x[0]);
+        view__json($x[0]);
 
     }
 

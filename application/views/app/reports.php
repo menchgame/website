@@ -24,7 +24,7 @@ foreach($this->config->item('e___42263') as $x__type => $m) {
     $growth = ( $growth >= 0 ? '+' : '-' ).$growth.'%';
 
     //Add to UI:
-    $html_message .= '<div class="line"><span style="display:inline-block; width: 55px; text-align: right;">'.$growth.'</span><span style="width:34px !important; display: inline-block; text-align: center;">'.$m['m__cover'].'</span>'.view_number($unique).' '.$m['m__title'].'</div>';
+    $html_message .= '<div class="line"><span style="display:inline-block; width: 55px; text-align: right;">'.$growth.'</span><span style="width:34px !important; display: inline-block; text-align: center;">'.$m['m__cover'].'</span>'.view__number($unique).' '.$m['m__title'].'</div>';
 
     //Primary Coin?
     if(in_array($x__type, $this->config->item('n___6404'))){
@@ -39,7 +39,7 @@ if($player_http_request && !isset($_GET['email_trigger'])){
 
     echo '<div style="font-weight: bold; padding: 0 0 13px 0;">'.$subject.'</div>';
     echo $html_message;
-    echo '<div style="padding: 21px 0;"><a href="'.view_app_link(12114).'?email_trigger=1">Email Me This Report</a></div>';
+    echo '<div style="padding: 21px 0;"><a href="'.view__app_link(12114).'?email_trigger=1">Email Me This Report</a></div>';
 
 } else {
 

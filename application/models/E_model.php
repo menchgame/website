@@ -15,8 +15,6 @@ class E_model extends CI_Model
     }
 
 
-
-
     function activate_subscription($e__id, $x__website = 0){
 
 
@@ -95,7 +93,7 @@ class E_model extends CI_Model
                 //Create Cookie:
                 $cookie_time = time();
                 $cookie_val = $e['e__id'].'ABCEFG'.$cookie_time.'ABCEFG'.view__hash($e['e__id'].$cookie_time);
-                setcookie('auth_cookie', $cookie_val, ($cookie_time + ( 86400 * view_memory(6404,14031))), "/");
+                setcookie('auth_cookie', $cookie_val, ($cookie_time + ( 86400 * view__memory(6404,14031))), "/");
 
             }
 
@@ -665,12 +663,12 @@ class E_model extends CI_Model
 
                     $x__type = 10654; //Source Privacy Updated
                     $e___6177 = $this->config->item('e___6177'); //Source Privacy
-                    $x__message = view_db_field($key) . ' updated from [' . $e___6177[$before_data[0][$key]]['m__title'] . '] to [' . $e___6177[$value]['m__title'] . ']';
+                    $x__message = view__db_field($key) . ' updated from [' . $e___6177[$before_data[0][$key]]['m__title'] . '] to [' . $e___6177[$value]['m__title'] . ']';
 
                 } elseif($key=='e__cover') {
 
                     $x__type = 10653; //Member Updated Cover
-                    $x__message = view_db_field($key) . ' updated from [' . $before_data[0][$key] . '] to [' . $value . ']';
+                    $x__message = view__db_field($key) . ' updated from [' . $before_data[0][$key] . '] to [' . $value . ']';
 
                 } else {
 
@@ -746,7 +744,7 @@ class E_model extends CI_Model
             'x__follower' => $x__player,
             'x__following IN (' . join(',', $followers) . ')' => null, //Current followers
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
-        ), array(), view_memory(6404,11064)) as $x) {
+        ), array(), view__memory(6404,11064)) as $x) {
 
             if (!$previously_assigned && $x['x__following']==$set_e_down_id) {
                 $previously_assigned = true;
@@ -916,14 +914,14 @@ class E_model extends CI_Model
                 'message' => 'Unknown mass action',
             );
 
-        } elseif(in_array($action_e__id, array(5981, 5982, 11956, 13441)) && !view_valid_handle_e($action_command1)){
+        } elseif(in_array($action_e__id, array(5981, 5982, 11956, 13441)) && !view__valid_handle_e($action_command1)){
 
             return array(
                 'status' => 0,
                 'message' => 'Unknown Source. Format must be: @SourceHandle',
             );
 
-        } elseif(in_array($action_e__id, array(11956)) && !view_valid_handle_e($action_command2)){
+        } elseif(in_array($action_e__id, array(11956)) && !view__valid_handle_e($action_command2)){
 
             return array(
                 'status' => 0,
@@ -970,11 +968,11 @@ class E_model extends CI_Model
 
                 $applied_success++;
 
-            } elseif (in_array($action_e__id, array(5981, 5982, 11956, 13441)) && view_valid_handle_e($action_command1)) { //Add/Delete/Migrate followings source
+            } elseif (in_array($action_e__id, array(5981, 5982, 11956, 13441)) && view__valid_handle_e($action_command1)) { //Add/Delete/Migrate followings source
 
                 //What member searched for:
                 foreach($this->E_model->fetch(array(
-                    'LOWER(e__handle)' => strtolower(view_valid_handle_e($action_command1)),
+                    'LOWER(e__handle)' => strtolower(view__valid_handle_e($action_command1)),
                 )) as $e){
 
                     //See if follower source has searched followings source:
@@ -1023,10 +1021,10 @@ class E_model extends CI_Model
                                 $applied_success++;
                             }
 
-                        } elseif($action_e__id==11956 && view_valid_handle_e($action_command2)) {
+                        } elseif($action_e__id==11956 && view__valid_handle_e($action_command2)) {
 
                             foreach($this->E_model->fetch(array(
-                                'LOWER(e__handle)' => strtolower(view_valid_handle_e($action_command2)),
+                                'LOWER(e__handle)' => strtolower(view__valid_handle_e($action_command2)),
                             )) as $e){
                                 //Add as a followings because it meets the condition
                                 $this->X_model->create(array(

@@ -30,7 +30,7 @@ if($has_idea && isset($_GET['name']) && isset($_GET['email']) && filter_var($_GE
         'domain' => 'mench.auth0.com',
         'client_id' => website_setting(14881),
         'client_secret' => website_setting(14882),
-        'redirect_uri' => 'https://'.get_server('SERVER_NAME').view_app_link(14564),
+        'redirect_uri' => 'https://'.get_server('SERVER_NAME').view__app_link(14564),
         'scope' => 'openid profile email',
     ]);
 
@@ -93,7 +93,7 @@ if($has_idea && isset($_GET['name']) && isset($_GET['email']) && filter_var($_GE
         if($has_idea){
             $redirect_url = new_player_redirect($player_emails[0]['e__id'], $_GET['i__hashtag']);
         } else {
-            $redirect_url = ( $login_i__hashtag ? $login_i__hashtag.'/'.view_memory(6404,4235) : ( $redirect_url ? $redirect_url : home_url() ));
+            $redirect_url = ( $login_i__hashtag ? $login_i__hashtag.'/'.view__memory(6404,4235) : ( $redirect_url ? $redirect_url : home_url() ));
         }
 
         if(count($player_emails)){
@@ -104,7 +104,7 @@ if($has_idea && isset($_GET['name']) && isset($_GET['email']) && filter_var($_GE
 
         } else {
 
-            js_php_redirect(view_app_link(14564).view_memory(42903,33286).$login_i__hashtag.'&name='.urlencode($userInfo['name']).'&email='.urlencode($userInfo['email']).'&image_url='.urlencode($userInfo['picture']).'&url='.urlencode($redirect_url), 13);
+            js_php_redirect(view__app_link(14564).view__memory(42903,33286).$login_i__hashtag.'&name='.urlencode($userInfo['name']).'&email='.urlencode($userInfo['email']).'&image_url='.urlencode($userInfo['picture']).'&url='.urlencode($redirect_url), 13);
 
         }
 
@@ -121,7 +121,7 @@ if($has_idea && isset($_GET['name']) && isset($_GET['email']) && filter_var($_GE
             ));
         }
 
-        js_php_redirect(( $login_i__hashtag ? view_memory(42903,33286).$login_i__hashtag : ( $redirect_url ? $redirect_url : home_url() ) ), 13);
+        js_php_redirect(( $login_i__hashtag ? view__memory(42903,33286).$login_i__hashtag : ( $redirect_url ? $redirect_url : home_url() ) ), 13);
 
     }
 

@@ -31,14 +31,14 @@ foreach($this->X_model->fetch(array(
 }
 
 if(count($primary_i)){
-    echo ' <script> $(document).ready(function () { show_more('.$primary_i['i__id'].'); $(document).prop(\'title\', \''.get_domain('m__title').' | '.str_replace('\'','\\\'',view_i_title($primary_i, true)).'\'); }); </script> ';
+    echo ' <script> $(document).ready(function () { show_more('.$primary_i['i__id'].'); $(document).prop(\'title\', \''.get_domain('m__title').' | '.str_replace('\'','\\\'',view__i_title($primary_i, true)).'\'); }); </script> ';
 }
 
-echo '<h1 class="maxwidth" style="margin: '.( $expanded_space ? '144px auto 377px' : '89px auto 233px' ).' !important;">' . view_i_title($primary_i, true) . '</h1>';
+echo '<h1 class="maxwidth" style="margin: '.( $expanded_space ? '144px auto 377px' : '89px auto 233px' ).' !important;">' . view__i_title($primary_i, true) . '</h1>';
 
 
 //Did we find any?
-$messages = '<div class="center-frame hide-subline maxwidth hideIfEmpty remove_first_line">' . view_i__links($primary_i) . '</div>';
+$messages = '<div class="center-frame hide-subline maxwidth hideIfEmpty remove_first_line">' . view__i__links($primary_i) . '</div>';
 
 
 
@@ -83,7 +83,7 @@ foreach($this->E_model->scissor_e($website_id, 14903) as $e_item) {
             $info_item .= '<div class="info_box_cover">'.'<div class="center-cropped" style="background-image: url(\''.$info_element['e__cover'].'\');"></div>'.'</div>';
             $info_item .= '<div class="info_box_title main__title">'.$info_element['e__title'].'</div>';
         } else {
-            $info_item .= '<div class="info_box_cover">'.view_cover($info_element['e__cover']).'</div>';
+            $info_item .= '<div class="info_box_cover">'.view__cover($info_element['e__cover']).'</div>';
             $info_item .= '<div class="info_box_title main__title">'.$info_element['e__title'].'</div>';
         }
         if(strlen($info_element['x__message'])){
@@ -118,7 +118,7 @@ if($messages){
 //List Relevant Ideas in order:
 $secondary_i = '';
 foreach($secondary_i_list as $ref_i){
-    $secondary_i .= view_card_i(14565,  $ref_i);
+    $secondary_i .= view__card_i(14565,  $ref_i);
 }
 if(strlen($secondary_i)){
     echo '<div class="row justify-content flip-content">';
@@ -142,7 +142,7 @@ foreach($this->config->item('e___14036') as $e__id => $m){
     ), array(), 0, 0) as $social_link){
 
         //Determine link type:
-        if(filter_var($social_link['x__message'], FILTER_VALIDATE_URL) && view_url_clean($social_link['x__message'])!=view_url_clean($e___14870[$website_id]['m__message'])){
+        if(filter_var($social_link['x__message'], FILTER_VALIDATE_URL) && view__url_clean($social_link['x__message'])!=view__url_clean($e___14870[$website_id]['m__message'])){
             //We made sure not the current website:
             $social_url = $social_link['x__message'];
         } elseif(filter_var($social_link['x__message'], FILTER_VALIDATE_EMAIL)){

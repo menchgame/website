@@ -24,7 +24,7 @@ foreach($this->X_model->fetch(array(
         continue;
     }
 
-    echo view_card_e(6287, $app);
+    echo view__card_e(6287, $app);
     array_push($already_loaded, intval($app['e__id']));
 
 }
@@ -55,6 +55,6 @@ foreach($this->X_model->fetch(array(
         }
     }
 
-    echo view_card_e(6287, $app);
+    echo view__card_e(6287, $app);
 }
 echo '</div>';
