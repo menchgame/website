@@ -26,13 +26,13 @@ echo '<div class="center miscstats hideIfEmpty"></div>';
 
 foreach($this->config->item('e___33292') as $e__id1 => $m1) {
 
-    echo '<h3 class="center centerh advanced-stats hidden main__title" title="@'.$m1['m__handle'].'"><div class="large-cover">'.$m1['m__cover'].'</div><b class="card_count_'.$e__id1.'"><i class="fas fa-yin-yang fa-spin"></i></b> '.$m1['m__title'].':</h3>';
+    echo '<h3 class="center centerh main__title" title="@'.$m1['m__handle'].'"><div class="large-cover">'.$m1['m__cover'].'</div><b class="card_count_'.$e__id1.'"><i class="fas fa-yin-yang fa-spin"></i></b> '.$m1['m__title'].':</h3>';
 
     echo '<div class="row justify-content list-covers">';
     
     foreach($this->config->item('e___'.$e__id1) as $e__id2 => $m2) {
 
-        echo '<div class="card_cover no-padding col-6 '.( !in_array($e__id2, $this->config->item('n___14874')) ? ' advanced-stats hidden ' : '' ).'">';
+        echo '<div class="card_cover no-padding col-6">';
         echo '<div class="card_frame dropdown_d'.$e__id1.' dropdown_'.$e__id2.'" e__id="'.$e__id2.'">';
 
         echo '<div title="'.$m2['m__message'].'">';
@@ -124,7 +124,7 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
 
     $(document).ready(function () {
 
-        $("h1").append('<a class="icon-block" href="javascript:void(0);" onclick="$(\'.advanced-stats\').toggleClass(\'hidden\');"><i class="far fa-search-plus advanced-stats" style="font-size: 0.34em !important;"></i><i class="far fa-search-minus advanced-stats hidden" style="font-size: 0.34em !important;"></i></a>').append('<a class="icon-block-sm advanced-stats hidden" href="javascript:void(0);" onclick="$(\'.points_frame\').toggleClass(\'hidden\');"><span class="points_frame"><?= $e___11035[42225]['m__cover'] ?></span></a>');
+        $("h1").append('<a class="icon-block-sm" href="javascript:void(0);" onclick="$(\'.points_frame\').toggleClass(\'hidden\');"><span class="points_frame"><?= $e___11035[42225]['m__cover'] ?></span></a>');
 
         //Load initial stats:
         x__refresh_gameplay();

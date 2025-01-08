@@ -209,7 +209,7 @@ function format_percentage($percent){
 function new_player_redirect($e__id, $sign_i__hashtag){
     //Is there a redirect app?
     if(strlen($sign_i__hashtag)) {
-        return view___memory(42903,33286) . $sign_i__hashtag;
+        return view__memory(42903,33286) . $sign_i__hashtag;
     } elseif(isset($_GET['url'])) {
         return $_GET['url'];
     } else {
@@ -265,7 +265,7 @@ function reset_cache($x__player){
     foreach($CI->X_model->fetch(array(
         'x__type' => 14599, //Cache App
         'x__following IN (' . join(',', $CI->config->item('n___14599')) . ')' => null, //Cache Apps
-        'x__time >' => date("Y-m-d H:i:s", (time() - view___memory(6404,14599))),
+        'x__time >' => date("Y-m-d H:i:s", (time() - view__memory(6404,14599))),
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
     )) as $delete_cahce){
         //Delete email:
