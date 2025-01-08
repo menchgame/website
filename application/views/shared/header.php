@@ -1026,7 +1026,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
                         <!-- Idea Message -->
                         <div class="dynamic_editing_input" style="margin: 0 !important;">
-                            <textarea class="form-control nodte-textarea algolia_finder new-note editing-mode unsaved_warning algolia__e algolia__i save_i__message" placeholder="<?= ( strlen($e___6201[4736]['m__message']) ? $e___6201[4736]['m__message'] : $e___6201[4736]['m__title'].'...' ) ?>" style="margin:0; width:100%; background-color: #FFFFFF !important;"></textarea>
+                            <textarea class="form-control note-textarea algolia_finder new-note editing-mode unsaved_warning algolia__e algolia__i save_i__message" placeholder="<?= ( strlen($e___6201[4736]['m__message']) ? $e___6201[4736]['m__message'] : $e___6201[4736]['m__title'].'...' ) ?>" style="margin:0; width:100%; background-color: #FFFFFF !important;"></textarea>
                             <div class="media_outer_frame hideIfEmpty" style="margin-left: 40px;">
                                 <div id="media_editor_frame" class="media_frame hideIfEmpty"></div>
                                 <div class="doclear">&nbsp;</div>
@@ -1045,7 +1045,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                                 if($e__id==44169){ //Idea Reference
 
                                     echo '<div class="dynamic_editing_input no_padded">
-                                        <a class="add_hashtag_44169 icon-block" href="#" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                        <a class="add_hashtag_44169 icon-block" href="javascript:void(0)" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
                                     </div>';
 
                                 } elseif($e__id==4737){ //Source Reference
@@ -1063,7 +1063,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                                 } elseif($e__id==13572){ //Upload File
 
                                     echo '<div class="dynamic_editing_input no_padded">
-                                        <a class="uploader_13572 icon-block" href="#" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                        <a class="uploader_13572 icon-block" href="javascript:void(0)" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
                                     </div>';
 
                                 } elseif($e__id==44170){ //ADD EMOJI
