@@ -490,7 +490,7 @@ function verify_cookie(){
         'e__id' => $cookie_parts[0],
     ));
 
-    if(count($es) && $cookie_parts[2]==view___hash($cookie_parts[0].$cookie_parts[1])){
+    if(count($es) && $cookie_parts[2]==view__hash($cookie_parts[0].$cookie_parts[1])){
 
         //Assign session & log transaction:
         $CI->E_model->activate_session($es[0], false, true);
@@ -2762,7 +2762,7 @@ function idea_creation_time($i__id){
  * */
 
 
-function view___db_field($field_name){
+function view__db_field($field_name){
 
     //Takes a database field name and returns a human-friendly version
     return ucwords(str_replace('i__', '', str_replace('e__', '', str_replace('x__', '', $field_name))));

@@ -287,7 +287,7 @@ class CI_Xmlrpcs extends CI_Xmlrpc {
 
 			if ($this->debug === TRUE)
 			{
-				echo "<pre>---PLIST---\n".$plist."\n---PLIST END---\n\n</pre>";
+				echo "<pre>---PLIST---\n".$plist."\n___PLIST END---\n\n</pre>";
 			}
 
 			$r = $this->_execute($m);

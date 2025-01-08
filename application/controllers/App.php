@@ -849,7 +849,7 @@ class App extends CI_Controller
                     break; //Nothing more to process
                 }
 
-                $input_parts = explode('____', $_POST['save_dynamic_' . $p], 3);
+                $input_parts = explode('EXPLODETERMABC', $_POST['save_dynamic_' . $p], 3);
                 $d_x__id = $input_parts[0];
                 $dynamic_e__id = $input_parts[1];
                 $dynamic_value = trim($input_parts[2]);
@@ -2046,7 +2046,7 @@ class App extends CI_Controller
                 break; //Nothing more to process
             }
 
-            $input_parts = explode('____', $_POST['save_dynamic_' . $p], 3);
+            $input_parts = explode('EXPLODETERMABC', $_POST['save_dynamic_' . $p], 3);
             $d_x__id = $input_parts[0];
             $dynamic_e__id = $input_parts[1];
             $dynamic_value = trim($input_parts[2]);
