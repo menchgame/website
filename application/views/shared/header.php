@@ -1054,7 +1054,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                                         <div class="dynamic_selector">'.view__single_select_form(4737, 6677).'</div>
                                     </div>';
 
-                                } elseif($e__id==31005){ //Idea Privacy
+                                } elseif($e__id==31004){ //Idea Privacy
 
                                     echo '<div class="dynamic_editing_input" style="margin: 0 !important;">
                                         <div class="dynamic_selector">'.view__single_select_form(31004, 31005).'</div>
