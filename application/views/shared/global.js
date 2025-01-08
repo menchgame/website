@@ -1067,6 +1067,7 @@ $(document).ready(function () {
 
     $(".add_hashtag_44169").click(function (e) {
         insertText($(".save_i__message"), '#');
+        console.log('added');
     });
 
     activate_popover();
