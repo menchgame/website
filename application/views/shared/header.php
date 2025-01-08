@@ -976,7 +976,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
                             <!-- Idea Links -->
                             <div class="dynamic_editing_input idea_link_type hidden hidden_superpower__10939" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view__single_select_form(4486, 4228, false, false); ?></div>
+                                <div class="dynamic_selector"><?= view__single_select_form(4486, 4228); ?></div>
                             </div>
 
                             <!-- Unlink -->
@@ -1051,19 +1051,19 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                                 } elseif($e__id==4737){ //Source Reference
 
                                     echo '<div class="dynamic_editing_input " style="margin: 0 !important;">
-                                        <div class="dynamic_selector">'.view__single_select_form(4737, 6677, false, false).'</div>
+                                        <div class="dynamic_selector">'.view__single_select_form(4737, 6677).'</div>
                                     </div>';
 
                                 } elseif($e__id==31005){ //Idea Privacy
 
                                     echo '<div class="dynamic_editing_input" style="margin: 0 !important;">
-                                        <div class="dynamic_selector">'.view__single_select_form(31004, 31005, false, false).'</div>
+                                        <div class="dynamic_selector">'.view__single_select_form(31004, 31005).'</div>
                                     </div>';
 
                                 } elseif($e__id==13572){ //Upload File
 
                                     echo '<div class="dynamic_editing_input no_padded">
-                                        <a class="uploader_13572 icon-block" href="javascript:void(0);" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                        <a class="uploader_13572 icon-block" href="#" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
                                     </div>';
 
                                 } elseif($e__id==44170){ //ADD EMOJI
