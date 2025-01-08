@@ -6,7 +6,7 @@ if(!isset($_GET['i__hashtag'])){
 
 //Sheet
 $e___6287 = $this->config->item('e___6287'); //APP
-$e___4737 = $this->config->item('e___4737'); //Idea Types
+$e___4737 = $this->config->item('e___4737'); //Source References
 $e___6177 = $this->config->item('e___6177'); //Source Privacy
 $e___31004 = $this->config->item('e___31004'); //Idea Status
 

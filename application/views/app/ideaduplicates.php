@@ -10,7 +10,6 @@ $duplicates = $q->result_array();
 if(count($duplicates) > 0){
 
     $prev_title = null;
-    $e___4737 = $this->config->item('e___4737'); //Idea Status
 
     foreach($duplicates as $in) {
         if ($prev_title != $in['i__message']) {
@@ -18,7 +17,7 @@ if(count($duplicates) > 0){
             $prev_title = $in['i__message'];
         }
 
-        echo '<div><span data-toggle="tooltip" data-placement="right" title="'.$e___4737[$in['i__type']]['m__title'].': '.$e___4737[$in['i__type']]['m__message'].'">' . $e___4737[$in['i__type']]['m__cover'] . '</span> <a href="' . view__memory(42903,33286). $in['i__hashtag'] . '"><b>' . $in['i__message'] . '</b></a> #' . $in['i__id'] . '</div>';
+        echo '<div><a href="' . view__memory(42903,33286). $in['i__hashtag'] . '"><b>' . $in['i__message'] . '</b></a> #' . $in['i__id'] . '</div>';
     }
 
 } else {

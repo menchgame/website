@@ -134,6 +134,8 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
             $('.card_subcat_'+$(this).attr('e__id')).toggleClass('hidden');
         });
 
+
+
         //Update stats live:
         $(function () {
             setInterval(x__refresh_gameplay, js_e___6404[33292]['m__message']);

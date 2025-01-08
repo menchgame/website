@@ -526,7 +526,7 @@ class App extends CI_Controller
         }
 
 
-        //Fetch dynamic data based on idea type:
+        //Fetch dynamic data based on Source Reference:
         $return_inputs = array();
         $e___4737 = $this->config->item('e___4737'); // Idea Status
         $e___42179 = $this->config->item('e___42179'); //Dynamic Input Fields
@@ -708,7 +708,7 @@ class App extends CI_Controller
         } elseif (!isset($_POST['save_i__type']) || !in_array($_POST['save_i__type'], $this->config->item('n___4737'))) {
             return view__json(array(
                 'status' => 0,
-                'message' => 'Invalid idea Type',
+                'message' => 'Invalid Source Reference',
             ));
         } elseif (!isset($_POST['save_i__privacy']) || !in_array($_POST['save_i__privacy'], $this->config->item('n___31004'))) {
             return view__json(array(
@@ -1066,7 +1066,7 @@ class App extends CI_Controller
                 } elseif(in_array($_POST['x__type'], $this->config->item('n___11020'))){
 
                     //IDEAS
-                    $e___4737 = $this->config->item('e___4737'); //Idea Types
+                    $e___4737 = $this->config->item('e___4737'); //Source References
                     $e___4593 = $this->config->item('e___4593'); //Transaction Types
                     $current_i__hashtag = ( substr($_POST['first_segment'], 0, 1)=='~' ? substr($_POST['first_segment'], 1) : false );
 
@@ -1198,7 +1198,7 @@ class App extends CI_Controller
 
                     //IDEAS
                     $current_i__hashtag = ( substr($_POST['first_segment'], 0, 1)=='~' ? substr($_POST['first_segment'], 1) : false );
-                    $e___4737 = $this->config->item('e___4737'); //Idea Types
+                    $e___4737 = $this->config->item('e___4737'); //Source References
                     $e___4593 = $this->config->item('e___4593'); //Transaction Types
                     $target_disccovery = target_disccovery();
 
@@ -1522,7 +1522,7 @@ class App extends CI_Controller
         $x_i = array();
 
         if($_POST['link_i__id'] > 0){
-            //Fetch transaction idea to determine idea type:
+            //Fetch transaction idea to determine Source Reference:
             $x_i = $this->I_model->fetch(array(
                 'i__id' => intval($_POST['link_i__id']),
                 'i__access IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
@@ -1744,7 +1744,7 @@ class App extends CI_Controller
         }
 
 
-        //Fetch dynamic data based on idea type:
+        //Fetch dynamic data based on Source Reference:
         $order_42145 = sort_by(42145);
         $scanned_sources = array();
         $return_inputs = array();

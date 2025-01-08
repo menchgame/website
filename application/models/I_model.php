@@ -19,7 +19,7 @@ class I_model extends CI_Model
     {
 
         if(!isset($add_fields['i__type']) || !in_array($add_fields['i__type'], $this->config->item('n___4737'))){
-            //Statement is the default idea type:
+            //Statement is the default Source Reference:
             $add_fields['i__type'] = 6677;
         }
 
@@ -217,7 +217,7 @@ class I_model extends CI_Model
                 } elseif($key=='i__type'){
 
                     $x__type = 10648; //Idea updated Status
-                    $e___4737 = $this->config->item('e___4737'); //Idea Types
+                    $e___4737 = $this->config->item('e___4737'); //Source References
                     $x__message = view__db_field($key) . ' updated from [' . $e___4737[$before_data[0][$key]]['m__title'] . '] to [' . $e___4737[$value]['m__title'] . ']';
                     $x__following = $value;
                     $x__follower = $before_data[0][$key];

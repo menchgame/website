@@ -991,7 +991,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
 
                         </div>
-                        <button type="button" class="btn btn-default i_editor_save post_button" onclick="i_editor_save()">SAVE</button>
+                        <button type="button" class="btn btn-default i_editor_save post_button" onclick="i_editor_save()">POST</button>
                     </div>
 
                     <div class="modal-body">
@@ -1037,34 +1037,48 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                             <div class="idea_list_previous hideIfEmpty"></div>
                         </div>
 
+
                         <div class="inner_message left_padded">
+                            <?php
+                            foreach($this->config->item('e___44168') as $e__id => $m){
 
-                            <!-- EMOJI -->
-                            <div class="dynamic_editing_input no_padded float_right">
-                                <div class="dropdown emoji_selector">
-                                    <button type="button" class="btn no-left-padding no-right-padding icon-block" id="emoji_i" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-face-smile"></i></button>
-                                    <div class="dropdown-menu emoji_i" aria-labelledby="emoji_i"></div>
-                                </div>
-                            </div>
+                                if($e__id==44169){ //Idea Reference
 
-                            <!-- Upload -->
-                            <div class="dynamic_editing_input no_padded float_right">
-                                <a class="uploader_13572 icon-block" href="javascript:void(0);" title="<?= $e___11035[13572]['m__title'] ?>"><?= $e___11035[13572]['m__cover'] ?></a>
-                            </div>
+                                    echo '<div class="dynamic_editing_input no_padded">
+                                        <a class="add_hashtag_44169 icon-block" href="javascript:void(0);" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                    </div>';
 
+                                } elseif($e__id==4737){ //Source Reference
 
-                            <!-- Idea Privacy -->
-                            <div class="dynamic_editing_input" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view__single_select_form(31004, 31005, false, true); ?></div>
-                            </div>
+                                    echo '<div class="dynamic_editing_input " style="margin: 0 !important;">
+                                        <div class="dynamic_selector">'.view__single_select_form(4737, 6677, false, false).'</div>
+                                    </div>';
 
-                            <!-- Idea Type -->
-                            <div class="dynamic_editing_input hidden_superpower__10939" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view__single_select_form(4737, 6677, false, true); ?></div>
-                            </div>
+                                } elseif($e__id==31005){ //Idea Privacy
 
+                                    echo '<div class="dynamic_editing_input" style="margin: 0 !important;">
+                                        <div class="dynamic_selector">'.view__single_select_form(31004, 31005, false, false).'</div>
+                                    </div>';
+
+                                } elseif($e__id==13572){ //Upload File
+
+                                    echo '<div class="dynamic_editing_input no_padded">
+                                        <a class="uploader_13572 icon-block" href="javascript:void(0);" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                    </div>';
+
+                                } elseif($e__id==44170){ //ADD EMOJI
+
+                                    echo '<div class="dynamic_editing_input no_padded">
+                                        <div class="dropdown emoji_selector">
+                                            <button type="button" class="btn no-left-padding no-right-padding icon-block" id="emoji_i" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="'.$m['m__title'].'">'.$m['m__cover'].'</button>
+                                            <div class="dropdown-menu emoji_i" aria-labelledby="emoji_i"></div>
+                                        </div>
+                                    </div>';
+
+                                }
+                            }
+                            ?>
                             <div class="doclear">&nbsp;</div>
-
                         </div>
 
                         <div class="hidden_superpower__10939 left_padded">

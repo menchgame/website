@@ -1065,6 +1065,10 @@ $(document).ready(function () {
         x_set_text(this);
     });
 
+    $(".add_hashtag_44169").click(function (e) {
+        insertText($(".save_i__message"), '#');
+    });
+
     activate_popover();
 
     activate_cover_watch();
@@ -1618,7 +1622,7 @@ function i_editor_load(i__id = 0, x__id = 0, link_x__type = 0, next_i__id = 0, p
         //Idea Privacy:
         update_form_select(31004, current_i__privacy, 1, true);
 
-        //Idea Type:
+        //Source Reference:
         update_form_select(4737, current_i__type, 1, true);
 
         //Activate Modal:
@@ -1833,7 +1837,7 @@ function i_editor_save(){
             var new_handle = modify_data['save_i__hashtag'];
             var on_focus__idea = parseInt($('#focus__node').val())==12273 && modify_data['save_i__id']==parseInt($('#focus__id').val());
 
-            //Update Idea Type:
+            //Update Source Reference:
             $('.s__12273_'+modify_data['save_i__id']).attr('i__type', modify_data['save_i__type']);
             ui_instant_select(4737, modify_data['save_i__type'], modify_data['save_i__id'], modify_data['save_x__id'], false);
 
@@ -3046,10 +3050,12 @@ function update_form_select(element_id, new_e__id, initial_loading, show_title){
     }
     if(!initial_loading){
         if(element_id==4737){
-            //Changing idea type would re-load dynamic fields based on type:
+            //Changing Source Reference would re-load dynamic fields based on type:
             has_unsaved_changes = true;
             console.log('Reloading: '+element_id+' with value: '+' NEW ID '+new_e__id+' / '+$('#modal31911 .created_i__id').val());
             load_i_dynamic($('#modal31911 .created_i__id').val(), 0, new_e__id, false);
+            //Add handle to text:
+            insertText($(".save_i__message"), '@'+new_e__id);
         }
     }
 }
@@ -3077,7 +3083,7 @@ function ui_instant_select(element_id, new_e__id, o__id, x__id, show_full_name){
         main_object_type = 12274;
         main_object_update = 'e__privacy';
     } else if(element_id==4737){
-        //Idea Type:
+        //Source Reference:
         $('.s__12273_'+o__id).attr('i__type', new_e__id);
         main_object_type = 12273;
         main_object_update = 'i__type';

@@ -692,7 +692,7 @@ class X_model extends CI_Model
 
         } elseif($element_id==4737){
 
-            //IDEA TYPE
+            //Source Reference
             $status = $this->I_model->update($o__id, array(
                 'i__type' => $new_e__id,
             ), true, $player_e['e__id']);

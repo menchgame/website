@@ -2220,8 +2220,8 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
 
         //Privacy level:
         $is_public = in_array($i['i__privacy'], $CI->config->item('n___42952'));
-        $is_read_only = $i['i__privacy']==42929;
-        return ( $is_public ? ( $is_read_only ? 1 : 2 ) : 0 );
+        //$is_read_only = $i['i__privacy']==42929; // returned 1, this is retired
+        return ( $is_public ? 2 : 0 );
     }
 
 
@@ -2880,7 +2880,7 @@ function view__card_x($x, $has_x__reference = false)
 
             //IDEA
             foreach($CI->I_model->fetch(array('i__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_i){
-                $ui .= '<div class="simple-line"><a href="'.view__memory(42903,33286).$focus_i['i__hashtag'].'" data-toggle="tooltip" data-placement="top" title="'.$m['m__title'].'" class="main__title"><span class="icon-block">'.$m['m__cover']. '</span><span class="icon-block">'.view__cache(4737 /* Idea Type */, $focus_i['i__type'], true, 'right', $focus_i['i__id']).'</span>'.view__i_title($focus_i).'</a></div>';
+                $ui .= '<div class="simple-line"><a href="'.view__memory(42903,33286).$focus_i['i__hashtag'].'" data-toggle="tooltip" data-placement="top" title="'.$m['m__title'].'" class="main__title"><span class="icon-block">'.$m['m__cover']. '</span><span class="icon-block">'.view__cache(4737 /* Source Reference */, $focus_i['i__type'], true, 'right', $focus_i['i__id']).'</span>'.view__i_title($focus_i).'</a></div>';
             }
 
 
@@ -3558,7 +3558,6 @@ function view__instant_select($focus__id, $down_e__id = 0, $right_i__id = 0){
 
     }
 
-    //view__single_select_instant(4737, 0, true, true)
     $unselected_count = 0;
     $overflow_unselected_limit = 5;
     $has_selected = count($already_selected);
@@ -4805,7 +4804,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
 
         } elseif($x__type_target_bar==4737 && !$discovery_mode && $superpower_10939){
 
-            //Idea Type
+            //Source Reference
             $bottom_bar_ui .= '<span>';
             $bottom_bar_ui .= view__single_select_instant(4737, $i['i__type'], $access_level_i, false, $i['i__id'], $x__id);
             $bottom_bar_ui .= '</span>';
