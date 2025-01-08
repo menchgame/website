@@ -147,6 +147,11 @@ if($website_id==39599){
             event.stopPropagation();
         });
 
+        $(".add_hashtag_44169").click(function (e) {
+            console.log('added2');
+            insertText($(".save_i__message"), '#');
+        });
+
     </script>
     <link href="https://unpkg.com/cloudinary-video-player@1.10.5/dist/cld-video-player.min.css" rel="stylesheet">
     <script src="https://unpkg.com/cloudinary-video-player@1.10.5/dist/cld-video-player.min.js" type="text/javascript"></script>

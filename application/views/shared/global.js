@@ -1065,10 +1065,7 @@ $(document).ready(function () {
         x_set_text(this);
     });
 
-    $(".add_hashtag_44169").click(function (e) {
-        console.log('added2');
-        insertText($(".save_i__message"), '#');
-    });
+
 
     activate_popover();
 
