@@ -4,6 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class App extends CI_Controller
 {
 
+    public $player_e;
+
     function __construct()
     {
         
@@ -12,6 +14,9 @@ class App extends CI_Controller
         $this->output->enable_profiler(FALSE);
 
         auto_login_player(false);
+
+        $this->player_e = superpower_unlocked();
+
     }
 
     function index(){
