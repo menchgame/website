@@ -1549,7 +1549,7 @@ function i_editor_load(i__id = 0, x__id = 0, link_x__type = 0, next_i__id = 0, p
 
         $('.idea_link_unlink, .idea_link_type').removeClass('hidden');
         if(!passon_i__id){
-            update_form_select(4486, link_x__type, 1, true);
+            update_form_select(4486, link_x__type, 1, false);
         }
     }
 
@@ -1621,10 +1621,10 @@ function i_editor_load(i__id = 0, x__id = 0, link_x__type = 0, next_i__id = 0, p
     if(!passon_i__id){
 
         //Idea Privacy:
-        update_form_select(31004, current_i__privacy, 1, true);
+        update_form_select(31004, current_i__privacy, 1, false);
 
         //Source Reference:
-        update_form_select(4737, current_i__type, 1, true);
+        update_form_select(4737, current_i__type, 1, false);
 
         //Activate Modal:
         $('#modal31911').modal('show');
