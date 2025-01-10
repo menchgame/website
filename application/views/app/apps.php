@@ -34,6 +34,7 @@ echo '</div>';
 
 
 //List Regular Apps:
+echo '<div class="row">';
 foreach($this->X_model->fetch(array(
     'x__following' => 6287, //Featured Apps
     'x__follower NOT IN (' . join(',', $already_loaded) . ')' => null, //SOURCE LINKS
@@ -55,3 +56,4 @@ foreach($this->X_model->fetch(array(
 
     echo view__card_e(6287, $app);
 }
+echo '</div>';
