@@ -75,7 +75,7 @@ echo '<th style="text-align: left;" id="th_total">Total Interactions</th>';
 echo '<th style="text-align: left;" id="th_perfect">%</th>';
 
 //Points Total
-echo '<th style="text-align: left;" id="th_points">'.$e___11035[42225]['m__cover'].' '.$e___11035[42225]['m__title'].'</th>';
+echo '<th style="text-align: left;" id="th_points"></th>';
 
 echo '</tr>';
 

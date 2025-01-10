@@ -3,7 +3,6 @@
 $e__handle = ( isset($_GET['e__handle']) ? $_GET['e__handle'] : null );
 $i__hashtag = ( !$e__handle && isset($_GET['i__hashtag']) ? $_GET['i__hashtag'] : null );
 $e___11035 = $this->config->item('e___11035'); //Encyclopedia
-$e___42225 = $this->config->item('e___42225'); //MENCH Points
 $e___42263 = $this->config->item('e___42263'); //Link Groups
 
 
@@ -36,7 +35,7 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
         echo '<div class="card_frame dropdown_d'.$e__id1.' dropdown_'.$e__id2.'" e__id="'.$e__id2.'">';
 
         echo '<div title="'.$m2['m__message'].'">';
-        echo '<div class="large_cover">'.$m2['m__cover'].'</div>';
+        //echo '<div class="large_cover">'.$m2['m__cover'].'</div>';
         echo '<div class="main__title large_title"><b class="card_count_'.$e__id2.'"><i class="fas fa-yin-yang fa-spin"></i></b></div>';
         echo '<div class="main__title large_title" title="@'.$m2['m__handle'].'">'.$m2['m__title'].'</div>';
         echo '</div>';
@@ -78,7 +77,7 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
             }
 
             echo '<tr class="mobile-shrink" title="'.$m3['m__message'].'" data-toggle="tooltip" data-placement="top">';
-            echo '<td style="text-align: left;" title="@'.$m3['m__handle'].'"><a href="'.view__memory(42903,42902).$m3['m__handle'].'"><span class="icon-block-sm">'.$m3['m__cover'].'</span>'.$m3['m__title'].'</a><span class="last-right-col"><b class="card_count_'.$e__id3.'"><i class="fas fa-yin-yang fa-spin"></i></b></span><span class="second-right-col points_frame hidden">'.( isset($e___42225[$e__id3]['m__message']) && intval($e___42225[$e__id3]['m__message'])>0 ? $e___42225[$e__id3]['m__message'].'<span class="icon-block-xs">'.$e___11035[42225]['m__cover'].'</span>' : '' ).'</span></td>';
+            echo '<td style="text-align: left;" title="@'.$m3['m__handle'].'"><a href="'.view__memory(42903,42902).$m3['m__handle'].'"><span class="icon-block-sm">'.$m3['m__cover'].'</span>'.$m3['m__title'].'</a><span class="last-right-col"><b class="card_count_'.$e__id3.'"><i class="fas fa-yin-yang fa-spin"></i></b></span></td>';
             echo '</tr>';
 
         }
@@ -106,7 +105,6 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
             js_request_uri: js_request_uri, //Always append to AJAX Calls
         }, function (data) {
 
-
             $.each(data.return_array, function (key, val) {
                 var formatted = String(val).replace(/(.)(?=(\d{3})+$)/g,'$1,');
                 if (formatted != $(".card_count_"+key+":first").text()){
@@ -123,8 +121,6 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
     }
 
     $(document).ready(function () {
-
-        $("h1").append('<a class="icon-block-sm" href="javascript:void(0);" onclick="$(\'.points_frame\').toggleClass(\'hidden\');"><span class="points_frame"><?= $e___11035[42225]['m__cover'] ?></span></a>');
 
         //Load initial stats:
         x__refresh_gameplay();

@@ -1484,7 +1484,7 @@ class X_model extends CI_Model
 
                     $this->X_model->update($existing_x['x__id'], array(
                         'x__privacy' => 6173,
-                    ), $x_data['x__player'], 12197 /* Following Removed */);
+                    ), $x_data['x__player'], 5982 /* Following Removed */);
 
                     //See if Session needs to be updated:
                     if($player_e && $player_e['e__id']==$x_data['x__player']){
