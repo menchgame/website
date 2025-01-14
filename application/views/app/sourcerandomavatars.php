@@ -14,8 +14,8 @@ if(isset($_GET['update_u_icons'])){
     }
 
     $updated = 0;
-    foreach($this->X_model->fetch($base_filters, array('x__follower'), 0) as $x){
-        $updated += $this->E_model->update($x['e__id'], array(
+    foreach($this->Interaction_model->fetch($base_filters, array('x__follower'), 0) as $x){
+        $updated += $this->Source_model->update($x['e__id'], array(
             'e__cover' => random_cover(12279),
         ));
     }

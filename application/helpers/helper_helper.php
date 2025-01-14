@@ -95,13 +95,13 @@ function i__discovery_link($i, $trying_to_skip = false){
 
     $CI =& get_instance();
     if(in_array($i['i__type'], $CI->config->item('n___41055'))){
-        $currency_types = $CI->X_model->fetch(array(
+        $currency_types = $CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
             'x__next' => $i['i__id'],
             'x__following IN (' . join(',', $CI->config->item('n___26661')) . ')' => null, //Currency
         ));
-        $total_dues = $CI->X_model->fetch(array(
+        $total_dues = $CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
             'x__next' => $i['i__id'],
@@ -128,14 +128,14 @@ function i__weight_calculator($i){
 
     //TODO Improve later (This is a very basic logic)
     $CI =& get_instance();
-    $count_x = $CI->X_model->fetch(array(
+    $count_x = $CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
         '(x__previous='.$i['i__id'].' OR x__next='.$i['i__id'].')' => null,
     ), array(), 0, 0, array(), 'COUNT(x__id) as totals');
 
     //Should we update?
     if($count_x[0]['totals'] != $i['i__weight']){
-        return $CI->I_model->update($i['i__id'], array(
+        return $CI->Idea_model->update($i['i__id'], array(
             'i__weight' => $count_x[0]['totals'],
         ));
     } else {
@@ -148,14 +148,14 @@ function e__weight_calculator($e){
 
     //TODO Improve later (This is a very basic logic)
     $CI =& get_instance();
-    $count_x = $CI->X_model->fetch(array(
+    $count_x = $CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
         '(x__follower='.$e['e__id'].' OR x__following='.$e['e__id'].' OR x__player='.$e['e__id'].')' => null,
     ), array(), 0, 0, array(), 'COUNT(x__id) as totals');
 
     //Should we update?
     if($count_x[0]['totals'] != $e['e__weight']){
-        return $CI->E_model->update($e['e__id'], array(
+        return $CI->Source_model->update($e['e__id'], array(
             'e__weight' => $count_x[0]['totals'],
         ));
     } else {
@@ -262,14 +262,14 @@ function prefix_common_words($strs) {
 function reset_cache($x__player){
     $CI =& get_instance();
     $count = 0;
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type' => 14599, //Cache App
         'x__following IN (' . join(',', $CI->config->item('n___14599')) . ')' => null, //Cache Apps
         'x__time >' => date("Y-m-d H:i:s", (time() - view__memory(6404,14599))),
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
     )) as $delete_cahce){
         //Delete email:
-        $count += $CI->X_model->update($delete_cahce['x__id'], array(
+        $count += $CI->Interaction_model->update($delete_cahce['x__id'], array(
             'x__privacy' => 6173, //Transaction Removed
         ), $x__player, 14600 /* Delete Cache */);
     }
@@ -318,7 +318,7 @@ function i_spots_remaining($i__id){
 
     //Any Limits on Selection?
     $spots_remaining = -1; //No limits
-    $max_available = $CI->X_model->fetch(array(
+    $max_available = $CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
         'x__next' => $i__id,
@@ -339,7 +339,7 @@ function i_spots_remaining($i__id){
 
         //Navigation?
         $must_follow = array();
-        foreach($CI->X_model->fetch(array(
+        foreach($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type' => 32235, //Navigation
             'x__next' => $i__id,
@@ -350,8 +350,8 @@ function i_spots_remaining($i__id){
         $current_discoveries = 0;
         if(count($must_follow)){
             //We must qualify each discovery individually:
-            foreach($CI->X_model->fetch($query_filters) as $e){
-                if(count($must_follow)==count($CI->X_model->fetch(array(
+            foreach($CI->Interaction_model->fetch($query_filters) as $e){
+                if(count($must_follow)==count($CI->Interaction_model->fetch(array(
                         'x__follower' => $e['x__player'],
                         'x__following IN (' . join(',', $must_follow) . ')' => null,
                         'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -361,7 +361,7 @@ function i_spots_remaining($i__id){
                 }
             }
         } else {
-            $query = $CI->X_model->fetch($query_filters, array(), 1, 0, array(), 'COUNT(x__id) as totals');
+            $query = $CI->Interaction_model->fetch($query_filters, array(), 1, 0, array(), 'COUNT(x__id) as totals');
             $current_discoveries = $query[0]['totals'];
         }
 
@@ -393,7 +393,7 @@ function object_to_array($obj) {
 
 function i_redirect_url($i){
     $CI =& get_instance();
-    if(strlen($i['i__message']) && count($CI->X_model->fetch(array(
+    if(strlen($i['i__message']) && count($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
             'x__next' => $i['i__id'],
@@ -412,7 +412,7 @@ function i_redirect_url($i){
 
 function i_popup_url($i){
     $CI =& get_instance();
-    if(strlen($i['i__message']) && count($CI->X_model->fetch(array(
+    if(strlen($i['i__message']) && count($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
             'x__next' => $i['i__id'],
@@ -431,7 +431,7 @@ function i_popup_url($i){
 
 function i_required($i){
     $CI =& get_instance();
-    return in_array($i['i__type'], $CI->config->item('n___43009')) || count($CI->X_model->fetch(array(
+    return in_array($i['i__type'], $CI->config->item('n___43009')) || count($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
             'x__next' => $i['i__id'],
@@ -452,7 +452,7 @@ function redirect_message($url, $message = null, $log_error = false)
 
     if($log_error){
         //Log thie error:
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__message' => $url.' '.stripslashes($message),
             'x__type' => 4246, //Platform Bug Reports
             'x__player' => ( $player_e ? $player_e['e__id'] : 0 ),
@@ -486,14 +486,14 @@ function verify_cookie(){
     $cookie_parts = explode('ABCEFG',$_COOKIE['auth_cookie']);
     $CI =& get_instance();
 
-    $es = $CI->E_model->fetch(array(
+    $es = $CI->Source_model->fetch(array(
         'e__id' => $cookie_parts[0],
     ));
 
     if(count($es) && $cookie_parts[2]==view__hash($cookie_parts[0].$cookie_parts[1])){
 
         //Assign session & log transaction:
-        $CI->E_model->activate_session($es[0], false, true);
+        $CI->Source_model->activate_session($es[0], false, true);
         return $es[0];
 
     } else {
@@ -529,12 +529,12 @@ function auto_login_player($is_ajax) {
 
         if($is_login_verified){
 
-            foreach($CI->E_model->fetch(array(
+            foreach($CI->Source_model->fetch(array(
                 'LOWER(e__handle)' => strtolower($_GET['e__handle']),
             )) as $player_e){
 
                 //Login:
-                $CI->E_model->activate_session($player_e, true);
+                $CI->Source_model->activate_session($player_e, true);
 
                 //Log them in:
                 if(!$is_ajax){
@@ -592,7 +592,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
         'phone_count' => 0,
     );
 
-   foreach($CI->I_model->fetch(array(
+   foreach($CI->Idea_model->fetch(array(
        'LOWER(i__hashtag)' => strtolower($i__hashtag),
    )) as $i){
 
@@ -600,7 +600,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
            $list_config[intval($x__type)] = array(); //Assume no links for this type
        }
        //Now search for these settings across sources:
-       foreach($CI->X_model->fetch(array(
+       foreach($CI->Interaction_model->fetch(array(
            'x__next' => $i['i__id'],
            'x__type IN (' . join(',', $CI->config->item('n___40946')) . ')' => null, //Source List Controllers
            'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -609,7 +609,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
            array_push($list_config[intval($setting_link['x__type'])], intval($setting_link['e__id']));
        }
        //Now search for these settings across ideas:
-       foreach($CI->X_model->fetch(array(
+       foreach($CI->Interaction_model->fetch(array(
            'x__previous' => $i['i__id'],
            'x__type IN (' . join(',', $CI->config->item('n___40946')) . ')' => null, //Source List Controllers
            'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -624,7 +624,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
        if(count($list_config[40791])){
 
            //If Discovered Any
-           $query_string_all = $CI->X_model->fetch(array(
+           $query_string_all = $CI->Interaction_model->fetch(array(
                'x__previous IN (' . join(',', $list_config[40791]) . ')' => null,
                'x__type IN (' . join(',', $CI->config->item('n___6255')) . ')' => null, //DISCOVERIES
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -633,7 +633,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
        } elseif(count($list_config[27984])){
 
            //Include If Has ANY
-           $query_string_all = $CI->X_model->fetch(array(
+           $query_string_all = $CI->Interaction_model->fetch(array(
                'x__following IN (' . join(',', $list_config[27984]) . ')' => null,
                'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -642,7 +642,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
        } elseif(count($list_config[43513])){
 
            //Include If Has ALL
-           $query_string_all = $CI->X_model->fetch(array(
+           $query_string_all = $CI->Interaction_model->fetch(array(
                'x__following IN (' . join(',', $list_config[43513]) . ')' => null,
                'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -651,7 +651,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
        } else {
 
            //All Discoveries:
-           $query_string_all = $CI->X_model->fetch(array(
+           $query_string_all = $CI->Interaction_model->fetch(array(
                'x__previous' => $i['i__id'],
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                'x__type IN (' . join(',', $CI->config->item('n___6255')) . ')' => null, //DISCOVERIES
@@ -669,7 +669,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
                (in_array(intval($x['e__id']), $unique_users_count)) ||
 
                //Include If Has ANY
-               (count($list_config[27984]) && !count($CI->X_model->fetch(array(
+               (count($list_config[27984]) && !count($CI->Interaction_model->fetch(array(
                        'x__follower' => $x['e__id'],
                        'x__following IN (' . join(',', $list_config[27984]) . ')' => null,
                        'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -677,7 +677,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
                    )))) ||
 
                //Exclude If Has ALL
-               (count($list_config[26600]) && count($CI->X_model->fetch(array(
+               (count($list_config[26600]) && count($CI->Interaction_model->fetch(array(
                        'x__follower' => $x['e__id'],
                        'x__following IN (' . join(',', $list_config[26600]) . ')' => null,
                        'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -685,7 +685,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
                    )))==count($list_config[26600])) ||
 
                //Exclude If Has ANY
-               (count($list_config[43514]) && count($CI->X_model->fetch(array(
+               (count($list_config[43514]) && count($CI->Interaction_model->fetch(array(
                        'x__follower' => $x['e__id'],
                        'x__following IN (' . join(',', $list_config[43514]) . ')' => null,
                        'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -693,7 +693,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
                    )))>0) ||
 
                //If Not Discovered Any
-               (count($list_config[40793]) && !count($CI->X_model->fetch(array(
+               (count($list_config[40793]) && !count($CI->Interaction_model->fetch(array(
                        'x__player' => $x['e__id'],
                        'x__previous IN (' . join(',', $list_config[40793]) . ')' => null,
                        'x__type IN (' . join(',', $CI->config->item('n___6255')) . ')' => null, //DISCOVERIES
@@ -708,7 +708,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
                //Include If Has ALL
                $total_found_43513 = 0;
                foreach($list_config[43513] as $this_filter){
-                   $total_found_43513 += ( count($CI->X_model->fetch(array(
+                   $total_found_43513 += ( count($CI->Interaction_model->fetch(array(
                        'x__follower' => $x['e__id'],
                        'x__following' => $this_filter,
                        'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -732,14 +732,14 @@ function list_settings($i__hashtag, $fetch_contact = false){
        //Determine columns if any:
        if(count($list_config[34513])){
 
-           $column_e = $CI->X_model->fetch(array(
+           $column_e = $CI->Interaction_model->fetch(array(
                'x__following IN (' . join(',', $list_config[34513]) . ')' => null,
                'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                'e__privacy IN (' . join(',', $CI->config->item('n___7357')) . ')' => null, //PUBLIC/OWNER
            ), array('x__follower'), 0, 0, sort__e());
 
-           foreach($CI->X_model->fetch(array(
+           foreach($CI->Interaction_model->fetch(array(
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                'x__type IN (' . join(',', $CI->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
                'x__following IN (' . join(',', $list_config[34513]) . ')' => null,
@@ -756,19 +756,19 @@ function list_settings($i__hashtag, $fetch_contact = false){
            foreach($query_string_filtered as $count => $x){
 
                //Fetch email & phone:
-               $fetch_names = $CI->X_model->fetch(array(
+               $fetch_names = $CI->Interaction_model->fetch(array(
                    'x__following' => 42584, //First Name
                    'x__follower' => $x['e__id'],
                    'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                    'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                ));
-               $fetch_emails = $CI->X_model->fetch(array(
+               $fetch_emails = $CI->Interaction_model->fetch(array(
                    'x__following' => 3288, //Email
                    'x__follower' => $x['e__id'],
                    'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                    'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                ));
-               $fetch_phones = $CI->X_model->fetch(array(
+               $fetch_phones = $CI->Interaction_model->fetch(array(
                    'x__following' => 4783, //Phone
                    'x__follower' => $x['e__id'],
                    'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -796,7 +796,7 @@ function list_settings($i__hashtag, $fetch_contact = false){
        //Append Navigation:
        foreach($column_i as $key => $i_var){
            $must_follow = array();
-           foreach($CI->X_model->fetch(array(
+           foreach($CI->Interaction_model->fetch(array(
                'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                'x__type' => 32235, //Navigation
                'x__next' => $i_var['i__id'],
@@ -837,7 +837,7 @@ function count_link_groups($x__type, $x__time_start = null, $x__time_end = null)
     }
 
     //Fetch Results:
-    $query = $CI->X_model->fetch($query_filters, array(), 1, 0, array(), 'COUNT(x__id) as totals');
+    $query = $CI->Interaction_model->fetch($query_filters, array(), 1, 0, array(), 'COUNT(x__id) as totals');
     return intval($query[0]['totals']);
 
 }
@@ -853,12 +853,12 @@ function home_url(){
 
 function i_startable($i, $x__player = 0){
     $CI =& get_instance();
-    return ( $x__player>0 ? count($CI->X_model->fetch(array(
+    return ( $x__player>0 ? count($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__player' => $x__player,
         'x__type' => 4235, //Get started
         'x__next' => $i['i__id'],
-    ))) : count($CI->X_model->fetch(array(
+    ))) : count($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
         'x__next' => $i['i__id'],
@@ -988,11 +988,11 @@ function generate_handle($focus__node, $str, $suggestion = null, $increment = 1)
 
 
     //Make sure no duplicates:
-    if($focus__node==12273 && count($CI->I_model->fetch(array(
+    if($focus__node==12273 && count($CI->Idea_model->fetch(array(
             'LOWER(i__hashtag)' => strtolower($suggestion),
         )))){
         return generate_handle(12273, $str, $suggestion, $increment);
-    } elseif($focus__node==12274 && count($CI->E_model->fetch(array(
+    } elseif($focus__node==12274 && count($CI->Source_model->fetch(array(
             'LOWER(e__handle)' => strtolower($suggestion),
         )))){
         return generate_handle(12274, $str, $suggestion, $increment);
@@ -1031,7 +1031,7 @@ function process_media($i__id, $uploaded_media){
     $sort_count = 0;
 
     //Fetch current media:
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type IN (' . join(',', $CI->config->item('n___42294')) . ')' => null, //Media
         'x__next' => $i__id,
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -1059,7 +1059,7 @@ function process_media($i__id, $uploaded_media){
                 if($current_media_e__ids[$sort_count]!=$upload_media['e__id']){
                     //Order has changed, update it:
                     $adjust_updated = true;
-                    $CI->X_model->update($full_media[$upload_media['e__id']]['x__id'], array(
+                    $CI->Interaction_model->update($full_media[$upload_media['e__id']]['x__id'], array(
                         'x__weight' => $sort_count,
                     ), $player_e['e__id'], 13006 /* SOURCE SORT MANUAL */);
                 }
@@ -1068,7 +1068,7 @@ function process_media($i__id, $uploaded_media){
                 $validate_e__title = validate_e__title($upload_media['e__title']);
                 if($validate_e__title['status'] && $full_media[$upload_media['e__id']]['e__title']!=$upload_media['e__title']){
                     $adjust_updated = true;
-                    $CI->E_model->update($upload_media['e__id'], array(
+                    $CI->Source_model->update($upload_media['e__id'], array(
                         'e__title' => trim($upload_media['e__title']),
                     ), true, $player_e['e__id']);
                 }
@@ -1087,7 +1087,7 @@ function process_media($i__id, $uploaded_media){
                 if(isset($upload_media['media_cache']['etag']) && strlen($upload_media['media_cache']['etag'])){
                     //We we already have this asset, link to that source without giving this new source the authority over it...
                     //First person to upload a source will get authority over its created source...
-                    foreach($CI->X_model->fetch(array(
+                    foreach($CI->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                         'x__following' => 42662, //etag
@@ -1104,9 +1104,9 @@ function process_media($i__id, $uploaded_media){
                     $media_stats['media_e__cover'] = $upload_media['e__cover'];
 
                     //Create Source for this new media:
-                    $added_e = $CI->E_model->verify_create($upload_media['e__title'], $player_e['e__id'], ( $upload_media['media_e__id']==4259 /* Audio has no thumbnail! */ ? 'far fa-volume-up' : $upload_media['e__cover'] ), true);
+                    $added_e = $CI->Source_model->verify_create($upload_media['e__title'], $player_e['e__id'], ( $upload_media['media_e__id']==4259 /* Audio has no thumbnail! */ ? 'far fa-volume-up' : $upload_media['e__cover'] ), true);
                     if(!$added_e['status']){
-                        $CI->X_model->create(array(
+                        $CI->Interaction_model->create(array(
                             'x__type' => 4246, //Platform Bug Reports
                             'x__message' => 'Failed to create a new source for ['.$upload_media['e__title'].'] with cover ['.$upload_media['e__cover'].']',
                             'x__metadata' => array(
@@ -1150,7 +1150,7 @@ function process_media($i__id, $uploaded_media){
 
                             //Single select that needs auto creation of sources if missing:
                             $child_id = 0;
-                            foreach($CI->X_model->fetch(array(
+                            foreach($CI->Interaction_model->fetch(array(
                                 'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                                 'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                                 'x__following' => $x__type,
@@ -1161,9 +1161,9 @@ function process_media($i__id, $uploaded_media){
 
                             //If not found create the child:
                             if(!$child_id){
-                                $added_child = $CI->E_model->verify_create($target_variable, 14068);
+                                $added_child = $CI->Source_model->verify_create($target_variable, 14068);
                                 if(!$added_child['status']){
-                                    $CI->X_model->create(array(
+                                    $CI->Interaction_model->create(array(
                                         'x__type' => 4246, //Platform Bug Reports
                                         'x__message' => 'Failed to create a new source for ['.$target_variable.']',
                                         'x__metadata' => array(
@@ -1175,7 +1175,7 @@ function process_media($i__id, $uploaded_media){
                                 }
 
                                 //Add links for this new source:
-                                $CI->X_model->create(array(
+                                $CI->Interaction_model->create(array(
                                     'x__player' => $player_e['e__id'],
                                     'x__following' => $x__type,
                                     'x__follower' => $added_child['new_e']['e__id'],
@@ -1189,7 +1189,7 @@ function process_media($i__id, $uploaded_media){
 
                             if($child_id){
                                 //Child source found, simply link:
-                                $CI->X_model->create(array(
+                                $CI->Interaction_model->create(array(
                                     'x__player' => $player_e['e__id'],
                                     'x__following' => $child_id,
                                     'x__follower' => $upload_media['e__id'],
@@ -1200,7 +1200,7 @@ function process_media($i__id, $uploaded_media){
                         } else {
 
                             //Save variable as is:
-                            $CI->X_model->create(array(
+                            $CI->Interaction_model->create(array(
                                 'x__player' => $player_e['e__id'],
                                 'x__following' => $x__type,
                                 'x__follower' => $upload_media['e__id'],
@@ -1217,13 +1217,13 @@ function process_media($i__id, $uploaded_media){
                 if($upload_media['e__id'] && $upload_media['media_e__id']){
 
                     //Link to Idea:
-                    if(!count($CI->X_model->fetch(array(
+                    if(!count($CI->Interaction_model->fetch(array(
                         'x__next' => $i__id,
                         'x__following' => $upload_media['e__id'],
                         'x__type' => $upload_media['media_e__id'],
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     )))){
-                        $CI->X_model->create(array(
+                        $CI->Interaction_model->create(array(
                             'x__player' => $player_e['e__id'],
                             'x__next' => $i__id,
                             'x__following' => $upload_media['e__id'],
@@ -1235,13 +1235,13 @@ function process_media($i__id, $uploaded_media){
 
 
                     //Link to Source as Uploader:
-                    if(!count($CI->X_model->fetch(array(
+                    if(!count($CI->Interaction_model->fetch(array(
                         'x__following' => $player_e['e__id'],
                         'x__follower' => $upload_media['e__id'],
                         'x__type IN (' . join(',', $CI->config->item('n___42657')) . ')' => null, //Uploads
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     )))){
-                        $CI->X_model->create(array(
+                        $CI->Interaction_model->create(array(
                             'x__player' => $player_e['e__id'],
                             'x__following' => $player_e['e__id'],
                             'x__follower' => $upload_media['e__id'],
@@ -1252,13 +1252,13 @@ function process_media($i__id, $uploaded_media){
 
 
                     //Link to Media Type:
-                    if(!count($CI->X_model->fetch(array(
+                    if(!count($CI->Interaction_model->fetch(array(
                         'x__following' => $upload_media['media_e__id'],
                         'x__follower' => $upload_media['e__id'],
                         'x__type' => 4251,
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     )))){
-                        $CI->X_model->create(array(
+                        $CI->Interaction_model->create(array(
                             'x__player' => $player_e['e__id'],
                             'x__following' => $upload_media['media_e__id'],
                             'x__follower' => $upload_media['e__id'],
@@ -1281,7 +1281,7 @@ function process_media($i__id, $uploaded_media){
     //Remove current media missing from submitted (Removed during editing):
     foreach(array_diff($current_media_e__ids, $upload_media_e__ids) as $deleted_media_e__id){
         $media_stats['adjust_removed']++;
-        $CI->X_model->update($full_media[$deleted_media_e__id]['x__id'], array(
+        $CI->Interaction_model->update($full_media[$deleted_media_e__id]['x__id'], array(
             'x__privacy' => 6173, //Transaction Removed
         ), $player_e['e__id'], 42694); //Media Removed
     }
@@ -1299,7 +1299,7 @@ function append_source($x__following, $x__player, $x__message, $i__id){
     $CI =& get_instance();
 
     //First validate data type to ensure it matches:
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
         'x__following IN (' . join(',', $CI->config->item('n___4592')) . ')' => null, //Data Types
@@ -1313,7 +1313,7 @@ function append_source($x__following, $x__player, $x__message, $i__id){
     }
 
     //Now check existing links:
-    $existing_x = $CI->X_model->fetch(array(
+    $existing_x = $CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type' => 4251, //SOURCE LINKS
         'x__following' => $x__following,
@@ -1329,14 +1329,14 @@ function append_source($x__following, $x__player, $x__message, $i__id){
         }
 
         //Content value has changed, update the transaction:
-        $CI->X_model->update($existing_x[0]['x__id'], array(
+        $CI->Interaction_model->update($existing_x[0]['x__id'], array(
             'x__message' => $x__message,
         ), $x__player, 10657 /* SOURCE LINK CONTENT UPDATE  */);
 
     } else {
 
         //Create transaction:
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__type' => 4251, //Follow Source
             'x__message' => $x__message,
             'x__player' => $x__player,
@@ -1346,7 +1346,7 @@ function append_source($x__following, $x__player, $x__message, $i__id){
 
     }
 
-    $CI->X_model->create(array(
+    $CI->Interaction_model->create(array(
         'x__type' => 12197, //Following Added
         'x__player' => $x__player,
         'x__following' => $x__following,
@@ -1407,7 +1407,7 @@ function data_type_validate($data_type, $data_value, $data_title = null){
         );
     } elseif(in_array($data_type, $CI->config->item('n___42188'))){
         //Single Choice of Multi Choice source types should not be validated here
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__type' => 4246, //Platform Bug Reports
             'x__message' => 'data_type_validate() was asked to validate choice options for @'.$data_type.' ['.$data_value.'] ['.$data_title.']',
         ));
@@ -1470,7 +1470,7 @@ function sync_handle_references($e, $new_handle_string){
 
     //Update Handles everywhere they are referenced:
     $CI =& get_instance();
-    foreach ($CI->X_model->fetch(array(
+    foreach ($CI->Interaction_model->fetch(array(
         'x__following' => $e['e__id'],
         'x__type' => 31835, //Source Mention
         'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -1538,7 +1538,7 @@ function validate_update_handle($str, $i__id = null, $e__id = null){
 
     //Syntax good! Now let's check the DB for duplicates
     if($i__id > 0){
-        foreach($CI->I_model->fetch(array(
+        foreach($CI->Idea_model->fetch(array(
             'i__id !=' => $i__id,
             'LOWER(i__hashtag)' => strtolower($str),
         ), 0) as $matched){
@@ -1546,7 +1546,7 @@ function validate_update_handle($str, $i__id = null, $e__id = null){
             if(!in_array($matched['i__privacy'], $CI->config->item('n___31871')) && $player_e){
 
                 //Since not active we can replace this:
-                $CI->I_model->update($matched['i__id'], array(
+                $CI->Idea_model->update($matched['i__id'], array(
                     'i__hashtag' => change_handle($matched['i__hashtag']),
                 ), true, $player_e['e__id']);
 
@@ -1560,7 +1560,7 @@ function validate_update_handle($str, $i__id = null, $e__id = null){
         }
     } elseif($e__id>0){
 
-        foreach($CI->E_model->fetch(array(
+        foreach($CI->Source_model->fetch(array(
             'e__id !=' => $e__id,
             'LOWER(e__handle)' => strtolower($str),
         ), 0) as $matched){
@@ -1568,7 +1568,7 @@ function validate_update_handle($str, $i__id = null, $e__id = null){
             if(!in_array($matched['e__privacy'], $CI->config->item('n___7358')) && $player_e){
 
                 //Since not active we can replace this:
-                $CI->E_model->update($matched['e__id'], array(
+                $CI->Source_model->update($matched['e__id'], array(
                     'e__handle' => change_handle($matched['e__handle']),
                 ), true, $player_e['e__id']);
 
@@ -1660,13 +1660,13 @@ function delete_all_between($beginning, $end, $string) {
 
 function user_website($x__player){
     $CI =& get_instance();
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__follower' => $x__player,
         'x__type' => 4251, //New Source Created
     ), array(), 1) as $e_created){
         return $e_created['x__website'];
     }
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__player' => $x__player,
     ), array(), 1) as $e_created){
         return $e_created['x__website'];
@@ -1702,7 +1702,7 @@ function dispatch_sms($to_phone, $single_message, $e__id = 0, $x_data = array(),
 
         //No way to send an SMS:
         if($log_tr){
-            $CI->X_model->create(array(
+            $CI->Interaction_model->create(array(
                 'x__message' => 'dispatch_sms() missing either: '.$twilio_account_sid.' / '.$twilio_auth_token.' / '.$twilio_from_number,
                 'x__type' => 4246, //Platform Bug Reports
                 'x__player' => $e__id,
@@ -1748,7 +1748,7 @@ function dispatch_sms($to_phone, $single_message, $e__id = 0, $x_data = array(),
 
     //Log transaction:
     if($log_tr){
-        $CI->X_model->create(array_merge($x_data, array(
+        $CI->Interaction_model->create(array_merge($x_data, array(
             'x__type' => ( $sms_success ? 27676 : 27678 ), //System SMS Success/Fail
             'x__player' => $e__id,
             'x__message' => $single_message,
@@ -1773,7 +1773,7 @@ function dispatch_email($to_emails, $subject, $email_body, $e__id = 0, $x_data =
     if(!strlen($domain_email)){
         $domain_name = 'MENCH';
         $domain_name = 'support@mench.com';
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__type' => 4246, //Platform Bug Reports
             'x__message' => 'Domain email is missing! ('.$domain_name.') ('.$domain_email.') ('.join(' & ',$to_emails).')',
         ));
@@ -1785,7 +1785,7 @@ function dispatch_email($to_emails, $subject, $email_body, $e__id = 0, $x_data =
 
     if($e__id > 0){
 
-        $es = $CI->E_model->fetch(array(
+        $es = $CI->Source_model->fetch(array(
             'e__id' => $e__id,
         ));
         if(count($es)){
@@ -1793,7 +1793,7 @@ function dispatch_email($to_emails, $subject, $email_body, $e__id = 0, $x_data =
             $name = $es[0]['e__title'];
 
             //Also fetch email for this user to populate the reply to:
-            $fetch_emails = $CI->X_model->fetch(array(
+            $fetch_emails = $CI->Interaction_model->fetch(array(
                 'x__following' => 3288, //Email
                 'x__follower' => $e__id,
                 'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -1815,7 +1815,7 @@ function dispatch_email($to_emails, $subject, $email_body, $e__id = 0, $x_data =
     $email_message .= '<div class="line">'.get_domain('m__title', $e__id, $x__website).'</div>';
 
 
-    if($e__id > 0 && count($es) && (!$template_i__id || !count($CI->X_model->fetch(array(
+    if($e__id > 0 && count($es) && (!$template_i__id || !count($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___42256')) . ')' => null, //Writes
             'x__following' => 31779, //Mandatory Emails
@@ -1891,7 +1891,7 @@ function dispatch_email($to_emails, $subject, $email_body, $e__id = 0, $x_data =
     if($log_tr){
 
         //Let's log a system email as the last resort way to record this transaction:
-        $CI->X_model->create(array_merge($x_data, array(
+        $CI->Interaction_model->create(array_merge($x_data, array(
             'x__type' => 29399,
             'x__next' => $template_i__id,
             'x__player' => $e__id,
@@ -1906,10 +1906,10 @@ function dispatch_email($to_emails, $subject, $email_body, $e__id = 0, $x_data =
 
         //Can we also mark the discovery as complete?
         if($e__id && isset($x_data['x__previous']) && $x_data['x__previous']>0 && isset($x_data['x__next'])) {
-            foreach ($CI->I_model->fetch(array(
+            foreach ($CI->Idea_model->fetch(array(
                 'i__id' => $x_data['x__previous'],
             )) as $email_i) {
-                $CI->X_model->mark_complete(i__discovery_link($email_i), $e__id, $x_data['x__next'], $email_i, $x_data);
+                $CI->Interaction_model->mark_complete(i__discovery_link($email_i), $e__id, $x_data['x__next'], $email_i, $x_data);
             }
         }
 
@@ -2012,7 +2012,7 @@ function access_level_e($e__handle = null, $e__id = 0, $e = false){
 
     if(!$e){
         //Check privacy first:
-        foreach($CI->E_model->fetch($filters) as $match_e){
+        foreach($CI->Source_model->fetch($filters) as $match_e){
             $e = $match_e;
             break;
         }
@@ -2027,7 +2027,7 @@ function access_level_e($e__handle = null, $e__id = 0, $e = false){
     $is_public = in_array($e['e__privacy'], $CI->config->item('n___33240'));
     $is_author = false;
     if($player_e){
-        $is_author = count($CI->X_model->fetch(array(
+        $is_author = count($CI->Interaction_model->fetch(array(
             'x__type IN (' . join(',', $CI->config->item('n___13548')) . ')' => null, //AUTHORED SOURCES
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__following' => $player_e['e__id'],
@@ -2073,7 +2073,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
 
     if(!$i){
         //Check privacy first:
-        foreach($CI->I_model->fetch($filters) as $match_i){
+        foreach($CI->Idea_model->fetch($filters) as $match_i){
             $i = $match_i;
             break;
         }
@@ -2081,7 +2081,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
 
     $is_author = false;
     if($player_e){
-        $is_author = count($CI->X_model->fetch(array( //IDEA SOURCE
+        $is_author = count($CI->Interaction_model->fetch(array( //IDEA SOURCE
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___31919')) . ')' => null, //IDEA AUTHOR
             'x__following' => $player_e['e__id'],
@@ -2092,7 +2092,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
     if($is_author) {
         //Authors can always edit:
         return 3;
-    } elseif(count($CI->X_model->fetch(array(
+    } elseif(count($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $CI->config->item('n___42953')) . ')' => null, //Mentioned Sources
         'x__following' => $player_e['e__id'],
@@ -2109,7 +2109,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
 
 
         //Include If Has ANY
-        $fetch_27984 = $CI->X_model->fetch(array(
+        $fetch_27984 = $CI->Interaction_model->fetch(array(
             'x__next' => $i['i__id'],
             'x__type' => 27984, //Must Include All
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -2119,7 +2119,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
             $the_counter = 0;
             if($player_e){
                 foreach($fetch_27984 as $e_pre){
-                    if((( $player_e && $player_e['e__id']==$e_pre['x__following'] ) || count($CI->X_model->fetch(array(
+                    if((( $player_e && $player_e['e__id']==$e_pre['x__following'] ) || count($CI->Interaction_model->fetch(array(
                             'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                             'x__following' => $e_pre['x__following'],
@@ -2136,7 +2136,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
 
 
         //Include If Has ALL
-        $fetch_43513 = $CI->X_model->fetch(array(
+        $fetch_43513 = $CI->Interaction_model->fetch(array(
             'x__next' => $i['i__id'],
             'x__type' => 43513, //Must Include All
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -2146,7 +2146,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
             $the_counter = 0;
             if($player_e){
                 foreach($fetch_43513 as $e_pre){
-                    if((( $player_e && $player_e['e__id']==$e_pre['x__following'] ) || count($CI->X_model->fetch(array(
+                    if((( $player_e && $player_e['e__id']==$e_pre['x__following'] ) || count($CI->Interaction_model->fetch(array(
                             'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                             'x__following' => $e_pre['x__following'],
@@ -2163,7 +2163,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
 
 
         //Exclude If Has ANY
-        $fetch_43514 = $CI->X_model->fetch(array(
+        $fetch_43514 = $CI->Interaction_model->fetch(array(
             'x__next' => $i['i__id'],
             'x__type' => 43514, //Must Exclude All
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -2173,7 +2173,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
             $the_counter = 0;
             if($player_e){
                 foreach($fetch_43514 as $e_pre){
-                    if(( $player_e['e__id']==$e_pre['x__following'] ) || count($CI->X_model->fetch(array(
+                    if(( $player_e['e__id']==$e_pre['x__following'] ) || count($CI->Interaction_model->fetch(array(
                             'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                             'x__following' => $e_pre['x__following'],
@@ -2191,7 +2191,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
         }
 
         //Exclude If Has ALL
-        $fetch_26600 = $CI->X_model->fetch(array(
+        $fetch_26600 = $CI->Interaction_model->fetch(array(
             'x__next' => $i['i__id'],
             'x__type' => 26600, //Must Exclude All
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -2201,7 +2201,7 @@ function access_level_i($i__hashtag = null, $i__id = 0, $i = false, $is_cahce = 
             $the_counter = 0;
             if($player_e){
                 foreach($fetch_26600 as $e_pre){
-                    if(( $player_e['e__id']==$e_pre['x__following'] ) || count($CI->X_model->fetch(array(
+                    if(( $player_e['e__id']==$e_pre['x__following'] ) || count($CI->Interaction_model->fetch(array(
                             'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                             'x__following' => $e_pre['x__following'],
@@ -2352,7 +2352,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 $filters['i__id'] = $s__id;
             }
 
-            $db_rows[$loop_obj] = $CI->I_model->fetch($filters, 0);
+            $db_rows[$loop_obj] = $CI->Idea_model->fetch($filters, 0);
 
         } elseif ($loop_obj==12274) {
 
@@ -2363,7 +2363,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 $filters['e__id'] = $s__id;
             }
 
-            $db_rows[$loop_obj] = $CI->E_model->fetch($filters, 0);
+            $db_rows[$loop_obj] = $CI->Source_model->fetch($filters, 0);
 
         }
 
@@ -2403,11 +2403,11 @@ function update_algolia($focus__node = null, $s__id = 0) {
 
                 //Clear possible metadata algolia ID's that have been cached:
                 if ($loop_obj==12273) {
-                    $CI->I_model->update($s['i__id'], array(
+                    $CI->Idea_model->update($s['i__id'], array(
                         'i__external' => null,
                     ));
                 } elseif ($loop_obj==12274) {
-                    $CI->E_model->update($s['e__id'], array(
+                    $CI->Source_model->update($s['e__id'], array(
                         'e__external' => null,
                     ));
                 }
@@ -2434,7 +2434,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 $export_row['s__weight'] = intval($s['i__weight']);
 
                 //Top/Bottom Idea Keywords
-                foreach ($CI->X_model->fetch(array(
+                foreach ($CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'i__privacy IN (' . join(',', $CI->config->item('n___31871')) . ')' => null, //ACTIVE
                     'x__type IN (' . join(',', $CI->config->item('n___42345')) . ')' => null, //Active Sequence 2-Ways
@@ -2442,7 +2442,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 ), array('x__next'), 0, 0, array('x__weight' => 'ASC')) as $i) {
                     $export_row['s__keywords'] .= $i['i__message'] . ' ';
                 }
-                foreach ($CI->X_model->fetch(array(
+                foreach ($CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'i__privacy IN (' . join(',', $CI->config->item('n___31871')) . ')' => null, //ACTIVE
                     'x__type IN (' . join(',', $CI->config->item('n___42345')) . ')' => null, //Active Sequence 2-Ways
@@ -2452,7 +2452,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 }
 
                 //Idea Sources Keywords
-                foreach($CI->X_model->fetch(array(
+                foreach($CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $CI->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
                     'x__next' => $s['i__id'],
@@ -2498,7 +2498,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 }
 
                 //Fetch Following:
-                foreach($CI->X_model->fetch(array(
+                foreach($CI->Interaction_model->fetch(array(
                     'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                     'x__follower' => $s['e__id'], //This follower source
                     'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -2514,7 +2514,7 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 }
 
                 //Append Discovery Written Responses to Keywords
-                foreach($CI->X_model->fetch(array(
+                foreach($CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $CI->config->item('n___29133')) . ')' => null, //Written Responses
                     'x__player' => $s['e__id'], //This follower source
@@ -2580,11 +2580,11 @@ function update_algolia($focus__node = null, $s__id = 0) {
                 if (isset($algolia_results['objectIDs']) && count($algolia_results['objectIDs'])==1 ) {
                     foreach($algolia_results['objectIDs'] as $key => $algolia_id) {
                         if ($focus__node==12273) {
-                            $CI->I_model->update($all_db_rows[$key][$focus_field_id], array(
+                            $CI->Idea_model->update($all_db_rows[$key][$focus_field_id], array(
                                 'i__external' => $algolia_id,
                             ));
                         } elseif ($focus__node==12274) {
-                            $CI->E_model->update($all_db_rows[$key][$focus_field_id], array(
+                            $CI->Source_model->update($all_db_rows[$key][$focus_field_id], array(
                                 'e__external' => $algolia_id,
                             ));
                         }
@@ -2619,11 +2619,11 @@ function update_algolia($focus__node = null, $s__id = 0) {
             foreach($algolia_results['objectIDs'] as $key => $algolia_id) {
 
                 if (isset($all_db_rows[$key]['i__id'])) {
-                    $CI->I_model->update($all_db_rows[$key][( isset($all_db_rows[$key]['i__id']) ? 'i__id' : 'e__id')], array(
+                    $CI->Idea_model->update($all_db_rows[$key][( isset($all_db_rows[$key]['i__id']) ? 'i__id' : 'e__id')], array(
                         'i__external' => intval($algolia_id),
                     ));
                 } else {
-                    $CI->E_model->update($all_db_rows[$key][( isset($all_db_rows[$key]['i__id']) ? 'i__id' : 'e__id')], array(
+                    $CI->Source_model->update($all_db_rows[$key][( isset($all_db_rows[$key]['i__id']) ? 'i__id' : 'e__id')], array(
                         'e__external' => intval($algolia_id),
                     ));
                 }
@@ -2668,7 +2668,7 @@ function x__metadata_update($x__id, $new_fields, $x__player = 0)
     }
 
     //Fetch metadata for this object:
-    $db_objects = $CI->X_model->fetch(array(
+    $db_objects = $CI->Interaction_model->fetch(array(
         'x__id' => $x__id,
     ));
 
@@ -2698,7 +2698,7 @@ function x__metadata_update($x__id, $new_fields, $x__player = 0)
     }
 
     //Should be all good:
-    return $CI->X_model->update($x__id, array(
+    return $CI->Interaction_model->update($x__id, array(
         'x__metadata' => $metadata,
     ));
 
@@ -2728,7 +2728,7 @@ function one_two_explode($one, $two, $str)
 
 function idea_author($i__id){
     $CI =& get_instance();
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type IN (' . join(',', $CI->config->item('n___31919')) . ')' => null, //IDEA AUTHOR
         'x__next' => $i__id,
         'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -2741,7 +2741,7 @@ function idea_author($i__id){
 
 function idea_creation_time($i__id){
     $CI =& get_instance();
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type IN (' . join(',', $CI->config->item('n___31919')) . ')' => null, //IDEA AUTHOR
         'x__next' => $i__id,
         'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -2872,14 +2872,14 @@ function view__card_x($x, $has_x__reference = false)
         if(in_array(6160 , $m['m__following']) && intval($x[$e___32088[$e__id]['m__message']])>0){
 
             //SOURCE
-            foreach($CI->E_model->fetch(array('e__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_e){
+            foreach($CI->Source_model->fetch(array('e__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_e){
                 $ui .= '<div class="simple-line"><a href="'.view__memory(42903,42902).$focus_e['e__handle'].'" data-toggle="tooltip" data-placement="top" title="'.$m['m__title'].'" class="main__title"><span class="icon-block">'.$m['m__cover']. '</span>'.'<span class="icon-block">'.view__cover($focus_e['e__cover'], true). '</span>'.$focus_e['e__title'].'</a></div>';
             }
 
         } elseif(in_array(6202 , $m['m__following']) && intval($x[$e___32088[$e__id]['m__message']])>0){
 
             //IDEA
-            foreach($CI->I_model->fetch(array('i__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_i){
+            foreach($CI->Idea_model->fetch(array('i__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_i){
                 $ui .= '<div class="simple-line"><a href="'.view__memory(42903,33286).$focus_i['i__hashtag'].'" data-toggle="tooltip" data-placement="top" title="'.$m['m__title'].'" class="main__title"><span class="icon-block">'.$m['m__cover']. '</span><span class="icon-block">'.view__cache(4737 /* Source Reference */, $focus_i['i__type'], true, 'right', $focus_i['i__id']).'</span>'.view__i_title($focus_i).'</a></div>';
             }
 
@@ -2888,7 +2888,7 @@ function view__card_x($x, $has_x__reference = false)
 
             //TRANSACTION
             if(!$has_x__reference){
-                foreach($CI->X_model->fetch(array('x__id' => $x[$e___32088[$e__id]['m__message']])) as $ref_x){
+                foreach($CI->Interaction_model->fetch(array('x__id' => $x[$e___32088[$e__id]['m__message']])) as $ref_x){
                     $ui .= '<div class="simple-line"><span class="icon-block" data-toggle="tooltip" data-placement="top" title="'.$m['m__title'].'">'.$m['m__cover']. '</span><div class="x-ref hidden x_message_'.$x['x__id'].'">'.view__card_x($ref_x, true).'</div><a class="x_message_'.$x['x__id'].'" href="javascript:void(0);" onclick="$(\'.x_message_'.$x['x__id'].'\').toggleClass(\'hidden\');">View Referenced Transaction</a></div>';
                 }
             } else {
@@ -2990,7 +2990,7 @@ function view__memory($following, $follower, $filed = 'm__message'){
         return $memory_tree[$follower][$filed];
     } else {
         return null;
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__type' => 4246, //Platform Bug Reports
             'x__message' => 'view__memory() Failed to load ['.$filed.'] @'.$following.' for @'.$follower,
         ));
@@ -3075,7 +3075,7 @@ function view__e_body($x__type, $counter, $e__id, $js_request_uri){
 
     $list_results = view__e_covers($x__type, $e__id, 1);
     $focus_e__id = ( $e__id>0 ? $e__id : ( $player_e ? $player_e['e__id'] : 0 ) );
-    $es = $CI->E_model->fetch(array(
+    $es = $CI->Source_model->fetch(array(
         'e__id' => $e__id,
     ));
     if(!count($es)){
@@ -3134,7 +3134,7 @@ function view__i_body($x__type, $counter, $i__id){
 
     $list_results = view__i_covers($x__type, $i__id, 1);
     $ui = '';
-    $is = $CI->I_model->fetch(array(
+    $is = $CI->Idea_model->fetch(array(
         'i__id' => $i__id,
     ));
     if(!count($is)){
@@ -3280,14 +3280,14 @@ function view__e_covers($x__type, $e__id, $page_num = 0, $append_card_icon = tru
     if($page_num > 0){
 
         $limit = view__memory(6404,11064);
-        $query = $CI->X_model->fetch($query_filters, $joins_objects, $limit, ($page_num-1)*$limit, $order_columns);
+        $query = $CI->Interaction_model->fetch($query_filters, $joins_objects, $limit, ($page_num-1)*$limit, $order_columns);
         return $query;
 
     } else {
 
         $e___11035 = $CI->config->item('e___11035');
         if(!isset($e___11035[$x__type]['m__title'])){
-            $CI->X_model->create(array(
+            $CI->Interaction_model->create(array(
                 'x__type' => 4246, //Platform Bug Reports
                 'x__following' => 11035,
                 'x__follower' => $x__type,
@@ -3298,7 +3298,7 @@ function view__e_covers($x__type, $e__id, $page_num = 0, $append_card_icon = tru
                 'm__cover' => '',
             );
         }
-        $query = $CI->X_model->fetch($query_filters, $joins_objects, 1, 0, array(), 'COUNT(x__id) as totals');
+        $query = $CI->Interaction_model->fetch($query_filters, $joins_objects, 1, 0, array(), 'COUNT(x__id) as totals');
         $count_query = $query[0]['totals'];
         $visual_counter = '<span class="mini-hidden adjust-left">'.view__number($count_query).'<span>';
         $title_desc = number_format($count_query, 0).' '.$e___11035[$x__type]['m__title'];
@@ -3410,12 +3410,12 @@ function view__i_covers($x__type, $i__id, $page_num = 0, $append_card_icon = tru
     if($page_num > 0){
 
         $limit = view__memory(6404,11064);
-        return $CI->X_model->fetch($query_filters, $joins_objects, $limit, ($page_num-1)*$limit, $order_columns);
+        return $CI->Interaction_model->fetch($query_filters, $joins_objects, $limit, ($page_num-1)*$limit, $order_columns);
 
     } else {
 
         $e___11035 = $CI->config->item('e___11035'); //COINS
-        $query = $CI->X_model->fetch($query_filters, $joins_objects, 1, 0, array(), 'COUNT(x__id) as totals');
+        $query = $CI->Interaction_model->fetch($query_filters, $joins_objects, 1, 0, array(), 'COUNT(x__id) as totals');
         $count_query = $query[0]['totals'];
         $visual_counter = '<span class="mini-hidden adjust-left">'.view__number($count_query).'<span>';
         $title_desc = number_format($count_query, 0).( isset($e___11035[$x__type]['m__title']) ? ' '.$e___11035[$x__type]['m__title'] : '' );
@@ -3490,7 +3490,7 @@ function view__instant_select($focus__id, $down_e__id = 0, $right_i__id = 0){
 
     if(!$single_select && !$multi_select){
         //Must be either:
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__type' => 4246, //Platform Bug Reports
             'x__message' => 'view__instant_select() @'.$focus__id.' not in single select @33331 or multi select 33332',
             'x__following' => $focus__id,
@@ -3502,7 +3502,7 @@ function view__instant_select($focus__id, $down_e__id = 0, $right_i__id = 0){
 
     $already_selected = array();
     $selection_ids = array();
-    $selection_options = $CI->X_model->fetch(array(
+    $selection_options = $CI->Interaction_model->fetch(array(
         'x__following' => $focus__id,
         'x__type IN (' . join(',', $CI->config->item('n___33337')) . ')' => null, //SOURCE LINKS
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -3523,7 +3523,7 @@ function view__instant_select($focus__id, $down_e__id = 0, $right_i__id = 0){
 
         //Source Focus:
         if(count($selection_ids)){
-            foreach($CI->X_model->fetch(array(
+            foreach($CI->Interaction_model->fetch(array(
                 'x__following IN (' . join(',', $selection_ids) . ')' => null, //All possible answers
                 'x__follower' => $down_e__id,
                 'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -3547,7 +3547,7 @@ function view__instant_select($focus__id, $down_e__id = 0, $right_i__id = 0){
     } elseif($right_i__id>0) {
 
         //Idea focus:
-        foreach($CI->X_model->fetch(array(
+        foreach($CI->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $selection_ids) . ')' => null, //All possible answers
             'x__next' => $right_i__id,
             'x__type IN (' . join(',', $CI->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
@@ -3687,7 +3687,7 @@ function view__single_select_instant($cache_e__id, $selected_e__id, $access_leve
     } elseif(!$selected_e__id && $access_level_i && $player_e){
 
         //See if this user has any of these options:
-        foreach($CI->X_model->fetch(array(
+        foreach($CI->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $CI->config->item('n___'.$cache_e__id)) . ')' => null, //SOURCE LINKS
             'x__follower' => $player_e['e__id'],
             'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -3813,21 +3813,21 @@ function view__i_title($i, $string_only = false){
 
 function view__valid_handle_e($string, $check_db = false){
     $CI =& get_instance();
-    return ( substr($string, 0, 1)=='@' && ctype_alnum(substr($string, 1)) && (!$check_db || count($CI->E_model->fetch(array(
+    return ( substr($string, 0, 1)=='@' && ctype_alnum(substr($string, 1)) && (!$check_db || count($CI->Source_model->fetch(array(
             'LOWER(e__handle)' => strtolower(substr($string, 1)),
         )))) ? substr($string, 1) : false );
 }
 
 function view__valid_handle_i($string, $check_db = false){
     $CI =& get_instance();
-    return ( substr($string, 0, 1)=='#' && ctype_alnum(substr($string, 1)) && ( !$check_db || count($CI->I_model->fetch(array(
+    return ( substr($string, 0, 1)=='#' && ctype_alnum(substr($string, 1)) && ( !$check_db || count($CI->Idea_model->fetch(array(
             'LOWER(i__hashtag)' => strtolower(substr($string, 1)),
         )))) ? substr($string, 1) : false );
 }
 
 function view__valid_handle_reverse_i($string, $check_db = false){
     $CI =& get_instance();
-    return ( substr($string, 0, 2)=='!#' && ctype_alnum(substr($string, 2)) && ( !$check_db || count($CI->I_model->fetch(array(
+    return ( substr($string, 0, 2)=='!#' && ctype_alnum(substr($string, 2)) && ( !$check_db || count($CI->Idea_model->fetch(array(
             'LOWER(i__hashtag)' => strtolower(substr($string, 2)),
         )))) ? substr($string, 2) : false );
 }
@@ -3847,7 +3847,7 @@ function view__i__links($i, $e__id = 0, $replace_links = true, $focus__node = fa
     }
 
     if($e__id>0){
-        foreach($CI->X_model->fetch(array(
+        foreach($CI->Interaction_model->fetch(array(
             'x__next' => $i['i__id'],
             'x__following > 0' => null,
             'x__type' => 31835, //References
@@ -3855,7 +3855,7 @@ function view__i__links($i, $e__id = 0, $replace_links = true, $focus__node = fa
         ), array('x__following'), 0) as $message_references){
             if(!substr_count(strtolower($i['i__cache']), '>@'.strtolower($message_references['e__handle']))){
                 //Strange!
-                $CI->X_model->create(array(
+                $CI->Interaction_model->create(array(
                     'x__type' => 4246, //Platform Bug Reports
                     'x__following' => $e__id,
                     'x__next' => $i['i__id'],
@@ -3863,7 +3863,7 @@ function view__i__links($i, $e__id = 0, $replace_links = true, $focus__node = fa
                 ));
                 continue;
             }
-            foreach($CI->X_model->fetch(array(
+            foreach($CI->Interaction_model->fetch(array(
                 'x__follower' => $e__id,
                 'x__following' => $message_references['e__id'],
                 'x__type IN (' . join(',', $CI->config->item('n___33337')) . ')' => null, //SOURCE LINKS
@@ -4028,7 +4028,7 @@ function view__sync_links($str, $return_array = false, $save_i__id = 0) {
         //Save Found references to remove the ones who exist in DB:
         $references_add_to_db = $i__references;
         $player_e = superpower_unlocked();
-        foreach($CI->X_model->fetch(array(
+        foreach($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___4736')) . ')' => null, //Idea Message Links 3x
             'x__next' => $save_i__id,
@@ -4038,7 +4038,7 @@ function view__sync_links($str, $return_array = false, $save_i__id = 0) {
             if(!in_array($x['x__message'], $i__references[$x['x__type']])){
 
                 //Not valid, must be removed:
-                $CI->X_model->update($x['x__id'], array(
+                $CI->Interaction_model->update($x['x__id'], array(
                     'x__privacy' => 6173, //Transaction Removed
                 ), $player_e['e__id'], 10673 /* Member Transaction Unpublished */);
 
@@ -4070,21 +4070,21 @@ function view__sync_links($str, $return_array = false, $save_i__id = 0) {
 
                 if($db_type==31834){
                     $x__type = 31834;
-                    foreach($CI->I_model->fetch(array(
+                    foreach($CI->Idea_model->fetch(array(
                         'LOWER(i__hashtag)' => strtolower(substr($db_val, 1)),
                     )) as $target){
                         $x__previous = $target['i__id'];
                     }
                 } elseif($db_type==42337){
                     $x__type = 42337;
-                    foreach($CI->I_model->fetch(array(
+                    foreach($CI->Idea_model->fetch(array(
                         'LOWER(i__hashtag)' => strtolower(substr($db_val, 2)),
                     )) as $target){
                         $x__previous = $target['i__id'];
                     }
                 } elseif($db_type==31835) {
                     $x__type = 31835;
-                    foreach($CI->E_model->fetch(array(
+                    foreach($CI->Source_model->fetch(array(
                         'LOWER(e__handle)' => strtolower(substr($db_val, 1)),
                     )) as $target){
                         $str = str_replace('@'.$target['e__id'],'@'.$target['e__handle'], $str); //TODO Remove!
@@ -4096,7 +4096,7 @@ function view__sync_links($str, $return_array = false, $save_i__id = 0) {
                     $x__message = $db_val;
                 }
 
-                $CI->X_model->create(array(
+                $CI->Interaction_model->create(array(
                     'x__time' => idea_creation_time($save_i__id),
                     'x__type' => $x__type,
                     'x__player' => $player_e['e__id'],
@@ -4112,7 +4112,7 @@ function view__sync_links($str, $return_array = false, $save_i__id = 0) {
         }
 
         //Save/update message & its cache:
-        $CI->I_model->update($save_i__id, array(
+        $CI->Idea_model->update($save_i__id, array(
             'i__message' => trim($str),
             'i__cache' => $i__cache,
         ), true, $player_e['e__id']);
@@ -4268,7 +4268,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
 
     $focus_i__or = false;
     if($discovery_mode && $focus_i__hashtag && !$focus__node && $x__player){
-        foreach($CI->I_model->fetch(array(
+        foreach($CI->Idea_model->fetch(array(
             'LOWER(i__hashtag)' => strtolower($focus_i__hashtag),
             'i__type IN (' . join(',', $CI->config->item('n___7712')) . ')' => null, //Input Choice
             'i__privacy IN (' . join(',', $CI->config->item('n___31871')) . ')' => null, //ACTIVE
@@ -4280,7 +4280,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
     $has_sortable = $x__id > 0 && !$focus__node && $access_level_i>=3 && in_array($x__type, $CI->config->item('n___4603')) && ($x__type!=42256 || $i['x__type']==34513);
     $has_discovered = 0;
     if(!$is_cache && $x__player){
-        $discoveries = $CI->X_model->fetch(array(
+        $discoveries = $CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___6255')) . ')' => null, //DISCOVERIES
             'x__player' => $x__player,
@@ -4293,7 +4293,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
     }
 
     if($has_discovered && !$target_i__hashtag){
-        foreach($CI->X_model->fetch(array(
+        foreach($CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___6255')) . ')' => null, //DISCOVERIES
             'x__player' => $x__player,
@@ -4336,7 +4336,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
         //$ui .= '<script> $(document).ready(function () { $(\'.cache_frame_'.$i['i__id'].' .first_line\').prepend(\''.$e___11035[43010]['m__cover'].' \'); }); </script>';
     }
 
-    if(count($CI->X_model->fetch(array(
+    if(count($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
         'x__next' => $i['i__id'],
@@ -4347,7 +4347,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
     }
 
     if($focus_i__or){
-        $ui .= '<div class="this_selector this_selector_'.$i['i__id'].'" selection_i__id="'.$i['i__id'].'"><span class="icon-block-sm">'.( count($CI->X_model->fetch(array(
+        $ui .= '<div class="this_selector this_selector_'.$i['i__id'].'" selection_i__id="'.$i['i__id'].'"><span class="icon-block-sm">'.( count($CI->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type' => 7712, //Input Choice
                 'x__player' => $x__player,
@@ -4365,7 +4365,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
 
     //Show Creator if any:
     $headline_authors = array();
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type' => 4250,
         'x__next' => $i['i__id'],
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -4374,7 +4374,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
         array_push($headline_authors, $creator['e__id']);
         $follow_btn = null;
         if($focus__node && $x__player && $x__player!=$creator['e__id']){
-            $followings = $CI->X_model->fetch(array(
+            $followings = $CI->Interaction_model->fetch(array(
                 'x__following' => $creator['e__id'],
                 'x__follower' => $x__player,
                 'x__type IN (' . join(',', $CI->config->item('n___42795')) . ')' => null, //Follow
@@ -4389,7 +4389,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
     }
 
     //Idea Location if any:
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type' => 41949, //Locate
         'x__next' => $i['i__id'],
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -4430,7 +4430,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
         $input_ui = '';
 
         //Fetch discovery
-        $x_completes = $CI->X_model->fetch(array(
+        $x_completes = $CI->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $CI->config->item('n___6255')) . ')' => null, //DISCOVERIES
             'x__player' => $x__player,
@@ -4482,25 +4482,25 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
 
                 $paypal_email =  website_setting(30882);
 
-                $currency_types = $CI->X_model->fetch(array(
+                $currency_types = $CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                     'x__next' => $i['i__id'],
                     'x__following IN (' . join(',', $CI->config->item('n___26661')) . ')' => null, //Currency
                 ));
-                $total_dues = $CI->X_model->fetch(array(
+                $total_dues = $CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                     'x__next' => $i['i__id'],
                     'x__following' => 26562, //Total Due
                 ));
-                $cart_max = $CI->X_model->fetch(array(
+                $cart_max = $CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                     'x__next' => $i['i__id'],
                     'x__following' => 29651, //Cart Max Quantity
                 ));
-                $cart_min = $CI->X_model->fetch(array(
+                $cart_min = $CI->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                     'x__next' => $i['i__id'],
@@ -4526,7 +4526,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
                     $valid_currency = true;
                     $e___26661 = $CI->config->item('e___26661'); //Currency
 
-                    $digest_fees = count($CI->X_model->fetch(array(
+                    $digest_fees = count($CI->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $i['i__id'],
@@ -4614,7 +4614,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
         } elseif (in_array($i['i__type'], $CI->config->item('n___33532'))) {
 
             //Find the created idea if any:
-            $x_responses = $CI->X_model->fetch(array(
+            $x_responses = $CI->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
                 'i__privacy IN (' . join(',', $CI->config->item('n___31871')) . ')' => null, //ACTIVE
                 'x__type' => 33532, //Share Idea
@@ -4642,7 +4642,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
                     $placeholder = 'Enter Number...';
 
                     //Steps
-                    foreach($CI->X_model->fetch(array(
+                    foreach($CI->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $i['i__id'],
@@ -4654,7 +4654,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
                     }
 
                     //Min Value
-                    foreach($CI->X_model->fetch(array(
+                    foreach($CI->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $i['i__id'],
@@ -4666,7 +4666,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
                     }
 
                     //Max Value
-                    foreach($CI->X_model->fetch(array(
+                    foreach($CI->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $i['i__id'],
@@ -4679,7 +4679,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
 
                 } elseif($i['i__type']==30350){
 
-                    $has_time = count($CI->X_model->fetch(array(
+                    $has_time = count($CI->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $CI->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $i['i__id'],
@@ -4752,7 +4752,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
     if(!$focus__node && $x__id && !$is_cache){
         foreach($CI->config->item('e___31770') as $x__type1 => $m1){
             if(in_array($i['x__type'], $CI->config->item('n___'.$x__type1))){
-                foreach($CI->X_model->fetch(array(
+                foreach($CI->Interaction_model->fetch(array(
                     'x__id' => $x__id,
                 ), array('x__player')) as $linker){
                     $link_type_ui .= '<span class="icon-block-sm">';
@@ -4791,7 +4791,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
             $time_diff = view__time_difference($i['x__time'], true);
             $creator_name = '';
             if($i['x__player'] > 0){
-                foreach($CI->E_model->fetch(array(
+                foreach($CI->Source_model->fetch(array(
                     'e__id' => $i['x__player'],
                     'e__privacy IN (' . join(',', $CI->config->item('n___7357')) . ')' => null, //PUBLIC/OWNER
                 )) as $creator){
@@ -4833,7 +4833,7 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
         } elseif($x__type_target_bar==42260 && $player_e && !$is_locked && !$is_cache){
 
             //Reactions... Check to see if they have any?
-            $reactions = $CI->X_model->fetch(array(
+            $reactions = $CI->Interaction_model->fetch(array(
                 'x__following' => $x__player,
                 'x__next' => $i['i__id'],
                 'x__type IN (' . join(',', $CI->config->item('n___42260')) . ')' => null, //Reactions
@@ -5052,7 +5052,7 @@ function view__list_e($i, $plain_no_html = false){
     }
 
     //Query Relevant Sources:
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7360')) . ')' => null, //ACTIVE
         'x__type IN (' . join(',', $CI->config->item('n___33602')) . ')' => null, //Writer Links Active
         'x__next' => $i['i__id'],
@@ -5080,7 +5080,7 @@ function view__i_media($i){
     $message_append = '';
 
     //Query Relevant Sources:
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $CI->config->item('n___42294')) . ')' => null, //Media
         'x__next' => $i['i__id'],
@@ -5147,7 +5147,7 @@ function view__card_e($x__type, $e, $extra_class = null)
     }
 
     if(!isset($e['e__id']) || !isset($e['e__title'])){
-        $CI->X_model->create(array(
+        $CI->Interaction_model->create(array(
             'x__type' => 4246, //Platform Bug Reports
             'x__message' => 'view__card_e() Missing core variables',
             'x__metadata' => array(
@@ -5215,7 +5215,7 @@ function view__card_e($x__type, $e, $extra_class = null)
     foreach($e___42777 as $x__sort_id => $sort) {
         $order_columns['x__type = \''.$x__sort_id.'\' DESC'] = null;
     }
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__type IN (' . join(',', $CI->config->item('n___42777')) . ')' => null, //Featured Profile
         'x__follower' => $e['e__id'],
         'x__privacy IN (' . join(',', $CI->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -5249,7 +5249,7 @@ function view__card_e($x__type, $e, $extra_class = null)
         if($x__id){
             foreach($CI->config->item('e___31770') as $x__type1 => $m1){
                 if(in_array($e['x__type'], $CI->config->item('n___'.$x__type1))){
-                    foreach($CI->X_model->fetch(array(
+                    foreach($CI->Interaction_model->fetch(array(
                         'x__id' => $x__id,
                     ), array('x__player')) as $linker){
                         $link_type_ui .= '<span class="'.( $focus__node ? 'icon-block-sm' : 'icon-block-xs' ).'">';
@@ -5282,7 +5282,7 @@ function view__card_e($x__type, $e, $extra_class = null)
                 $featured_sources .= view__single_select_instant(6177, $e['e__privacy'], $access_level_e, false, $e['e__id'], $x__id);
                 $featured_sources .= '</span>';
 
-            } elseif($x__type_target_bar==42795 && $player_e && $player_e['e__id']!=$e['e__id'] && count($CI->X_model->fetch(array(
+            } elseif($x__type_target_bar==42795 && $player_e && $player_e['e__id']!=$e['e__id'] && count($CI->Interaction_model->fetch(array(
                     'x__follower' => $e['e__id'],
                     'x__following' => 4430, //Active Member
                     'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -5290,7 +5290,7 @@ function view__card_e($x__type, $e, $extra_class = null)
                 )))){
 
                 //Allow to follow fellow players:
-                $followings = $CI->X_model->fetch(array(
+                $followings = $CI->Interaction_model->fetch(array(
                     'x__following' => $e['e__id'],
                     'x__follower' => $player_e['e__id'],
                     'x__type IN (' . join(',', $CI->config->item('n___42795')) . ')' => null, //Follow
@@ -5422,7 +5422,7 @@ function view__card_e($x__type, $e, $extra_class = null)
     foreach($e___14036 as $x__sort_id => $sort) {
         $order_columns['x__following = \''.$x__sort_id.'\' DESC'] = null;
     }
-    foreach($CI->X_model->fetch(array(
+    foreach($CI->Interaction_model->fetch(array(
         'x__following IN (' . join(',', $CI->config->item('n___14036')) . ')' => null, //Featured Sources
         'x__follower' => $e['e__id'],
         'x__type IN (' . join(',', $CI->config->item('n___32292')) . ')' => null, //SOURCE LINKS

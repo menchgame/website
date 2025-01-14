@@ -4,7 +4,7 @@ die('Retired for now');
 
 $transaction__id = 0;
 
-foreach($this->X_model->fetch(array(), array(), 0, 0, array('x__id' => 'ASC')) as $x){
+foreach($this->Interaction_model->fetch(array(), array(), 0, 0, array('x__id' => 'ASC')) as $x){
 
     //Update ID
     $transaction__id++;

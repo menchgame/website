@@ -10,7 +10,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
     if($x__type==12273){
 
         //IDEAS
-        $unique = $this->X_model->fetch(array(
+        $unique = $this->Interaction_model->fetch(array(
             'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___13480')) . ')' => null, //UNIQUE IDEAS
@@ -19,7 +19,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
     } elseif($x__type==12274){
 
         //SOURCE
-        $unique = $this->X_model->fetch(array(
+        $unique = $this->Interaction_model->fetch(array(
             'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___13548')) . ')' => null, //AUTHORED SOURCES
@@ -27,7 +27,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
 
     } elseif(in_array($x__type, $this->config->item('n___42284'))){
 
-        $unique = $this->X_model->fetch(array(
+        $unique = $this->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___'.$x__type)) . ')' => null,
         ), array(), 0, 0, array(), 'COUNT(x__id) as totals');
@@ -35,7 +35,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
     } elseif($x__type==6255){
 
         //DISCOVERY
-        $unique = $this->X_model->fetch(array(
+        $unique = $this->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
         ), array(), 0, 0, array(), 'COUNT(x__id) as totals');
@@ -63,7 +63,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
         if($x__type==12273){
 
             //IDEAS
-            $query = $this->X_model->fetch(array(
+            $query = $this->Interaction_model->fetch(array(
                 'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type IN (' . join(',', $this->config->item('n___13480')) . ')' => null, //UNIQUE IDEAS
@@ -74,7 +74,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
         } elseif($x__type==12274){
 
             //SOURCE
-            $query = $this->X_model->fetch(array(
+            $query = $this->Interaction_model->fetch(array(
                 'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type IN (' . join(',', $this->config->item('n___13548')) . ')' => null, //UNIQUE SOURCES
@@ -85,7 +85,7 @@ foreach($this->config->item('e___14874') as $x__type => $m) {
         } elseif($x__type==6255){
 
             //DISCOVERY
-            $query = $this->X_model->fetch(array(
+            $query = $this->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
                 'x__time >=' => $time_start,

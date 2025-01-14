@@ -2,9 +2,9 @@
 
 $community_pills = '';
 
-foreach(( isset($_GET['e__handle']) && strlen($_GET['e__handle']) ? $this->E_model->fetch(array('LOWER(e__handle)' => strtolower($_GET['e__handle']))) : $this->E_model->scissor_e(website_setting(0), 13207) ) as $e_item) {
+foreach(( isset($_GET['e__handle']) && strlen($_GET['e__handle']) ? $this->Source_model->fetch(array('LOWER(e__handle)' => strtolower($_GET['e__handle']))) : $this->Source_model->scissor_e(website_setting(0), 13207) ) as $e_item) {
 
-    foreach($this->X_model->fetch(array(
+    foreach($this->Interaction_model->fetch(array(
         'x__following' => $e_item['e__id'],
         'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC

@@ -321,17 +321,17 @@ if(isset($_POST['payment_status']) && isset($_POST['item_number'])){
     $item_numbers['e_player'] = strtolower(trim(str_replace('@','',$item_parts[( count($item_parts)==4 ? 3 : 2 )])));
 
     //Fetch Objects based on handles:
-    $player_es = $this->E_model->fetch(array(
+    $player_es = $this->Source_model->fetch(array(
         'LOWER(e__handle)' => $item_numbers['e_player'],
     ));
-    $website_es = $this->E_model->fetch(array(
+    $website_es = $this->Source_model->fetch(array(
         'LOWER(e__handle)' => $item_numbers['e_wesbite'],
     ));
-    $next_is = $this->I_model->fetch(array(
+    $next_is = $this->Idea_model->fetch(array(
         'LOWER(i__hashtag)' => $item_numbers['i_destination'],
         'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
     ));
-    $target_is = ($item_numbers['i_target'] ? $this->I_model->fetch(array(
+    $target_is = ($item_numbers['i_target'] ? $this->Idea_model->fetch(array(
         'LOWER(i__hashtag)' => $item_numbers['i_target'],
         'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
     )) : false);
@@ -349,7 +349,7 @@ if(isset($_POST['payment_status']) && isset($_POST['item_number'])){
             $x__type = ( $is_pending ? 35572 /* Pending Payment */ : 26595 );
 
             //Log Payment:
-            $completion_status = $this->X_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
+            $completion_status = $this->Interaction_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
                 'x__weight' => intval($_POST['quantity']),
                 'x__metadata' => $_POST,
             ));
@@ -359,14 +359,14 @@ if(isset($_POST['payment_status']) && isset($_POST['item_number'])){
             $x__type = ( $is_pending ? 39597 /* Pending Refund */ : 31967 );
 
             //Find issued tickets:
-            $original_payment = $this->X_model->fetch(array(
+            $original_payment = $this->Interaction_model->fetch(array(
                 'x__type' => 26595,
                 'x__player' => $player_es[0]['e__id'],
                 'x__previous' => $next_is[0]['i__id'],
             ));
 
             //Log Refund:
-            $completion_status = $this->X_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
+            $completion_status = $this->Interaction_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
                 'x__weight' => (-1 * ( isset($original_payment[0]['x__weight']) ? $original_payment[0]['x__weight'] : 1 )),
                 'x__metadata' => $_POST,
                 'x__reference' => ( isset($original_payment[0]['x__id']) ? $original_payment[0]['x__id'] : 0 ),
@@ -1015,7 +1015,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                         <!-- Idea Creator(s) -->
                         <div class="creator_box">
                             <?php
-                            foreach($this->X_model->fetch(array(
+                            foreach($this->Interaction_model->fetch(array(
                                 'x__following' => $player_e['e__id'],
                                 'x__type' => 41011, //PINNED FOLLOWER
                                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE

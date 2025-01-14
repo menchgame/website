@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class E_model extends CI_Model
+class Source_model extends CIdea_model
 {
 
     /*
@@ -19,13 +19,13 @@ class E_model extends CI_Model
 
 
         //Remove from Anonymous:
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__following IN (' . join(',', $this->config->item('n___32540')) . ')' => null, //Unsubscribers
             'x__follower' => $e__id,
         )) as $unsubscriber_x){
-            $this->X_model->update($unsubscriber_x['x__id'], array(
+            $this->Interaction_model->update($unsubscriber_x['x__id'], array(
                 'x__privacy' => 6173,
             ), $e__id, 10673 /* IDEA NOTES Unpublished */);
         }
@@ -35,7 +35,7 @@ class E_model extends CI_Model
 
 
         //Add to Subscriber:
-        $this->X_model->create(array(
+        $this->Interaction_model->create(array(
             'x__following' => 4430, //Subscriber
             'x__type' => 4251,
             'x__player' => $e__id,
@@ -58,25 +58,25 @@ class E_model extends CI_Model
         );
 
         //Make sure they also belong to this website's members:
-        $this->E_model->add_regular_e(website_setting(0), $e['e__id']);
+        $this->Source_model->add_regular_e(website_setting(0), $e['e__id']);
 
 
         //Check & Adjust their subscription, IF needed:
         //Remove their subscribe:
         $resubscribed = 0;
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $this->config->item('n___29648')) . ')' => null, //Unsubscribers
             'x__follower' => $e['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         )) as $unsubscribe){
-            $resubscribed += $this->X_model->update($unsubscribe['x__id'], array(
+            $resubscribed += $this->Interaction_model->update($unsubscribe['x__id'], array(
                 'x__privacy' => 6173, //Transaction Removed
             ), $e['e__id'], 31064 /* Login Resubscribe */);
         }
         if($resubscribed > 0){
             //Add Back to Subscribers:
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__type' => 4251,
                 'x__following' => 4430, //Active Member
                 'x__player' => $e['e__id'],
@@ -97,7 +97,7 @@ class E_model extends CI_Model
 
             }
 
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__player' => $e['e__id'],
                 'x__type' => ( $is_cookie ? 14032 /* COOKIE SIGN */ : 7564 /* MEMBER SIGN */ ),
             ));
@@ -109,7 +109,7 @@ class E_model extends CI_Model
 
         //Fetch Platform Defaults:
         $platform_theme = array();
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $this->config->item('n___14926')) . ')' => null, //Website Theme Items
             'x__follower' => 6404, //Platform Default
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -120,7 +120,7 @@ class E_model extends CI_Model
 
         //Fetch Website Defaults:
         $website_theme = array();
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $this->config->item('n___14926')) . ')' => null, //Website Theme Items
             'x__follower' => website_setting(0), //Website ID
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -132,7 +132,7 @@ class E_model extends CI_Model
 
         //Fetch User Defaults:
         $user_theme = array();
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__follower' => $e['e__id'], //This follower source
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -203,20 +203,20 @@ class E_model extends CI_Model
         //Resubscribe IF they are Permanently Unsubscribed:
         /*
         $unsubscribed_time = null;
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $this->config->item('n___31057')) . ')' => null, //Permanently Unsubscribed
             'x__follower' => $e['e__id'], //This follower source
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         ), array(), 0) as $unsubscribed){
             $unsubscribed_time = $unsubscribed['x__time'];
-            $this->X_model->update($unsubscribed['x__id'], array(
+            $this->Interaction_model->update($unsubscribed['x__id'], array(
                 'x__privacy' => 6173,
             ), $e['e__id'], 31064); //Resubscribe
         }
         if($unsubscribed_time){
             //Add to subscribed again:
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__type' => 4251,
                 'x__following' => 4430, //Active Member
                 'x__player' => $e['e__id'],
@@ -233,14 +233,14 @@ class E_model extends CI_Model
 
     function add_regular_e($x__following, $x__follower, $x__message = null) {
         //Add if link not already there:
-        if(!count($this->X_model->fetch(array(
+        if(!count($this->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__following' => $x__following,
             'x__follower' => $x__follower,
             'x__message' => $x__message,
         )))){
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__player' => $x__follower, //Belongs to this Member
                 'x__type' => 4251,
                 'x__message' => $x__message,
@@ -252,7 +252,7 @@ class E_model extends CI_Model
 
     function scissor_e($x__following, $sub_id){
 
-        $all_results = $this->X_model->fetch(array(
+        $all_results = $this->Interaction_model->fetch(array(
             'x__following' => $x__following,
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -261,7 +261,7 @@ class E_model extends CI_Model
 
         //Remove if not in the secondary group:
         foreach($all_results as $key => $primary_list){
-            if(!count($this->X_model->fetch(array(
+            if(!count($this->Interaction_model->fetch(array(
                 'x__following' => $sub_id,
                 'x__follower' => $primary_list['e__id'],
                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -278,7 +278,7 @@ class E_model extends CI_Model
 
     function scissor_i($x__following, $sub_id){
 
-        $all_results = $this->X_model->fetch(array(
+        $all_results = $this->Interaction_model->fetch(array(
             'x__following' => $x__following,
             'x__type IN (' . join(',', $this->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -287,7 +287,7 @@ class E_model extends CI_Model
 
         //Remove if not in the secondary group:
         foreach($all_results as $key => $primary_list){
-            if(!count($this->X_model->fetch(array(
+            if(!count($this->Interaction_model->fetch(array(
                 'x__following' => $sub_id,
                 'x__next' => $primary_list['i__id'],
                 'x__type IN (' . join(',', $this->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
@@ -313,7 +313,7 @@ class E_model extends CI_Model
 
         //All good, create new source:
         $new_private_users = in_array($x__website, $this->config->item('n___44011'));
-        $added_e = $this->E_model->verify_create($full_name, 0, ( $image_url ? $image_url : random_cover(12279) ), false, ( $new_private_users ? 4755 : 6181 ));
+        $added_e = $this->Source_model->verify_create($full_name, 0, ( $image_url ? $image_url : random_cover(12279) ), false, ( $new_private_users ? 4755 : 6181 ));
         if(!$added_e['status']){
             //We had an error, return it:
             return $added_e;
@@ -331,7 +331,7 @@ class E_model extends CI_Model
 
         //Add email?
         if($email){
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__type' => 4251,
                 'x__message' => trim(strtolower($email)),
                 'x__following' => 3288, //Email
@@ -343,7 +343,7 @@ class E_model extends CI_Model
 
         //Add Number?
         if($phone_number){
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__following' => 4783, //Phone
                 'x__type' => 4251,
                 'x__message' => $phone_number,
@@ -355,12 +355,12 @@ class E_model extends CI_Model
 
         if($email || $phone_number){
 
-            $this->E_model->activate_subscription( $added_e['new_e']['e__id'], $x__website );
+            $this->Source_model->activate_subscription( $added_e['new_e']['e__id'], $x__website );
 
         } else {
 
             //Add to anonymous:
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__following' => 14938, //Guest
                 'x__type' => 4251,
                 'x__player' => $added_e['new_e']['e__id'],
@@ -376,24 +376,24 @@ class E_model extends CI_Model
 
 
         //Add member to Domain Member Group(s):
-        $this->E_model->add_regular_e($x__website, $added_e['new_e']['e__id']);
+        $this->Source_model->add_regular_e($x__website, $added_e['new_e']['e__id']);
 
 
         //Send Welcome Email if any:
         if($email){
-            foreach($this->X_model->fetch(array(
+            foreach($this->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type' => 33600, //Draft
                 'x__following' => 14929, //Website Welcome Email Templates
             ), array('x__next'), 0) as $i){
-                if(count($this->X_model->fetch(array(
+                if(count($this->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type' => 33600, //Draft
                     'x__following' => $x__website, //for Current website
                     'x__next' => $i['i__id'], //Is this the template?
                 )))){
                     //Found the email template to send:
-                    $total_sent = $this->X_model->send_i_mass_dm(array($added_e['new_e']), $i, $x__website);
+                    $total_sent = $this->Interaction_model->send_i_mass_dm(array($added_e['new_e']), $i, $x__website);
                     break; //Just the first template match
                 }
             }
@@ -403,7 +403,7 @@ class E_model extends CI_Model
         flag_for_search_indexing(12274,  $added_e['new_e']['e__id']);
 
         //Assign session & log login transaction:
-        $this->E_model->activate_session($added_e['new_e']);
+        $this->Source_model->activate_session($added_e['new_e']);
 
 
         //Return Member:
@@ -442,13 +442,13 @@ class E_model extends CI_Model
 
             //Log transaction new source:
             $creator = ($x__player > 0 ? $x__player : $add_fields['e__id']);
-            if(!$skip_creator_link && $creator!=$add_fields['e__id'] && !count($this->X_model->fetch(array(
+            if(!$skip_creator_link && $creator!=$add_fields['e__id'] && !count($this->Interaction_model->fetch(array(
                     'x__following' => $creator,
                     'x__follower' => $add_fields['e__id'],
                     'x__type' => 4251, //New Source Created
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 )))){
-                $this->X_model->create(array(
+                $this->Interaction_model->create(array(
                     'x__player' => $creator,
                     'x__following' => $creator,
                     'x__follower' => $add_fields['e__id'],
@@ -458,7 +458,7 @@ class E_model extends CI_Model
 
 
             //Log transaction new Idea hashtag:
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__player' => $x__player,
                 'x__next' => $add_fields['e__id'],
                 'x__message' => $add_fields['e__handle'],
@@ -466,7 +466,7 @@ class E_model extends CI_Model
             ));
 
             //Fetch to return the complete source data:
-            $es = $this->E_model->fetch(array(
+            $es = $this->Source_model->fetch(array(
                 'e__id' => $add_fields['e__id'],
             ));
 
@@ -478,7 +478,7 @@ class E_model extends CI_Model
         } else {
 
             //Ooopsi, something went wrong!
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__following' => $x__player,
                 'x__message' => 'create() failed to create a new source',
                 'x__type' => 4246, //Platform Bug Reports
@@ -564,11 +564,11 @@ class E_model extends CI_Model
         }
 
 
-        foreach($this->X_model->fetch($query_filters, $joins_objects, 0, 0, $order_columns) as $e_down) {
+        foreach($this->Interaction_model->fetch($query_filters, $joins_objects, 0, 0, $order_columns) as $e_down) {
 
             //Filter Sources, if needed:
             $qualified_e = true;
-            if(count($include_any_e) && !count($this->X_model->fetch(array(
+            if(count($include_any_e) && !count($this->Interaction_model->fetch(array(
                     'x__following IN (' . join(',', $include_any_e) . ')' => null,
                     'x__follower' => $e_down['e__id'],
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -577,7 +577,7 @@ class E_model extends CI_Model
                 //Must include all sources, skip:
                 $qualified_e = false;
             }
-            if(count($exclude_all_e) && count($this->X_model->fetch(array(
+            if(count($exclude_all_e) && count($this->Interaction_model->fetch(array(
                     'x__following IN (' . join(',', $exclude_all_e) . ')' => null,
                     'x__follower' => $e_down['e__id'],
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -600,7 +600,7 @@ class E_model extends CI_Model
                 break;
             }
 
-            foreach($this->E_model->fetch_recursive($x__type, $e_down['e__id'], $include_any_e, $exclude_all_e, $hard_level, $hard_limit, $s__level) as $e_recursive_down){
+            foreach($this->Source_model->fetch_recursive($x__type, $e_down['e__id'], $include_any_e, $exclude_all_e, $hard_level, $hard_limit, $s__level) as $e_recursive_down){
                 if(!isset($flat_items[$e_recursive_down['e__id']])){
                     $e_recursive_down['s__count'] = count($flat_items)+1;
                     $flat_items[$e_recursive_down['e__id']] = $e_recursive_down;
@@ -621,7 +621,7 @@ class E_model extends CI_Model
 
         //Fetch current source filed values so we can compare later on after we've updated it:
         if($x__player > 0){
-            $before_data = $this->E_model->fetch(array('e__id' => $id));
+            $before_data = $this->Source_model->fetch(array('e__id' => $id));
         }
 
         //Update:
@@ -678,7 +678,7 @@ class E_model extends CI_Model
                 }
 
                 //Value has changed, log transaction:
-                $this->X_model->create(array(
+                $this->Interaction_model->create(array(
                     'x__player' => ($x__player > 0 ? $x__player : $id),
                     'x__type' => $x__type,
                     'x__follower' => $id,
@@ -696,7 +696,7 @@ class E_model extends CI_Model
         } elseif($affected_rows < 1){
 
             //This should not happen:
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__follower' => $id,
                 'x__type' => 4246, //Platform Bug Reports
                 'x__player' => $x__player,
@@ -740,7 +740,7 @@ class E_model extends CI_Model
         //First delete existing following/follower transactions for this drop down:
         $previously_assigned = ($set_e_down_id < 1);
         $x_update_id = 0;
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__follower' => $x__player,
             'x__following IN (' . join(',', $followers) . ')' => null, //Current followers
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -753,7 +753,7 @@ class E_model extends CI_Model
                 $x_update_id = $x['x__id'];
 
                 //Do not log update transaction here as we would log it further below:
-                $this->X_model->update($x['x__id'], array(
+                $this->Interaction_model->update($x['x__id'], array(
                     'x__privacy' => 6173, //Transaction Deleted
                 ), $x__player, 6224 /* Member Account Updated */);
             }
@@ -764,7 +764,7 @@ class E_model extends CI_Model
         //Make sure $set_e_down_id belongs to followings if set (Could be null which means delete all)
         if (!$previously_assigned) {
             //Let's go ahead and add desired source as parent:
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__player' => $x__player,
                 'x__follower' => $x__player,
                 'x__following' => $set_e_down_id,
@@ -783,7 +783,7 @@ class E_model extends CI_Model
         $duplicates_removed = 0;
 
         //Check followings to see if there are duplicates:
-        foreach($this->X_model->fetch(array(
+        foreach($this->Interaction_model->fetch(array(
             'x__follower' => $e__id,
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -802,7 +802,7 @@ class E_model extends CI_Model
             if($duplicate_found){
                 //Remove it:
                 $duplicates_removed++;
-                $this->X_model->update($x['x__id'], array(
+                $this->Interaction_model->update($x['x__id'], array(
                     'x__privacy' => 6173,
                 ), $x['x__player'], 29331); //Duplicate Link Removed
             } else {
@@ -854,11 +854,11 @@ class E_model extends CI_Model
             $x_adjusted += $affected_x__website;
 
             //Clean Duplicates:
-            $duplicates_removed = $this->E_model->remove_duplicate_links($migrate_s__id);
+            $duplicates_removed = $this->Source_model->remove_duplicate_links($migrate_s__id);
             $x_adjusted += $duplicates_removed;
 
             $player_e = superpower_unlocked();
-            $this->X_model->create(array(
+            $this->Interaction_model->create(array(
                 'x__player' => ($x__player > 0 ? $x__player : $player_e['e__id'] ),
                 'x__type' => 31784,
                 'x__follower' => $migrate_s__id,
@@ -879,13 +879,13 @@ class E_model extends CI_Model
         } else {
 
             //REMOVE TRANSACTIONS
-            foreach($this->X_model->fetch(array(
+            foreach($this->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                 'x__type !=' => 10673, //Member Transaction Unpublished
                 '(x__follower = ' . $e__id . ' OR x__following = ' . $e__id . ' OR x__player = ' . $e__id . ')' => null,
             ), array(), 0) as $adjust_tr){
                 //Delete this transaction:
-                $x_adjusted += $this->X_model->update($adjust_tr['x__id'], array(
+                $x_adjusted += $this->Interaction_model->update($adjust_tr['x__id'], array(
                     'x__privacy' => 6173, //Transaction Deleted
                 ), $x__player, 10673 /* Member Transaction Unpublished */);
             }
@@ -938,7 +938,7 @@ class E_model extends CI_Model
         $applied_success = 0; //To be populated
 
         //Fetch all followers:
-        $followers = $this->X_model->fetch(array(
+        $followers = $this->Interaction_model->fetch(array(
             'x__following' => $e__id,
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -954,7 +954,7 @@ class E_model extends CI_Model
             //Take command-specific action:
             if ($action_e__id==4998) { //Add Prefix String
 
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__title' => $action_command1 . $x['e__title'],
                 ), true, $x__player);
 
@@ -962,7 +962,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==4999) { //Add Postfix String
 
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__title' => $x['e__title'] . $action_command1,
                 ), true, $x__player);
 
@@ -971,12 +971,12 @@ class E_model extends CI_Model
             } elseif (in_array($action_e__id, array(5981, 5982, 11956, 13441)) && view__valid_handle_e($action_command1)) { //Add/Delete/Migrate followings source
 
                 //What member searched for:
-                foreach($this->E_model->fetch(array(
+                foreach($this->Source_model->fetch(array(
                     'LOWER(e__handle)' => strtolower(view__valid_handle_e($action_command1)),
                 )) as $e){
 
                     //See if follower source has searched followings source:
-                    $down_up_e = $this->X_model->fetch(array(
+                    $down_up_e = $this->Interaction_model->fetch(array(
                         'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                         'x__follower' => $x['e__id'], //This follower source
                         'x__following' => $e['e__id'],
@@ -998,13 +998,13 @@ class E_model extends CI_Model
                         }
 
                         //Following Member Addition
-                        $this->X_model->create($add_fields);
+                        $this->Interaction_model->create($add_fields);
 
                         $applied_success++;
 
                         if($action_e__id==13441){
                             //Since we're migrating we should remove from here:
-                            $this->X_model->update($x['x__id'], array(
+                            $this->Interaction_model->update($x['x__id'], array(
                                 'x__privacy' => 6173, //Transaction Deleted
                             ), $x__player, 10673 /* Member Transaction Unpublished  */);
                         }
@@ -1015,7 +1015,7 @@ class E_model extends CI_Model
 
                             //Following Member Removal
                             foreach($down_up_e as $delete_tr){
-                                $this->X_model->update($delete_tr['x__id'], array(
+                                $this->Interaction_model->update($delete_tr['x__id'], array(
                                     'x__privacy' => 6173, //Transaction Deleted
                                 ), $x__player, 10673 /* Member Transaction Unpublished  */);
                                 $applied_success++;
@@ -1023,11 +1023,11 @@ class E_model extends CI_Model
 
                         } elseif($action_e__id==11956 && view__valid_handle_e($action_command2)) {
 
-                            foreach($this->E_model->fetch(array(
+                            foreach($this->Source_model->fetch(array(
                                 'LOWER(e__handle)' => strtolower(view__valid_handle_e($action_command2)),
                             )) as $e){
                                 //Add as a followings because it meets the condition
-                                $this->X_model->create(array(
+                                $this->Interaction_model->create(array(
                                     'x__player' => $x__player,
                                     'x__type' => 4251,
                                     'x__follower' => $x['e__id'], //This follower source
@@ -1041,7 +1041,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==5943) { //Member Mass Update Member Cover
 
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__cover' => $action_command1,
                 ), true, $x__player);
 
@@ -1049,7 +1049,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==12318 && !strlen($x['e__cover'])) { //Member Mass Update Member Cover
 
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__cover' => $action_command1,
                 ), true, $x__player);
 
@@ -1057,7 +1057,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==5000 && substr_count(strtolower($x['e__title']), strtolower($action_command1)) > 0) { //Replace Member Matching Name
 
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__title' => str_ireplace($action_command1, $action_command2, $x['e__title']),
                 ), true, $x__player);
 
@@ -1065,7 +1065,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==10625 && substr_count($x['e__cover'], $action_command1) > 0) { //Replace Member Matching Cover
 
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__cover' => str_replace($action_command1, $action_command2, $x['e__cover']),
                 ), true, $x__player);
 
@@ -1075,7 +1075,7 @@ class E_model extends CI_Model
 
                 $new_message = str_replace($action_command1, $action_command2, $x['x__message']);
 
-                $this->X_model->update($x['x__id'], array(
+                $this->Interaction_model->update($x['x__id'], array(
                     'x__message' => $new_message,
                 ), $x__player, 10657 /* SOURCE LINK CONTENT UPDATE  */);
 
@@ -1083,7 +1083,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==26093) { //Replace Transaction Matching String
 
-                $this->X_model->update($x['x__id'], array(
+                $this->Interaction_model->update($x['x__id'], array(
                     'x__message' => $action_command1,
                 ), $x__player, 10657 /* SOURCE LINK CONTENT UPDATE  */);
 
@@ -1093,11 +1093,11 @@ class E_model extends CI_Model
 
                 //Being deleted? Remove as well if that's the case:
                 if(!in_array($action_command2, $this->config->item('n___7358'))){
-                    $links_removed = $this->E_model->remove($x['e__id'], $x__player);
+                    $links_removed = $this->Source_model->remove($x['e__id'], $x__player);
                 }
 
                 //Update Matching Member Status:
-                $this->E_model->update($x['e__id'], array(
+                $this->Source_model->update($x['e__id'], array(
                     'e__privacy' => $action_command2,
                 ), true, $x__player);
 
@@ -1105,7 +1105,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==5865 && ($action_command1=='*' || $x['x__privacy']==$action_command1) && in_array($action_command2, $this->config->item('n___6186') /* Interaction Privacy */)) { //Update Matching Interaction Privacy
 
-                $this->X_model->update($x['x__id'], array(
+                $this->Interaction_model->update($x['x__id'], array(
                     'x__privacy' => $action_command2,
                 ), $x__player, ( in_array($action_command2, $this->config->item('n___7360') /* ACTIVE */) ? 10656 /* Member Transaction Updated Status */ : 10673 /* Member Transaction Unpublished */ ));
 
@@ -1113,7 +1113,7 @@ class E_model extends CI_Model
 
             } elseif ($action_e__id==42804 && ($action_command1=='*' || $x['x__type']==$action_command1) && in_array($action_command2, $this->config->item('n___32292') /* Source Link Types */)) { //Update Matching Interaction Type
 
-                $this->X_model->update($x['x__id'], array(
+                $this->Interaction_model->update($x['x__id'], array(
                     'x__type' => $action_command2,
                 ), $x__player, 42805);
                 $applied_success++;
@@ -1122,7 +1122,7 @@ class E_model extends CI_Model
         }
 
         //Log mass source edit transaction:
-        $this->X_model->create(array(
+        $this->Interaction_model->create(array(
             'x__player' => $x__player,
             'x__type' => $action_e__id,
             'x__follower' => $e__id,
@@ -1153,7 +1153,7 @@ class E_model extends CI_Model
         }
 
         //Create
-        $focus_e = $this->E_model->create(array(
+        $focus_e = $this->Source_model->create(array(
             'e__title' => $validate_e__title['e__title_clean'],
             'e__cover' => $e__cover,
             'e__privacy' => $e__privacy,

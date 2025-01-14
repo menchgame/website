@@ -16,7 +16,7 @@ $target_i__hashtag = ( count($target_i) && $x__player ? $target_i['i__hashtag'] 
 $breadcrum_content = null;
 if($x__player && $target_i__hashtag!=$focus_i['i__hashtag']){
 
-    $find_previous = $this->X_model->find_previous($x__player, $target_i__hashtag, $focus_i['i__id']);
+    $find_previous = $this->Interaction_model->find_previous($x__player, $target_i__hashtag, $focus_i['i__id']);
     if(count($find_previous)){
 
         $nav_list = array();
@@ -32,7 +32,7 @@ if($x__player && $target_i__hashtag!=$focus_i['i__hashtag']){
             $level++;
 
             //Does this have a follower list?
-            $query_subset = $this->X_model->fetch(array(
+            $query_subset = $this->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                 'x__type IN (' . join(',', $this->config->item('n___42267')) . ')' => null, //Sequence Down
@@ -52,7 +52,7 @@ if($x__player && $target_i__hashtag!=$focus_i['i__hashtag']){
                 $breadcrum_content .= '<div class="dropdown-menu" aria-labelledby="dropdown_instant_'.$followings_i['i__id'].'">';
                 foreach ($query_subset as $i_subset) {
 
-                    if(count($this->X_model->fetch(array(
+                    if(count($this->Interaction_model->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
                         'x__player' => $x__player,
@@ -89,7 +89,7 @@ if($breadcrum_content){
 
 //Progress?
 if($player_e){
-    $tree_progress = $this->X_model->tree_progress($x__player, $target_i);
+    $tree_progress = $this->Interaction_model->tree_progress($x__player, $target_i);
     $target_completed = $tree_progress['fixed_completed_percentage'] >= 100;
     if($target_completed) {
         echo '<div class="alert alert-success" role="alert" title="'.$tree_progress['fixed_total'].'/'.$tree_progress['fixed_discovered'].' '.$tree_progress['fixed_completed_percentage'].'% '.$tree_progress['fixed_discovered'].': '.join(',',$tree_progress['list_discovered']).'"><span class="icon-block"><i class="far fa-check-circle"></i></span>100% Complete</div>';

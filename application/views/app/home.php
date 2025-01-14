@@ -16,7 +16,7 @@ if(in_array($website_id, $this->config->item('n___30984'))){
 
 $primary_i = array();
 $secondary_i_list = array();
-foreach($this->X_model->fetch(array(
+foreach($this->Interaction_model->fetch(array(
     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
     'x__type' => 34513, //Pinned
     'x__following' => $website_id,
@@ -68,10 +68,10 @@ if($domain_phone || $email_domain) {
 
 
 //Any Info Boxes?
-foreach($this->E_model->scissor_e($website_id, 14903) as $e_item) {
+foreach($this->Source_model->scissor_e($website_id, 14903) as $e_item) {
     //Any Followers?
     $info_item = null;
-    foreach($this->X_model->fetch(array(
+    foreach($this->Interaction_model->fetch(array(
         'x__following' => $e_item['e__id'],
         'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -134,7 +134,7 @@ if(strlen($secondary_i)){
 $social_ui = null;
 $e___14870 = $this->config->item('e___14870'); //Website Partner
 foreach($this->config->item('e___14036') as $e__id => $m){
-    foreach($this->X_model->fetch(array(
+    foreach($this->Interaction_model->fetch(array(
         'x__following' => $e__id,
         'x__follower' => $website_id,
         'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
