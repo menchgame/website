@@ -22,6 +22,7 @@
     }
 </style>
 
+<h1>Reels</h1>
 
 <section class="videos">
     <div class="video-box">
