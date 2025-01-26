@@ -4,12 +4,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class App extends CI_Controller
 {
 
+    public $player_e; // Declare the variable
+
     function __construct()
     {
         
         parent::__construct();
 
         $this->output->enable_profiler(FALSE);
+
+        $this->player_e = superpower_unlocked();
 
         auto_login_player(false);
     }
