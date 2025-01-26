@@ -10,7 +10,7 @@ $filters = array(
 $buffer_time = 300;
 
 if(isset($_GET['i__hashtag']) && strlen($_GET['i__hashtag'])){
-    foreach($this->Idea_model->fetch(array(
+    foreach($this->Idea_cache->fetch(array(
         'LOWER(i__hashtag)' => strtolower($_GET['i__hashtag']),
     )) as $i){
         $filters['x__next'] = $i['i__id'];
@@ -22,17 +22,17 @@ $links_deleted = 0;
 $counter = 0;
 
 //Go through all expire seconds ideas:
-foreach($this->Interaction_model->fetch($filters, array('x__next'), 0) as $expires){
+foreach($this->Mench_ledger->fetch($filters, array('x__next'), 0) as $expires){
 
     //Now go through everyone who discovered this selection:
-    foreach($this->Interaction_model->fetch(array(
+    foreach($this->Mench_ledger->fetch(array(
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $this->config->item('n___7704')) . ')' => null, //Discovery Expansions
         'x__previous' => $expires['i__id'],
     ), array('x__player'), 0) as $x_progress){
 
         //Now see if the answer is completed:
-        $answer_completed = $this->Interaction_model->fetch(array(
+        $answer_completed = $this->Mench_ledger->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___31777')) . ')' => null, //SUCCESSFUL DISCOVERIES
             'x__previous' => $x_progress['x__next'],
@@ -44,7 +44,7 @@ foreach($this->Interaction_model->fetch($filters, array('x__next'), 0) as $expir
 
             //Answer not yet completed and no time left, delete response:
             $deleted = false;
-            foreach($this->Interaction_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                 'x__type IN (' . join(',', $this->config->item('n___31777')) . ')' => null, //SUCCESSFUL DISCOVERIES
                 'x__previous' => $expires['i__id'],
@@ -52,7 +52,7 @@ foreach($this->Interaction_model->fetch($filters, array('x__next'), 0) as $expir
             ), array(), 0) as $delete){
 
                 $deleted = true;
-                $this->Interaction_model->update($delete['x__id'], array(
+                $this->Mench_ledger->update($delete['x__id'], array(
                     'x__privacy' => 6173, //Transaction Deleted
                 ), $player_e['e__id'], 29085); //Time Expired
 
@@ -76,7 +76,7 @@ foreach($this->Interaction_model->fetch($filters, array('x__next'), 0) as $expir
 echo '<div style="text-align: center">'.$links_deleted.'/'.$counter.' ideas expired.</div>';
 
 if(isset($filters['x__next'])){
-    foreach($this->Idea_model->fetch(array('i__id' => $filters['x__next'])) as $i){
+    foreach($this->Idea_cache->fetch(array('i__id' => $filters['x__next'])) as $i){
         //We were deleting a single item, redirect back:
         js_php_redirect(view__memory(42903,33286).$i['i__hashtag'], 0);
     }

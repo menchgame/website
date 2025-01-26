@@ -7,13 +7,13 @@ $e___42263 = $this->config->item('e___42263'); //Link Groups
 
 
 if($e__handle){
-    foreach($this->Source_model->fetch(array(
+    foreach($this->Source_cache->fetch(array(
         'LOWER(e__handle)' => strtolower($e__handle),
     )) as $e){
         echo '<h2 class="center"><a href="'.view__memory(42903,42902).$e__handle.'"><span class="icon-block">'.view__cover($e['e__cover']).'</span> <u>' . $e['e__title'] . '</u></a> <a href="'.view__memory(42903,33286).$this->uri->segment(1).'"><i class="far fa-filter-slash"></i></a></h2>';
     }
 } elseif($i__hashtag){
-    foreach($this->Idea_model->fetch(array(
+    foreach($this->Idea_cache->fetch(array(
         'LOWER(i__hashtag)' => strtolower($i__hashtag),
     )) as $i){
         echo '<h2 class="center"><a href="'.view__memory(42903,33286).$i__hashtag.'"><u>' . view__i_title($i, true) . '</u></a> <a href="'.view__memory(42903,33286).$this->uri->segment(1).'"><i class="far fa-filter-slash"></i></a></h2>';
@@ -58,7 +58,7 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
                         echo '<td class="center" colspan="2" title="@'.$e___42263[$headline_link]['m__handle'].'">';
                         //Search for sibling If Has Family:
                         if(in_array($e__id2, $this->config->item('n___42792'))){
-                            foreach($this->Interaction_model->fetch(array(
+                            foreach($this->Mench_ledger->fetch(array(
                                 'x__follower' => $headline_link,
                                 'x__type' => 42570, //Family
                                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC

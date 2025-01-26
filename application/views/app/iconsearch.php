@@ -8,7 +8,7 @@ if(isset($_GET['search_for'])){
 
 } elseif(isset($_GET['e__handle']) && $_GET['e__handle']){
 
-    $es = $this->Source_model->fetch(array(
+    $es = $this->Source_cache->fetch(array(
         'LOWER(e__handle)' => strtolower($_GET['e__handle']),
     ));
     if(!count($es)){
@@ -46,7 +46,7 @@ echo '<input type="submit" class="btn" value="Search">';
 
 if($icon_keyword){
 
-    $matching_results = $this->Source_model->fetch(array(
+    $matching_results = $this->Source_cache->fetch(array(
         'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
         'LOWER(e__cover) LIKE \'%'.strtolower($icon_keyword).'%\'' => null,
     ));
@@ -71,7 +71,7 @@ if($icon_keyword){
         foreach($matching_results as $count=>$en){
 
             if(isset($_GET['do_replace']) && isset($_GET['replace_with'])){
-                $replaced += $this->Source_model->update($en['e__id'], array(
+                $replaced += $this->Source_cache->update($en['e__id'], array(
                     'e__cover' => str_ireplace($icon_keyword, $_GET['replace_with'], $en['e__cover']),
                 ), false, $player_e['e__id']);
 

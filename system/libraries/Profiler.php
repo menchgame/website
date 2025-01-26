@@ -207,7 +207,7 @@ class CI_Profiler {
 				{
 					$dbs[get_class($this->CI).':$'.$name] = $cobject;
 				}
-				elseif ($cobject instanceof CIdea_model)
+				elseif ($cobject instanceof CIdea_cache)
 				{
 					foreach (get_object_vars($cobject) as $mname => $mobject)
 					{

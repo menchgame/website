@@ -56,7 +56,7 @@ class App extends CI_Controller
 
         if($target_hashtag && strlen($target_hashtag)){
             //Verify:
-            foreach($this->I_model->fetch(array(
+            foreach($this->Idea_cache->fetch(array(
                 'LOWER(i__hashtag)' => strtolower($target_hashtag),
             )) as $i_found){
                 $target_i = $i_found;
@@ -75,7 +75,7 @@ class App extends CI_Controller
 
             } else {
 
-                foreach($this->I_model->fetch(array(
+                foreach($this->Idea_cache->fetch(array(
                     'LOWER(i__hashtag)' => strtolower($_GET['i__hashtag']),
                 )) as $i_found){
                     $focus_i = $i_found;
@@ -86,7 +86,7 @@ class App extends CI_Controller
             if(!$focus_i){
                 //See if we can find via ID?
                 if(is_numeric($_GET['i__hashtag'])){
-                    foreach($this->I_model->fetch(array(
+                    foreach($this->Idea_cache->fetch(array(
                         'i__id' => $_GET['i__hashtag'],
                     )) as $i_found){
                         $focus_i = $i_found;
@@ -102,7 +102,7 @@ class App extends CI_Controller
 
         
         if(isset($_GET['e__handle']) && strlen($_GET['e__handle'])){
-            foreach($this->E_model->fetch(array(
+            foreach($this->Source_cache->fetch(array(
                 'LOWER(e__handle)' => strtolower($_GET['e__handle']),
             )) as $e_found){
                 $focus_e = $e_found;
@@ -111,7 +111,7 @@ class App extends CI_Controller
                 //See if we need to lookup the ID:
                 if(is_numeric($_GET['e__handle'])){
                     //Maybe its an ID?
-                    foreach ($this->E_model->fetch(array(
+                    foreach ($this->Source_cache->fetch(array(
                         'e__id' => $_GET['e__handle'],
                     )) as $e_found){
                         $focus_e = $e_found;
@@ -173,8 +173,8 @@ class App extends CI_Controller
                         if(i_startable($focus_i)){
                             $flash_message = '<div class="alert alert-success" role="alert"><span class="icon-block"><i class="far fa-play"></i></span>You have started discovering this idea. Scroll to the bottom & go next to continue.</div>';
                         } else {
-                            $this->X_model->mark_complete(i__discovery_link($focus_i), $focus_e['e__id'], ( $target_i ? $target_i['i__id'] : 0 ), $focus_i);
-                            $this->X_model->mark_complete(29393, $focus_e['e__id'], ( $target_i ? $target_i['i__id'] : 0 ), $focus_i);
+                            $this->Mench_ledger->mark_complete(i__discovery_link($focus_i), $focus_e['e__id'], ( $target_i ? $target_i['i__id'] : 0 ), $focus_i);
+                            $this->Mench_ledger->mark_complete(29393, $focus_e['e__id'], ( $target_i ? $target_i['i__id'] : 0 ), $focus_i);
 
                             //Inform user of changes:
                             $flash_message = '<div class="alert alert-success" role="alert"><span class="icon-block"><i class="far fa-check-circle"></i></span>Idea has been discovered</div>';
@@ -183,7 +183,7 @@ class App extends CI_Controller
 
                     //If not logged in, log them in:
                     if(!$player_e){
-                        $session_data = $this->E_model->activate_session($player_e, true);
+                        $session_data = $this->Source_cache->activate_session($player_e, true);
                     }
 
                 }
@@ -247,7 +247,7 @@ class App extends CI_Controller
 
                 if(!isset($_GET['reset_cache'])){
                     //Fetch Most Recent Cache:
-                    foreach($this->X_model->fetch(array(
+                    foreach($this->Mench_ledger->fetch(array(
                         'x__website' => website_setting(0),
                         'x__type' => 14599, //Cache App
                         'x__following' => $app_e__id,
@@ -316,7 +316,7 @@ class App extends CI_Controller
 
 
         if($new_cache){
-            $cache_x = $this->X_model->create(array(
+            $cache_x = $this->Mench_ledger->create(array(
                 'x__player' => $x__player,
                 'x__type' => 14599, //Cache App
                 'x__following' => $app_e__id,
@@ -327,6 +327,8 @@ class App extends CI_Controller
                 'x__next' => $x__next,
             ));
         }
+
+
 
 
         //App title?
@@ -344,10 +346,10 @@ class App extends CI_Controller
                 //Not a valid starting point:
                 return redirect_message(home_url(), '<div class="alert alert-warning" role="alert">#'.$target_i['i__hashtag'].' is not an active starting point.</div>');
 
-            } elseif(!$this->X_model->i_has_started($player_e['e__id'], $target_i['i__hashtag'])){
+            } elseif(!$this->Mench_ledger->i_has_started($player_e['e__id'], $target_i['i__hashtag'])){
 
                 //Not yet started, add to their starting point:
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__player' => $player_e['e__id'],
                     'x__type' => 4235, //Get started
                     'x__next' => $target_i['i__id'],
@@ -355,10 +357,10 @@ class App extends CI_Controller
                 ));
 
                 //Mark as complete:
-                $this->X_model->mark_complete(i__discovery_link($target_i), $player_e['e__id'], $target_i['i__id'], $target_i);
+                $this->Mench_ledger->mark_complete(i__discovery_link($target_i), $player_e['e__id'], $target_i['i__id'], $target_i);
 
                 //Now return next idea:
-                $next__url = $this->X_model->find_next($player_e['e__id'], $target_i['i__hashtag'], $target_i);
+                $next__url = $this->Mench_ledger->find_next($player_e['e__id'], $target_i['i__hashtag'], $target_i);
                 if($next__url){
                     //Go Next:
                     return redirect_message(view__memory(42903,30795).$target_i['i__hashtag'].'/'.$next__url );
@@ -429,14 +431,14 @@ class App extends CI_Controller
     function load_popover(){
         if(isset($_POST['handle_string']) && strlen($_POST['handle_string'])>1 && in_array(substr($_POST['handle_string'], 0, 1), array('#','@')) ){
             if(substr($_POST['handle_string'], 0, 1)=='#'){
-                foreach($this->I_model->fetch(array(
+                foreach($this->Idea_cache->fetch(array(
                     'LOWER(i__hashtag)' => strtolower(substr($_POST['handle_string'], 1)),
                 )) as $i){
                     echo view__card_i(6255, $i);
                     return true;
                 }
             } elseif(substr($_POST['handle_string'], 0, 1)=='@'){
-                foreach($this->E_model->fetch(array(
+                foreach($this->Source_cache->fetch(array(
                     'LOWER(e__handle)' => strtolower(substr($_POST['handle_string'], 1)),
                 )) as $e){
                     echo view__card_e(12274, $e);
@@ -478,7 +480,7 @@ class App extends CI_Controller
 
         if($_POST['i__id'] > 0){
 
-            $is = $this->I_model->fetch(array(
+            $is = $this->Idea_cache->fetch(array(
                 'i__id' => $_POST['i__id'],
             ));
             if (!count($is)) {
@@ -502,7 +504,7 @@ class App extends CI_Controller
         } else {
 
             //Create a new idea:
-            $i_new = $this->I_model->create(array(
+            $i_new = $this->Idea_cache->create(array(
                 'i__message' => null,
                 'i__type' => $_POST['current_i__type'],
                 'i__privacy' => 42636, //Pre-drafting idea
@@ -532,7 +534,7 @@ class App extends CI_Controller
 
             if(count($data_types)!=1) {
                 //This is strange, we are expecting 1 match only report this:
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__type' => 4246, //Platform Bug Reports
                     'x__player' => $player_e['e__id'],
                     'x__following' => 42179, //Dynamic Input Fields
@@ -576,7 +578,7 @@ class App extends CI_Controller
                 $counted = 0;
                 $unique_values = array();
                 if($i__id > 0){ //Must have an original ID to possibly have a value...
-                    foreach($this->X_model->fetch(array(
+                    foreach($this->Mench_ledger->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $this->config->item('n___42252')) . ')' => null, //Plain Link
                         'x__next' => $i__id,
@@ -601,7 +603,7 @@ class App extends CI_Controller
 
 
                 if(!$counted){
-                    foreach($this->E_model->fetch(array(
+                    foreach($this->Source_cache->fetch(array(
                         'e__id' => $dynamic_e__id,
                     )) as $selected_e){
                         array_push($return_inputs, array(
@@ -626,7 +628,7 @@ class App extends CI_Controller
         );
 
         //Log Modal View:
-        $this->X_model->create(array(
+        $this->Mench_ledger->create(array(
             'x__player' => $player_e['e__id'],
             'x__type' => 14576, //MODAL VIEWED
             'x__following' => 31911, //Edit Idea
@@ -712,7 +714,7 @@ class App extends CI_Controller
 
 
 
-        $is = $this->I_model->fetch(array(
+        $is = $this->Idea_cache->fetch(array(
             'i__id' => $_POST['save_i__id'],
         ));
         if(!count($is)){
@@ -740,7 +742,7 @@ class App extends CI_Controller
                     $found_hashtag = false;
                     if(substr($word, 0, 1)=='#'){
                         $valid_hashtag = false;
-                        foreach($this->I_model->fetch(array(
+                        foreach($this->Idea_cache->fetch(array(
                             'LOWER(i__hashtag)' => strtolower(substr($word, 1)),
                             'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                         )) as $i_found){
@@ -764,16 +766,16 @@ class App extends CI_Controller
                 if($all_hashtags && count($i_references) && $_POST['save_x__type']>0){
 
                     //Return success:
-                    foreach($this->I_model->fetch(array(
+                    foreach($this->Idea_cache->fetch(array(
                         'i__id' => ( intval($_POST['next_i__id'])>0 ? intval($_POST['next_i__id']) : intval($_POST['previous_i__id']) ),
                     )) as $focus_i){
 
                         //Append all of these hashtags:
                         foreach($i_references as $reference_i){
                             if(intval($_POST['next_i__id'])>0){
-                                $status = $this->I_model->i_link($focus_i, $_POST['save_x__type'], $reference_i, $player_e['e__id']);
+                                $status = $this->Idea_cache->i_link($focus_i, $_POST['save_x__type'], $reference_i, $player_e['e__id']);
                             } elseif(intval($_POST['previous_i__id'])>0){
-                                $status = $this->I_model->i_link($reference_i, $_POST['save_x__type'], $focus_i, $player_e['e__id']);
+                                $status = $this->Idea_cache->i_link($reference_i, $_POST['save_x__type'], $focus_i, $player_e['e__id']);
                             }
                             if(!$status['status']){
                                 return view__json($status);
@@ -798,7 +800,7 @@ class App extends CI_Controller
 
 
             //Update new idea fields:
-            $this->I_model->update($is[0]['i__id'], array(
+            $this->Idea_cache->update($is[0]['i__id'], array(
                 'i__type' => $_POST['save_i__type'],
                 'i__privacy' => $_POST['save_i__privacy'],
             ), true, $player_e['e__id']);
@@ -859,13 +861,13 @@ class App extends CI_Controller
 
                 //Fetch the current value:
                 if($d_x__id > 0){
-                    $values = $this->X_model->fetch(array(
+                    $values = $this->Mench_ledger->fetch(array(
                         'x__id' => $d_x__id,
                     ));
                 }
 
                 if(!$d_x__id || !count($values)){
-                    $values = $this->X_model->fetch(array(
+                    $values = $this->Mench_ledger->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $this->config->item('n___42252')) . ')' => null, //Plain Link
                         'x__next' => $is[0]['i__id'],
@@ -879,7 +881,7 @@ class App extends CI_Controller
 
                     //Remove Link if we have one:
                     if(count($values) && $dynamic_e__id!=11035 /* HACK: Summary are key links that should not be removed */){
-                        $this->X_model->update($values[0]['x__id'], array(
+                        $this->Mench_ledger->update($values[0]['x__id'], array(
                             'x__privacy' => 6173, //Transaction Removed
                         ), $player_e['e__id'], 42175 /* Dynamic Link Content Removed */);
                     }
@@ -887,7 +889,7 @@ class App extends CI_Controller
                 } elseif(!count($values)){
 
                     //Create New Link:
-                    $this->X_model->create(array(
+                    $this->Mench_ledger->create(array(
                         'x__player' => $player_e['e__id'],
                         'x__type' => 4983, //Co-Author
                         'x__following' => $dynamic_e__id,
@@ -899,7 +901,7 @@ class App extends CI_Controller
                 } elseif($values[0]['x__message']!=$dynamic_value){
 
                     //Update Link:
-                    $this->X_model->update($values[0]['x__id'], array(
+                    $this->Mench_ledger->update($values[0]['x__id'], array(
                         'x__message' => $dynamic_value,
                     ), $player_e['e__id'], 42176 /* Dynamic Link Content Updated */);
 
@@ -920,12 +922,12 @@ class App extends CI_Controller
             }
 
             //Save hashtag since changed:
-            $this->I_model->update($is[0]['i__id'], array(
+            $this->Idea_cache->update($is[0]['i__id'], array(
                 'i__hashtag' => trim($_POST['save_i__hashtag']),
             ), true, $player_e['e__id']);
 
             //Now Handles everywhere they are referenced:
-            foreach ($this->X_model->fetch(array(
+            foreach ($this->Mench_ledger->fetch(array(
                 'x__previous' => $is[0]['i__id'],
                 'x__type IN (' . join(',', $this->config->item('n___42341')) . ')' => null, //Idea References
                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -941,14 +943,14 @@ class App extends CI_Controller
 
         //Also have to add as a comment to another idea?
         if(intval($_POST['next_i__id'])>0 && $_POST['save_x__type']>0){
-            $this->X_model->create(array(
+            $this->Mench_ledger->create(array(
                 'x__player' => $player_e['e__id'],
                 'x__previous' => $_POST['next_i__id'],
                 'x__next' => $is[0]['i__id'],
                 'x__type' => $_POST['save_x__type'],
             ));
         } elseif(intval($_POST['previous_i__id'])>0 && $_POST['save_x__type']>0){
-            $this->X_model->create(array(
+            $this->Mench_ledger->create(array(
                 'x__player' => $player_e['e__id'],
                 'x__previous' => $is[0]['i__id'],
                 'x__next' => $_POST['previous_i__id'],
@@ -960,14 +962,14 @@ class App extends CI_Controller
         //Do we have a link reference message that need to be saved?
         if($_POST['save_x__id']>0 && $_POST['save_x__message']!='IGNORE_INPUT'){
             //Fetch transaction:
-            foreach($this->X_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__id' => $_POST['save_x__id'],
             )) as $this_x){
 
                 $is[0] = array_merge($is[0], $this_x);
 
                 if($this_x['x__message'] != trim($_POST['save_x__message'])){
-                    $this->X_model->update($this_x['x__id'], array(
+                    $this->Mench_ledger->update($this_x['x__id'], array(
                         'x__message' => trim($_POST['save_x__message']),
                     ), $player_e['e__id'], 42171);
                 }
@@ -1018,7 +1020,7 @@ class App extends CI_Controller
             ));
         }
 
-        return view__json($this->I_model->recursive_clone(intval($_POST['i__id']), intval($_POST['do_recursive']), $player_e['e__id']));
+        return view__json($this->Idea_cache->recursive_clone(intval($_POST['i__id']), intval($_POST['do_recursive']), $player_e['e__id']));
 
     }
 
@@ -1069,7 +1071,7 @@ class App extends CI_Controller
 
                 if($listed_items < $_POST['counter']){
                     //We have more to show:
-                    foreach($this->I_model->fetch(array(
+                    foreach($this->Idea_cache->fetch(array(
                         'i__id' => $_POST['i__id'],
                     )) as $i){
                         $ui .= view__more($target_disccovery.view__memory(42903,33286).$i['i__hashtag'], false, '&nbsp;', '&nbsp;', '&nbsp;', 'View all '.number_format($_POST['counter'], 0));
@@ -1116,7 +1118,7 @@ class App extends CI_Controller
         foreach($_POST['new_x_order'] as $x__weight => $x__id){
             if(intval($x__id) > 0 && intval($x__weight) > 0){
                 //Update order of this transaction:
-                if($this->X_model->update(intval($x__id), array(
+                if($this->Mench_ledger->update(intval($x__id), array(
                     'x__weight' => $x__weight,
                 ), $player_e['e__id'], 4603)){
                     $updated++;
@@ -1201,7 +1203,7 @@ class App extends CI_Controller
 
                 if($listed_items < $_POST['counter']){
                     //We have more to show:
-                    foreach($this->E_model->fetch(array(
+                    foreach($this->Source_cache->fetch(array(
                         'e__id' => $_POST['e__id'],
                     )) as $e_this){
                         $ui .= view__more(view__memory(42903,42902).$e_this['e__handle'], false, '&nbsp;', '&nbsp;', '&nbsp;', 'View all '.number_format($_POST['counter'], 0));
@@ -1237,13 +1239,13 @@ class App extends CI_Controller
         } else {
 
             //Validate Source:
-            $es = $this->E_model->fetch(array(
+            $es = $this->Source_cache->fetch(array(
                 'e__id' => $_POST['e__id'],
                 'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
             ));
 
             //Count followers:
-            $list_e_count = $this->X_model->fetch(array(
+            $list_e_count = $this->Mench_ledger->fetch(array(
                 'x__following' => $_POST['e__id'],
                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -1268,7 +1270,7 @@ class App extends CI_Controller
 
                 //Update them all:
                 foreach($_POST['new_x__weight'] as $rank => $x__id) {
-                    $this->X_model->update($x__id, array(
+                    $this->Mench_ledger->update($x__id, array(
                         'x__weight' => intval($rank),
                     ), $player_e['e__id'], 13006 /* SOURCE SORT MANUAL */);
                 }
@@ -1300,7 +1302,7 @@ class App extends CI_Controller
         }
 
         //Archive Transaction:
-        $this->X_model->update($_POST['x__id'], array(
+        $this->Mench_ledger->update($_POST['x__id'], array(
             'x__privacy' => 6173,
         ), $player_e['e__id'], 10673 /* IDEA NOTES Unpublished */);
 
@@ -1334,7 +1336,7 @@ class App extends CI_Controller
 
 
         //Validate Source:
-        $fetch_o = $this->E_model->fetch(array(
+        $fetch_o = $this->Source_cache->fetch(array(
             'e__id' => $_POST['e__id'],
             'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
         ));
@@ -1348,7 +1350,7 @@ class App extends CI_Controller
 
 
         //Create:
-        $added_e = $this->E_model->verify_create($_POST['copy_source_title'], $player_e['e__id'], $fetch_o[0]['e__cover']);
+        $added_e = $this->Source_cache->verify_create($_POST['copy_source_title'], $player_e['e__id'], $fetch_o[0]['e__cover']);
         if(!$added_e['status']){
             //We had an error, return it:
             return view__json($added_e);
@@ -1359,13 +1361,13 @@ class App extends CI_Controller
 
 
         //Followers:
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__following' => $_POST['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___41303')) . ')' => null, //Clone Source Links
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
         ), array(), 0) as $x) {
             //Make sure none existent in new source:
-            if(!count($this->X_model->fetch(array(
+            if(!count($this->Mench_ledger->fetch(array(
                 'x__type' => $x['x__type'],
                 'x__following' => $focus_e['e__id'],
                 'x__follower' => $x['x__follower'],
@@ -1374,7 +1376,7 @@ class App extends CI_Controller
                 'x__privacy' => $x['x__privacy'],
                 'x__metadata' => $x['x__metadata'],
             )))){
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__player' => $player_e['e__id'],
                     'x__weight' => $x['x__weight'],
 
@@ -1391,12 +1393,12 @@ class App extends CI_Controller
 
 
         //Followings:
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__follower' => $_POST['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___41303')) . ')' => null, //Clone Source Links
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
         ), array(), 0) as $x) {
-            if(!count($this->X_model->fetch(array(
+            if(!count($this->Mench_ledger->fetch(array(
                 'x__type' => $x['x__type'],
                 'x__following' => $x['x__following'],
                 'x__follower' => $focus_e['e__id'],
@@ -1405,7 +1407,7 @@ class App extends CI_Controller
                 'x__metadata' => $x['x__metadata'],
                 'x__privacy' => $x['x__privacy'],
             )))){
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__player' => $player_e['e__id'],
                     'x__weight' => $x['x__weight'],
 
@@ -1421,12 +1423,12 @@ class App extends CI_Controller
         }
 
         //Ideas:
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
             'x__type IN (' . join(',', $this->config->item('n___41302')) . ')' => null, //Clone Idea Source Links
             'x__following' => $_POST['e__id'],
         ), array(), 0) as $x){
-            if(!count($this->X_model->fetch(array(
+            if(!count($this->Mench_ledger->fetch(array(
                 'x__type' => $x['x__type'],
                 'x__following' => $focus_e['e__id'],
                 'x__follower' => $x['x__follower'],
@@ -1437,7 +1439,7 @@ class App extends CI_Controller
                 'x__metadata' => $x['x__metadata'],
                 'x__privacy' => $x['x__privacy'],
             )))){
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__player' => $player_e['e__id'],
                     'x__weight' => $x['x__weight'],
 
@@ -1500,7 +1502,7 @@ class App extends CI_Controller
 
 
         if(!$_POST['link_i__id'] && view__valid_handle_i($_POST['new_i__message'])){
-            foreach($this->I_model->fetch(array(
+            foreach($this->Idea_cache->fetch(array(
                 'LOWER(i__hashtag)' => strtolower(view__valid_handle_i($_POST['new_i__message'])),
             )) as $i){
                 $_POST['link_i__id'] = $i['i__id'];
@@ -1511,7 +1513,7 @@ class App extends CI_Controller
 
         if($_POST['link_i__id'] > 0){
             //Fetch transaction idea to determine idea type:
-            $x_i = $this->I_model->fetch(array(
+            $x_i = $this->Idea_cache->fetch(array(
                 'i__id' => intval($_POST['link_i__id']),
                 'i__access IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
             ));
@@ -1525,7 +1527,7 @@ class App extends CI_Controller
         }
 
         //All seems good, go ahead and try to create/link the Idea:
-        return view__json($this->I_model->create_or_link($_POST['focus_card'], $_POST['x__type'], trim($_POST['new_i__message']), $member_e['e__id'], $_POST['focus_id'], $_POST['link_i__id']));
+        return view__json($this->Idea_cache->create_or_link($_POST['focus_card'], $_POST['x__type'], trim($_POST['new_i__message']), $member_e['e__id'], $_POST['focus_id'], $_POST['link_i__id']));
 
     }
 
@@ -1563,7 +1565,7 @@ class App extends CI_Controller
         if($adding_to_i){
 
             //Validate Idea:
-            $fetch_o = $this->I_model->fetch(array(
+            $fetch_o = $this->Idea_cache->fetch(array(
                 'i__id' => $_POST['focus__id'],
             ));
             if (count($fetch_o) < 1) {
@@ -1576,7 +1578,7 @@ class App extends CI_Controller
         } else {
 
             //Validate Source:
-            $fetch_o = $this->E_model->fetch(array(
+            $fetch_o = $this->Source_cache->fetch(array(
                 'e__id' => $_POST['focus__id'],
                 'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
             ));
@@ -1597,7 +1599,7 @@ class App extends CI_Controller
         $is_upwards = in_array($_POST['x__type'], $this->config->item('n___14686'));
 
         if(!intval($_POST['e_existing_id']) && view__valid_handle_e($_POST['e_new_string'])){
-            foreach($this->E_model->fetch(array(
+            foreach($this->Source_cache->fetch(array(
                 'LOWER(e__handle)' => strtolower(substr($_POST['e_new_string'], 1)),
             )) as $e){
                 $_POST['e_existing_id'] = $e['e__id'];
@@ -1609,7 +1611,7 @@ class App extends CI_Controller
         if ($adding_to_existing) {
 
             //Validate this existing source:
-            $es = $this->E_model->fetch(array(
+            $es = $this->Source_cache->fetch(array(
                 'e__id' => $_POST['e_existing_id'],
                 'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
             ));
@@ -1627,7 +1629,7 @@ class App extends CI_Controller
         } else {
 
             //We are creating a new source:
-            $added_e = $this->E_model->verify_create($_POST['e_new_string'], $player_e['e__id']);
+            $added_e = $this->Source_cache->verify_create($_POST['e_new_string'], $player_e['e__id']);
             if(!$added_e['status']){
                 //We had an error, return it:
                 return view__json($added_e);
@@ -1645,7 +1647,7 @@ class App extends CI_Controller
         if($adding_to_i) {
 
             //Add Reference:
-            $ur2 = $this->X_model->create(array(
+            $ur2 = $this->Mench_ledger->create(array(
                 'x__player' => $player_e['e__id'],
                 'x__type' => 4983, //Co-Author
                 'x__following' => $focus_e['e__id'],
@@ -1677,7 +1679,7 @@ class App extends CI_Controller
             $x__message = null;
 
             //Create transaction:
-            $ur2 = $this->X_model->create(array(
+            $ur2 = $this->Mench_ledger->create(array(
                 'x__player' => $player_e['e__id'],
                 'x__type' => 4251,
                 'x__message' => $x__message,
@@ -1715,7 +1717,7 @@ class App extends CI_Controller
             ));
         }
 
-        $es = $this->E_model->fetch(array(
+        $es = $this->Source_cache->fetch(array(
             'e__id' => $_POST['e__id'],
             'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
         ));
@@ -1740,7 +1742,7 @@ class App extends CI_Controller
         $profile_header = '';
 
         //Fetch Source Templates, if any:
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__following IN (' . join(',', $this->config->item('n___42178')) . ')' => null, //Dynamic Sources
             'x__follower' => $es[0]['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -1752,7 +1754,7 @@ class App extends CI_Controller
             }
             array_push($scanned_sources, $e_group['e__id']);
 
-            foreach($this->X_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__follower' => $e_group['e__id'],
                 'x__following IN (' . join(',', $this->config->item('n___42145')) . ')' => null, //Dynamic Input Templates
                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -1765,7 +1767,7 @@ class App extends CI_Controller
                 //Load template:
                 if(!is_array($this->config->item('e___'.$e_template['e__id']))){
                     //Report Error:
-                    $this->X_model->create(array(
+                    $this->Mench_ledger->create(array(
                         'x__type' => 4246, //Platform Bug Reports
                         'x__message' => 'e_editor_load() ERROR: @'.$e_template['e__id'].' is NOT in memory cache',
                     ));
@@ -1792,7 +1794,7 @@ class App extends CI_Controller
                     if(count($data_types)!=1){
 
                         //This is strange, we are expecting 1 match only report this:
-                        $this->X_model->create(array(
+                        $this->Mench_ledger->create(array(
                             'x__type' => 4246, //Platform Bug Reports
                             'x__player' => $player_e['e__id'],
                             'x__following' => 31912, //Edit Source
@@ -1804,7 +1806,7 @@ class App extends CI_Controller
 
                     } elseif ($input_pointer >= view__memory(6404, 42206)) {
                         //Monitor if we ever reach the maximum:
-                        $this->X_model->create(array(
+                        $this->Mench_ledger->create(array(
                             'x__type' => 4246, //Platform Bug Reports
                             'x__player' => $player_e['e__id'],
                             'x__following' => 42179, //Dynamic Input Fields
@@ -1847,7 +1849,7 @@ class App extends CI_Controller
                         //Fetch the current value(s):
                         $counted = 0;
                         $unique_values = array();
-                        foreach($this->X_model->fetch(array(
+                        foreach($this->Mench_ledger->fetch(array(
                             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                             'x__follower' => $es[0]['e__id'],
@@ -1870,7 +1872,7 @@ class App extends CI_Controller
                         }
 
                         if(!$counted){
-                            foreach($this->E_model->fetch(array(
+                            foreach($this->Source_cache->fetch(array(
                                 'e__id' => $dynamic_e__id,
                             )) as $selected_e){
                                 array_push($return_inputs, array(
@@ -1894,12 +1896,12 @@ class App extends CI_Controller
 
         //Add universal inputs only if missing bio profiles:
         if(!array_intersect($scanned_sources, $this->config->item('n___42885'))){
-            foreach($this->E_model->fetch(array(
+            foreach($this->Source_cache->fetch(array(
                 'e__id IN (' . join(',', $this->config->item('n___42776')) . ')' => null, //Universal Dynamic Inputs
             )) as $selected_e){
                 foreach(array_intersect($e___42776[$selected_e['e__id']]['m__following'], $this->config->item('n___4592')) as $data_type){
                     //Any value?
-                    $values = $this->X_model->fetch(array(
+                    $values = $this->Mench_ledger->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                         'x__follower' => $es[0]['e__id'],
@@ -1924,7 +1926,7 @@ class App extends CI_Controller
         //Find Past Selected Covers for Source:
         $cover_history_content = array();
         $unique_covers = array();
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__follower' => $_POST['e__id'],
             'x__type' => 10653, //Source Cover Update
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -1950,7 +1952,7 @@ class App extends CI_Controller
         );
 
         //Log Modal View:
-        $this->X_model->create(array(
+        $this->Mench_ledger->create(array(
             'x__player' => $player_e['e__id'],
             'x__type' => 14576, //MODAL VIEWED
             'x__following' => 31912, //Edit Source
@@ -2007,7 +2009,7 @@ class App extends CI_Controller
 
 
 
-        $es = $this->E_model->fetch(array(
+        $es = $this->Source_cache->fetch(array(
             'e__id' => $_POST['save_e__id'],
             'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
         ));
@@ -2057,13 +2059,13 @@ class App extends CI_Controller
 
             //Fetch the current value:
             if($d_x__id > 0){
-                $values = $this->X_model->fetch(array(
+                $values = $this->Mench_ledger->fetch(array(
                     'x__id' => $d_x__id,
                 ));
             }
 
             if(!$d_x__id || !count($values)){
-                $values = $this->X_model->fetch(array(
+                $values = $this->Mench_ledger->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                     'x__following' => $dynamic_e__id,
@@ -2077,7 +2079,7 @@ class App extends CI_Controller
 
                 //Remove Link if we have one:
                 if(count($values) && $dynamic_e__id!=11035 /* HACK: Summary are key links that should not be removed */){
-                    $this->X_model->update($values[0]['x__id'], array(
+                    $this->Mench_ledger->update($values[0]['x__id'], array(
                         'x__privacy' => 6173, //Transaction Removed
                     ), $player_e['e__id'], 42175 /* Dynamic Link Content Removed */);
                 }
@@ -2085,7 +2087,7 @@ class App extends CI_Controller
             } elseif (!count($values)) {
 
                 //Create Link:
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__player' => $player_e['e__id'],
                     'x__type' => 4251,
                     'x__following' => $dynamic_e__id,
@@ -2097,7 +2099,7 @@ class App extends CI_Controller
             } elseif ($values[0]['x__message'] != $dynamic_value) {
 
                 //Update Link:
-                $this->X_model->update($values[0]['x__id'], array(
+                $this->Mench_ledger->update($values[0]['x__id'], array(
                     'x__message' => $dynamic_value,
                 ), $player_e['e__id'], 42176 /* Dynamic Link Content Updated */);
 
@@ -2137,7 +2139,7 @@ class App extends CI_Controller
         }
 
         //Update:
-        $this->E_model->update($es[0]['e__id'], array(
+        $this->Source_cache->update($es[0]['e__id'], array(
             'e__title' => $validate_e__title['e__title_clean'],
             'e__cover' => trim($_POST['save_e__cover']),
             'e__handle' => trim($_POST['save_e__handle']),
@@ -2151,14 +2153,14 @@ class App extends CI_Controller
         if($_POST['save_x__id']>0 && $_POST['save_x__message']!='IGNORE_INPUT'){
 
             //Fetch transaction:
-            foreach($this->X_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__id' => $_POST['save_x__id'],
             )) as $this_x){
 
                 $es[0] = array_merge($es[0], $this_x);
 
                 if($this_x['x__message'] != trim($_POST['save_x__message'])){
-                    $this->X_model->update($this_x['x__id'], array(
+                    $this->Mench_ledger->update($this_x['x__id'], array(
                         'x__message' => trim($_POST['save_x__message']),
                     ), $player_e['e__id'], 42171);
                 }
@@ -2168,7 +2170,7 @@ class App extends CI_Controller
 
         //Reset member session data if this data belongs to the logged-in member:
         if ($_POST['save_e__id']==$player_e['e__id']) {
-            $this->E_model->activate_session($es[0], true);
+            $this->Source_cache->activate_session($es[0], true);
         }
 
 
@@ -2228,19 +2230,19 @@ class App extends CI_Controller
 
             //Dispatch Any Emails Necessary:
             if(isset($_POST['selected_e__id']) && intval($_POST['selected_e__id'])>0){
-                foreach($this->X_model->fetch(array(
+                foreach($this->Mench_ledger->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type' => 33600, //Draft
                     'x__following' => $_POST['selected_e__id'],
                 ), array('x__next'), 0) as $i){
-                    if(count($this->X_model->fetch(array(
+                    if(count($this->Mench_ledger->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type' => 33600, //Draft
                         'x__following' => 31065, //Choice Update Email Templates
                         'x__next' => $i['i__id'], //Is this the template?
                     )))){
                         //Found the email template to send:
-                        $total_sent = $this->X_model->send_i_mass_dm(array($player_e), $i, website_setting(0), false);
+                        $total_sent = $this->Mench_ledger->send_i_mass_dm(array($player_e), $i, website_setting(0), false);
                         break; //Just the first template match
                     }
                 }
@@ -2251,7 +2253,7 @@ class App extends CI_Controller
 
                 //Add special transaction to monitor unsubscribes:
                 if(in_array($_POST['selected_e__id'], $this->config->item('n___29648'))){
-                    $this->X_model->create(array(
+                    $this->Mench_ledger->create(array(
                         'x__player' => $player_e['e__id'],
                         'x__type' => 29648, //Communication Downgraded
                         'x__following' => $_POST['focus__id'],
@@ -2282,21 +2284,21 @@ class App extends CI_Controller
 
             //List all possible answers:
             $possible_answers = array();
-            foreach($this->X_model->fetch($query_filters, array('x__follower'), 0, 0) as $answer_e){
+            foreach($this->Mench_ledger->fetch($query_filters, array('x__follower'), 0, 0) as $answer_e){
                 $stats['total']++;
                 array_push($possible_answers, $answer_e['e__id']);
             }
 
             //Delete previously selected options:
             if($_POST['down_e__id']){
-                $delete_query = $this->X_model->fetch(array(
+                $delete_query = $this->Mench_ledger->fetch(array(
                     'x__following IN (' . join(',', $possible_answers) . ')' => null,
                     'x__follower' => $_POST['down_e__id'],
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 ));
             } elseif($_POST['right_i__id']){
-                $delete_query = $this->X_model->fetch(array(
+                $delete_query = $this->Mench_ledger->fetch(array(
                     'x__following IN (' . join(',', $possible_answers) . ')' => null,
                     'x__next' => $_POST['right_i__id'],
                     'x__type IN (' . join(',', $this->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
@@ -2307,7 +2309,7 @@ class App extends CI_Controller
             foreach($delete_query as $delete){
                 $stats['deleted']++;
                 //Should usually delete a single option:
-                $this->X_model->update($delete['x__id'], array(
+                $this->Mench_ledger->update($delete['x__id'], array(
                     'x__privacy' => 6173, //Transaction Removed
                 ), $player_e['e__id'], 6224 /* Member Account Updated */);
             }
@@ -2318,7 +2320,7 @@ class App extends CI_Controller
         if((!$_POST['enable_mulitiselect'] && $is_required) || !$_POST['was_previously_selected']){
             if($_POST['down_e__id']){
                 $stats['added']++;
-                $this->X_model->create(array(
+                $this->Mench_ledger->create(array(
                     'x__player' => $player_e['e__id'],
                     'x__following' => $_POST['selected_e__id'],
                     'x__type' => 4251,
@@ -2326,14 +2328,14 @@ class App extends CI_Controller
                 ));
             } elseif($_POST['right_i__id']){
 
-                if(!count($this->X_model->fetch(array(
+                if(!count($this->Mench_ledger->fetch(array(
                     'x__type IN (' . join(',', $this->config->item('n___31919')) . ')' => null, //IDEA AUTHOR
                     'x__following' => $_POST['selected_e__id'],
                     'x__next' => $_POST['right_i__id'],
                     'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                 )))){
                     $stats['added']++;
-                    $this->X_model->create(array(
+                    $this->Mench_ledger->create(array(
                         'x__player' => $player_e['e__id'],
                         'x__type' => 4983, //Co-Author
                         'x__following' => $_POST['selected_e__id'],
@@ -2347,7 +2349,7 @@ class App extends CI_Controller
 
         //Update Session:
         if($_POST['down_e__id'] && count($player_e)){
-            $this->E_model->activate_session($player_e, true);
+            $this->Source_cache->activate_session($player_e, true);
         }
 
 
@@ -2393,7 +2395,7 @@ class App extends CI_Controller
         //Validate member ID
         if($_POST['account_id'] > 0){
 
-            $es = $this->E_model->fetch(array(
+            $es = $this->Source_cache->fetch(array(
                 'e__id' => $_POST['account_id'],
             ));
             if(!count($es)){
@@ -2420,7 +2422,7 @@ class App extends CI_Controller
 
         //Auth Code:
         $is_authenticated = false;
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__type' => 32078, //Sign In Key
             'x__privacy' => 6175, //Still Pending
             'x__message' => $_POST['account_email_phone'],
@@ -2432,7 +2434,7 @@ class App extends CI_Controller
             if(strlen($session_key) && $x__metadata['hash_code']==md5($session_key.$_POST['input_code'])){
 
                 //Complete access code:
-                $is_authenticated = $this->X_model->update($sent_key['x__id'], array(
+                $is_authenticated = $this->Mench_ledger->update($sent_key['x__id'], array(
                     'x__privacy' => 6176, //Published
                 ), $_POST['account_id'], 32569); //Code Verified
 
@@ -2454,7 +2456,7 @@ class App extends CI_Controller
         if($_POST['account_id'] > 0){
 
             //Assign session & log transaction:
-            $this->E_model->activate_session($es[0]);
+            $this->Source_cache->activate_session($es[0]);
 
         } else {
 
@@ -2464,7 +2466,7 @@ class App extends CI_Controller
 
             //Prep inputs & validate further:
             $acc_email = ( $is_email ? $_POST['account_email_phone'] : $_POST['new_account_email'] );
-            $player_result = $this->E_model->add_member(strstr($acc_email, '@', true), $acc_email, ( !$is_email ? $_POST['account_email_phone'] : '' ));
+            $player_result = $this->Source_cache->add_member(strstr($acc_email, '@', true), $acc_email, ( !$is_email ? $_POST['account_email_phone'] : '' ));
             if (!$player_result['status']) {
                 return view__json($player_result);
             }
@@ -2479,7 +2481,7 @@ class App extends CI_Controller
 
         //See if we can find a better one:
         if (intval($_POST['sign_i__id']) > 0) {
-            foreach($this->I_model->fetch(array(
+            foreach($this->Idea_cache->fetch(array(
                 'i__id' => $_POST['sign_i__id'],
             )) as $i){
                 $sign_url = $i['i__hashtag'].'/'.view__memory(6404,4235);
@@ -2516,7 +2518,7 @@ class App extends CI_Controller
 
             $_POST['require_writing'] = intval($_POST['require_writing']);
 
-            $already_added = $this->X_model->fetch(array(
+            $already_added = $this->Mench_ledger->fetch(array(
                 'x__following' => $_POST['e__id'],
                 'x__follower' => $_POST['x__player'],
                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -2529,11 +2531,11 @@ class App extends CI_Controller
 
                     //Updating current value if changed:
                     if(strlen($_POST['written_answer']) && trim($_POST['written_answer'])!=$already_added[0]['x__message']){
-                        $this->X_model->update($already_added[0]['x__id'], array(
+                        $this->Mench_ledger->update($already_added[0]['x__id'], array(
                             'x__message' => $_POST['written_answer'],
                         ));
                     } elseif(!strlen($_POST['written_answer'])){
-                        $this->X_model->update($already_added[0]['x__id'], array(
+                        $this->Mench_ledger->update($already_added[0]['x__id'], array(
                             'x__privacy' => 6173, //Transaction Deleted
                         ), $player_e['e__id'], 10673 /* Member Transaction Unpublished */);
                     }
@@ -2546,7 +2548,7 @@ class App extends CI_Controller
                 } else {
 
                     //Already exists, let's remove:
-                    $this->X_model->update($already_added[0]['x__id'], array(
+                    $this->Mench_ledger->update($already_added[0]['x__id'], array(
                         'x__privacy' => 6173, //Transaction Deleted
                     ), $player_e['e__id'], 10673 /* Member Transaction Unpublished */);
 
@@ -2569,12 +2571,12 @@ class App extends CI_Controller
 
                 } else {
 
-                    foreach($this->E_model->fetch(array(
+                    foreach($this->Source_cache->fetch(array(
                         'e__id' => $_POST['e__id'],
                     )) as $e){
 
                         //Does not exist, Add:
-                        $this->X_model->create(array(
+                        $this->Mench_ledger->create(array(
                             'x__following' => $_POST['e__id'],
                             'x__follower' => $_POST['x__player'],
                             'x__player' => $player_e['e__id'],
@@ -2626,7 +2628,7 @@ class App extends CI_Controller
 
         if(intval($_POST['sign_i__id']) > 0){
             //Fetch the idea:
-            $referrer_i = $this->I_model->fetch(array(
+            $referrer_i = $this->Idea_cache->fetch(array(
                 'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                 'i__id' => $_POST['sign_i__id'],
             ));
@@ -2637,7 +2639,7 @@ class App extends CI_Controller
 
         //Search for email/phone to see if it exists
         $x__player = 0;
-        foreach($this->X_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__message' => $_POST['account_email_phone'],
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -2667,7 +2669,7 @@ class App extends CI_Controller
 
 
             //Log new key:
-            $this->X_model->create(array(
+            $this->Mench_ledger->create(array(
                 'x__player' => $x__player, //Member making request
                 'x__previous' => intval($_POST['sign_i__id']),
                 'x__type' => 32078, //Sign In Key
@@ -2684,7 +2686,7 @@ class App extends CI_Controller
             dispatch_sms($_POST['account_email_phone'], $html_message, 0, array(), 0, 0, false);
 
             //Log new key:
-            $this->X_model->create(array(
+            $this->Mench_ledger->create(array(
                 'x__player' => $x__player, //Member making request
                 'x__previous' => intval($_POST['sign_i__id']),
                 'x__type' => 32078, //Sign In Key
@@ -2731,7 +2733,7 @@ class App extends CI_Controller
 
         } elseif($_POST['cache_e__id']==6197 /* SOURCE FULL NAME */){
 
-            $es = $this->E_model->fetch(array(
+            $es = $this->Source_cache->fetch(array(
                 'e__id' => $_POST['s__id'],
                 'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
             ));
@@ -2752,7 +2754,7 @@ class App extends CI_Controller
             }
 
             //All good, go ahead and update:
-            $this->E_model->update($es[0]['e__id'], array(
+            $this->Source_cache->update($es[0]['e__id'], array(
                 'e__title' => $validate_e__title['e__title_clean'],
             ), true, $player_e['e__id']);
 
@@ -2760,7 +2762,7 @@ class App extends CI_Controller
             if ($es[0]['e__id']==$player_e['e__id']) {
                 //Re-activate Session with new data:
                 $es[0]['e__title'] = $validate_e__title['e__title_clean'];
-                $this->E_model->activate_session($es[0], true);
+                $this->Source_cache->activate_session($es[0], true);
             }
 
             return view__json(array(
@@ -2787,7 +2789,7 @@ class App extends CI_Controller
 
         //Log Modal View
         $player_e = superpower_unlocked(null, 0, $this->player_e);
-        $this->X_model->create(array(
+        $this->Mench_ledger->create(array(
             'x__player' => ( isset($player_e['e__id']) ? $player_e['e__id'] : 0 ),
             'x__type' => 14576, //MODAL VIEWED
             'x__following' => $_POST['apply_id'],
@@ -2819,7 +2821,7 @@ class App extends CI_Controller
             } elseif($_POST['apply_id']==12589){
 
                 //idea list:
-                $is_next = $this->X_model->fetch(array(
+                $is_next = $this->Mench_ledger->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                     'i__privacy IN (' . join(',', $this->config->item('n___42948')) . ')' => null, //Public Ideas
                     'x__type IN (' . join(',', $this->config->item('n___42267')) . ')' => null, //IDEA LINKS
@@ -2861,7 +2863,7 @@ class App extends CI_Controller
         if($_POST['focus__node']==12274){
 
             //SOURCE
-            $focus_es = $this->E_model->fetch(array(
+            $focus_es = $this->Source_cache->fetch(array(
                 'e__id' => $_POST['focus__id'],
             ));
             $focus_e = $focus_es[0];
@@ -2879,7 +2881,7 @@ class App extends CI_Controller
         } elseif($_POST['focus__node']==12273) {
 
             //IDEA
-            $previous_is = $this->I_model->fetch(array(
+            $previous_is = $this->Idea_cache->fetch(array(
                 'i__id' => $_POST['focus__id'],
             ));
             $previous_i = $previous_is[0];
@@ -2927,26 +2929,26 @@ class App extends CI_Controller
         if($_POST['focus__node']==12273){
             //Ideas order based on alphabetical order
             $order = 0;
-            foreach($this->X_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                 'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                 'x__type IN (' . join(',', $this->config->item('n___42267')) . ')' => null, //IDEA LINKS
                 'x__previous' => $_POST['focus__id'],
             ), array('x__next'), 0, 0, array('i__message' => 'ASC')) as $x) {
                 $order++;
-                $this->X_model->update($x['x__id'], array(
+                $this->Mench_ledger->update($x['x__id'], array(
                     'x__weight' => $order,
                 ), $player_e['e__id'], 13007 /* SOURCE SORT RESET */);
             }
         } elseif($_POST['focus__node']==12274){
             //Sources reset order
-            foreach($this->X_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__following' => $_POST['focus__id'],
                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                 'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
             ), array('x__follower'), 0, 0) as $x) {
-                $this->X_model->update($x['x__id'], array(
+                $this->Mench_ledger->update($x['x__id'], array(
                     'x__weight' => 0,
                 ), $player_e['e__id'], 13007 /* SOURCE SORT RESET */);
             }
@@ -2990,7 +2992,7 @@ class App extends CI_Controller
 
         //Discover Focus Idea:
         $primary_i__id = null;
-        foreach($this->I_model->fetch(array(
+        foreach($this->Idea_cache->fetch(array(
             'i__id' => $_POST['focus_i_data']['i__id'],
             'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
         )) as $focus_i){
@@ -3021,7 +3023,7 @@ class App extends CI_Controller
 
                 //How about the min selection?
                 if($i_required && !$is_single_selection){
-                    foreach($this->X_model->fetch(array(
+                    foreach($this->Mench_ledger->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $this->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $focus_i['i__id'],
@@ -3039,7 +3041,7 @@ class App extends CI_Controller
 
                 //How about max selection?
                 if(!$is_single_selection){
-                    foreach($this->X_model->fetch(array(
+                    foreach($this->Mench_ledger->fetch(array(
                         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                         'x__type IN (' . join(',', $this->config->item('n___42991')) . ')' => null, //Active Writes
                         'x__next' => $focus_i['i__id'],
@@ -3057,7 +3059,7 @@ class App extends CI_Controller
 
                 //Delete ALL previous answers that are not currently selected, if any:
                 $already_answered = array();
-                foreach($this->X_model->fetch(array(
+                foreach($this->Mench_ledger->fetch(array(
                     'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type' => 7712, //Input Choice
@@ -3071,20 +3073,20 @@ class App extends CI_Controller
                         continue; //Nothing we need to do here...
                     }
 
-                    $this->X_model->update($x_selection['x__id'], array(
+                    $this->Mench_ledger->update($x_selection['x__id'], array(
                         'x__privacy' => 6173, //Transaction Deleted
                     ), $player_e['e__id'], 12129 /* DISCOVERY ANSWER DELETED */);
 
 
                     //Remove discovery if we can:
                     if(!in_array($x_selection['i__type'], $this->config->item('n___42905'))){
-                        foreach($this->X_model->fetch(array(
+                        foreach($this->Mench_ledger->fetch(array(
                             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                             'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
                             'x__previous' => $x_selection['i__id'],
                             'x__player' => $player_e['e__id'],
                         ), array(), 0) as $x_discovery){
-                            $this->X_model->update($x_discovery['x__id'], array(
+                            $this->Mench_ledger->update($x_discovery['x__id'], array(
                                 'x__privacy' => 6173, //Transaction Deleted
                             ), $player_e['e__id'], 12129 /* DISCOVERY ANSWER DELETED */);
                         }
@@ -3094,7 +3096,7 @@ class App extends CI_Controller
                 //Save New Answers if not already:
                 foreach($_POST['selection_i__id'] as $answer_i__id){
                     if(!in_array($answer_i__id, $already_answered)){
-                        $this->X_model->create(array(
+                        $this->Mench_ledger->create(array(
                             'x__type' => 7712, //Input Choice
                             'x__player' => $player_e['e__id'],
                             'x__previous' => $focus_i['i__id'],
@@ -3106,7 +3108,7 @@ class App extends CI_Controller
             }
 
             //Issue DISCOVERY/IDEA COIN:
-            $completion_status = $this->X_model->mark_complete(i__discovery_link($focus_i, $trying_to_skip), $player_e['e__id'], $_POST['target_i__id'], $focus_i, $_POST['focus_i_data'], array(
+            $completion_status = $this->Mench_ledger->mark_complete(i__discovery_link($focus_i, $trying_to_skip), $player_e['e__id'], $_POST['target_i__id'], $focus_i, $_POST['focus_i_data'], array(
                 'x__weight' => $_POST['focus_i_data']['i__quantity'],
             ));
             if(!$completion_status['status']){
@@ -3134,12 +3136,12 @@ class App extends CI_Controller
                     continue;
                 }
 
-                foreach($this->I_model->fetch(array(
+                foreach($this->Idea_cache->fetch(array(
                     'i__id' => $next_i_data['i__id'],
                 )) as $i_next){
 
                     //Can we auto-complete?
-                    if(in_array($i_next['i__type'], $this->config->item('n___43039')) || (!strlen($next_i_data['i__text']) && !count($next_i_data['uploaded_media']) && count($this->X_model->fetch(array(
+                    if(in_array($i_next['i__type'], $this->config->item('n___43039')) || (!strlen($next_i_data['i__text']) && !count($next_i_data['uploaded_media']) && count($this->Mench_ledger->fetch(array(
                                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                                 'i__privacy IN (' . join(',', $this->config->item('n___42948')) . ')' => null, //Public Ideas
                                 'i__type IN (' . join(',', $this->config->item('n___43050')) . ')' => null, //Input Required Ideas
@@ -3158,7 +3160,7 @@ class App extends CI_Controller
 
                     if(!($i_required && $trying_to_skip)){
                         //Try to complete:
-                        $completion_status = $this->X_model->mark_complete(i__discovery_link($i_next, $trying_to_skip), $player_e['e__id'], $_POST['target_i__id'], $i_next, $next_i_data, array(
+                        $completion_status = $this->Mench_ledger->mark_complete(i__discovery_link($i_next, $trying_to_skip), $player_e['e__id'], $_POST['target_i__id'], $i_next, $next_i_data, array(
                             'x__weight' => $next_i_data['i__quantity'],
                         ));
                         if($i_required && !$completion_status['status']){
@@ -3171,13 +3173,13 @@ class App extends CI_Controller
 
             //Find Next:
             $i_redirect_url = false;
-            foreach($this->I_model->fetch(array(
+            foreach($this->Idea_cache->fetch(array(
                 'i__id' => $primary_i__id,
             )) as $primary_i){
                 $i_redirect_url = i_redirect_url($primary_i);
             }
             if(!$i_redirect_url){
-                $find_next = $this->X_model->find_next($player_e['e__id'], $_POST['target_i__hashtag'], $focus_i);
+                $find_next = $this->Mench_ledger->find_next($player_e['e__id'], $_POST['target_i__hashtag'], $focus_i);
             }
 
             //All good:
@@ -3210,7 +3212,7 @@ class App extends CI_Controller
         $_POST['migrate_s__handle'] = trim($_POST['migrate_s__handle']);
         $first_letter = substr($_POST['migrate_s__handle'], 0, 1);
         if($first_letter=='@' && strlen($_POST['migrate_s__handle'])>1){
-            if (!count($this->E_model->fetch(array(
+            if (!count($this->Source_cache->fetch(array(
                 'LOWER(e__handle)' => strtolower(substr($_POST['migrate_s__handle'], 1)),
             )))) {
                 return view__json(array(
@@ -3219,7 +3221,7 @@ class App extends CI_Controller
                 ));
             }
         } elseif($first_letter=='#' && strlen($_POST['migrate_s__handle'])>1){
-            if(!count($this->I_model->fetch(array(
+            if(!count($this->Idea_cache->fetch(array(
                 'LOWER(i__hashtag)' => strtolower(substr($_POST['migrate_s__handle'], 1)),
             )))){
                 return view__json(array(
@@ -3234,11 +3236,11 @@ class App extends CI_Controller
         if(is_array($_POST['o__id'])){
             $mass_result = array();
             foreach($_POST['o__id'] as $o__id){
-                array_push($mass_result, $this->X_model->x_update_instant_select($_POST['focus__id'],$o__id,$_POST['element_id'],$_POST['new_e__id'],$_POST['migrate_s__handle'],$_POST['x__id']));
+                array_push($mass_result, $this->Mench_ledger->x_update_instant_select($_POST['focus__id'],$o__id,$_POST['element_id'],$_POST['new_e__id'],$_POST['migrate_s__handle'],$_POST['x__id']));
             }
             return view__json($mass_result);
         } else {
-            return view__json($this->X_model->x_update_instant_select($_POST['focus__id'],$_POST['o__id'],$_POST['element_id'],$_POST['new_e__id'],$_POST['migrate_s__handle'],$_POST['x__id']));
+            return view__json($this->Mench_ledger->x_update_instant_select($_POST['focus__id'],$_POST['o__id'],$_POST['element_id'],$_POST['new_e__id'],$_POST['migrate_s__handle'],$_POST['x__id']));
         }
 
     }
@@ -3277,7 +3279,7 @@ class App extends CI_Controller
 
         }
 
-        $is = $this->I_model->fetch(array(
+        $is = $this->Idea_cache->fetch(array(
             'i__id' => $_POST['i__id'],
             'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
         ));
@@ -3289,7 +3291,7 @@ class App extends CI_Controller
         }
 
         //Save IDEA:
-        $x = $this->X_model->create(array(
+        $x = $this->Mench_ledger->create(array(
             'x__player' => $player_e['e__id'],
             'x__following' => $player_e['e__id'],
             'x__previous' => $_POST['target_i__id'],
@@ -3331,7 +3333,7 @@ class App extends CI_Controller
         }
 
         //Remove Idea
-        $this->X_model->update($_POST['x__id'], array(
+        $this->Mench_ledger->update($_POST['x__id'], array(
             'x__privacy' => 6173, //DELETED
         ), $player_e['e__id'], 10673);
 
@@ -3358,8 +3360,8 @@ class App extends CI_Controller
         $message = '';
 
         //Fetch transactions and total transaction counts:
-        $x = $this->X_model->fetch($query_filters, $joined_by, view__memory(6404,11064), $query_offset);
-        $x_count = $this->X_model->fetch($query_filters, $joined_by, 0, 0, array(), 'COUNT(x__id) as total_count');
+        $x = $this->Mench_ledger->fetch($query_filters, $joined_by, view__memory(6404,11064), $query_offset);
+        $x_count = $this->Mench_ledger->fetch($query_filters, $joined_by, 0, 0, array(), 'COUNT(x__id) as total_count');
         $total_items_loaded = ($query_offset+count($x));
         $has_more_x = ($x_count[0]['total_count'] > 0 && $total_items_loaded < $x_count[0]['total_count']);
 
@@ -3384,7 +3386,7 @@ class App extends CI_Controller
 
                     $new_content = str_replace($_POST['x__message_find'],trim($_POST['x__message_replace']),$x['x__message']);
 
-                    $this->X_model->update($x['x__id'], array(
+                    $this->Mench_ledger->update($x['x__id'], array(
                         'x__message' => $new_content,
                     ), $player_e['e__id'], 12360, update_description($x['x__message'], $new_content));
 
@@ -3431,7 +3433,7 @@ class App extends CI_Controller
         if($has_handle){
 
             //See stats for this source:
-            $es = $this->E_model->fetch(array(
+            $es = $this->Source_cache->fetch(array(
                 'LOWER(e__handle)' => strtolower($_POST['e__handle']),
             ));
             if(!count($es)){
@@ -3444,7 +3446,7 @@ class App extends CI_Controller
         } elseif($has_hashtag){
 
             //See stats for this idea:
-            $is = $this->I_model->fetch(array(
+            $is = $this->Idea_cache->fetch(array(
                 'LOWER(i__hashtag)' => strtolower($_POST['i__hashtag']),
             ));
             if(!count($is)){
@@ -3454,7 +3456,7 @@ class App extends CI_Controller
                 ));
             }
 
-            $recursive_down_ids = $this->I_model->recursive_down_ids($is[0], 'ALL');
+            $recursive_down_ids = $this->Idea_cache->recursive_down_ids($is[0], 'ALL');
 
             //List stats:
             $miscstats .= '<div>Tree Ideas: '.number_format(count($recursive_down_ids['recursive_i_ids']), 0).'</div>';
@@ -3479,7 +3481,7 @@ class App extends CI_Controller
 
                         if($has_handle){
 
-                            $sub_counter = $this->X_model->fetch(array(
+                            $sub_counter = $this->Mench_ledger->fetch(array(
                                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                                 'x__type IN (' . join(',', $this->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
                                 'x__following' => $es[0]['e__id'],
@@ -3490,7 +3492,7 @@ class App extends CI_Controller
                         } elseif($has_hashtag && count($recursive_down_ids['recursive_i_ids'])){
 
                             //See stats for this idea:
-                            $sub_counter = $this->I_model->fetch(array(
+                            $sub_counter = $this->Idea_cache->fetch(array(
                                 'i__type' => $x__type3,
                                 'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                                 'i__id IN (' . join(',', $recursive_down_ids['recursive_i_ids']) . ')' => null,
@@ -3498,7 +3500,7 @@ class App extends CI_Controller
 
                         } else {
 
-                            $sub_counter = $this->I_model->fetch(array(
+                            $sub_counter = $this->Idea_cache->fetch(array(
                                 'i__type' => $x__type3,
                                 'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
                             ), 0, 0, array(), 'COUNT(i__id) as totals');
@@ -3509,7 +3511,7 @@ class App extends CI_Controller
 
                         if($has_handle){
 
-                            $sub_counter = $this->X_model->fetch(array(
+                            $sub_counter = $this->Mench_ledger->fetch(array(
                                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                                 'x__following' => $es[0]['e__id'],
@@ -3519,7 +3521,7 @@ class App extends CI_Controller
                         } elseif($has_hashtag && count($recursive_down_ids['recursive_i_ids'])){
 
                             //See stats for this idea:
-                            $sub_counter = $this->X_model->fetch(array(
+                            $sub_counter = $this->Mench_ledger->fetch(array(
                                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                                 'x__type IN (' . join(',', $this->config->item('n___33602')) . ')' => null, //Idea/Source Links Active
                                 'x__next IN (' . join(',', $recursive_down_ids['recursive_i_ids']) . ')' => null,
@@ -3528,7 +3530,7 @@ class App extends CI_Controller
 
                         } else {
 
-                            $sub_counter = $this->E_model->fetch(array(
+                            $sub_counter = $this->Source_cache->fetch(array(
                                 'e__privacy' => $x__type3,
                             ), 0, 0, array(), 'COUNT(e__id) as totals');
 
@@ -3538,7 +3540,7 @@ class App extends CI_Controller
 
                         if($has_handle){
 
-                            $sub_counter = $this->X_model->fetch(array(
+                            $sub_counter = $this->Mench_ledger->fetch(array(
                                 'x__type' => $x__type3,
                                 '( x__follower = ' . $es[0]['e__id'] . ' OR x__following = ' . $es[0]['e__id'] . ' OR x__player = ' . $es[0]['e__id'] . ' )' => null,
                                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -3546,7 +3548,7 @@ class App extends CI_Controller
 
                         } elseif($has_hashtag && count($recursive_down_ids['recursive_i_ids'])){
 
-                            $sub_counter = $this->X_model->fetch(array(
+                            $sub_counter = $this->Mench_ledger->fetch(array(
                                 'x__type' => $x__type3,
                                 '( x__previous IN (' . join(',', $recursive_down_ids['recursive_i_ids']) . ') OR x__next IN (' . join(',', $recursive_down_ids['recursive_i_ids']) . '))' => null,
                                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -3554,7 +3556,7 @@ class App extends CI_Controller
 
                         } else {
 
-                            $sub_counter = $this->X_model->fetch(array(
+                            $sub_counter = $this->Mench_ledger->fetch(array(
                                 'x__type' => $x__type3,
                                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
                             ), array(), 0, 0, array(), 'COUNT(x__id) as totals');

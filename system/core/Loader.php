@@ -77,7 +77,7 @@ class CI_Loader {
 	 *
 	 * @var	array
 	 */
-	protected $_cIdea_model_paths =	array(APPPATH);
+	protected $_cIdea_cache_paths =	array(APPPATH);
 
 	/**
 	 * List of paths to load helpers from
@@ -105,7 +105,7 @@ class CI_Loader {
 	 *
 	 * @var	array
 	 */
-	protected $_cIdea_models =	array();
+	protected $_cIdea_caches =	array();
 
 	/**
 	 * List of loaded helpers
@@ -264,7 +264,7 @@ class CI_Loader {
 			$name = $model;
 		}
 
-		if (in_array($name, $this->_cIdea_models, TRUE))
+		if (in_array($name, $this->_cIdea_caches, TRUE))
 		{
 			return $this;
 		}
@@ -293,18 +293,18 @@ class CI_Loader {
 		//       to cache them for later use and that prevents
 		//       MY_Model from being an abstract class and is
 		//       sub-optimal otherwise anyway.
-		if ( ! class_exists('CIdea_model', FALSE))
+		if ( ! class_exists('CIdea_cache', FALSE))
 		{
 			$app_path = APPPATH.'core'.DIRECTORY_SEPARATOR;
 			if (file_exists($app_path.'Model.php'))
 			{
 				require_once($app_path.'Model.php');
-				if ( ! class_exists('CIdea_model', FALSE))
+				if ( ! class_exists('CIdea_cache', FALSE))
 				{
-					throw new RuntimeException($app_path."Model.php exists, but doesn't declare class CIdea_model");
+					throw new RuntimeException($app_path."Model.php exists, but doesn't declare class CIdea_cache");
 				}
 			}
-			elseif ( ! class_exists('CIdea_model', FALSE))
+			elseif ( ! class_exists('CIdea_cache', FALSE))
 			{
 				require_once(BASEPATH.'core'.DIRECTORY_SEPARATOR.'Model.php');
 			}
@@ -323,7 +323,7 @@ class CI_Loader {
 		$model = ucfirst($model);
 		if ( ! class_exists($model, FALSE))
 		{
-			foreach ($this->_cIdea_model_paths as $mod_path)
+			foreach ($this->_cIdea_cache_paths as $mod_path)
 			{
 				if ( ! file_exists($mod_path.'models/'.$path.$model.'.php'))
 				{
@@ -344,12 +344,12 @@ class CI_Loader {
 				throw new RuntimeException('Unable to locate the model you have specified: '.$model);
 			}
 		}
-		elseif ( ! is_subclass_of($model, 'CIdea_model'))
+		elseif ( ! is_subclass_of($model, 'CIdea_cache'))
 		{
-			throw new RuntimeException("Class ".$model." already exists and doesn't extend CIdea_model");
+			throw new RuntimeException("Class ".$model." already exists and doesn't extend CIdea_cache");
 		}
 
-		$this->_cIdea_models[] = $name;
+		$this->_cIdea_caches[] = $name;
 		$CI->$name = new $model();
 		return $this;
 	}
@@ -762,7 +762,7 @@ class CI_Loader {
 	 * path arrays.
 	 *
 	 * @see	CI_Loader::$_ci_library_paths
-	 * @see	CI_Loader::$_cIdea_model_paths
+	 * @see	CI_Loader::$_cIdea_cache_paths
 	 * @see CI_Loader::$_ci_helper_paths
 	 * @see CI_Config::$_config_paths
 	 *
@@ -775,7 +775,7 @@ class CI_Loader {
 		$path = rtrim($path, '/').'/';
 
 		array_unshift($this->_ci_library_paths, $path);
-		array_unshift($this->_cIdea_model_paths, $path);
+		array_unshift($this->_cIdea_cache_paths, $path);
 		array_unshift($this->_ci_helper_paths, $path);
 
 		$this->_ci_view__paths = array($path.'views/' => $view_cascade) + $this->_ci_view__paths;
@@ -799,7 +799,7 @@ class CI_Loader {
 	 */
 	public function get_package_paths($include_base = FALSE)
 	{
-		return ($include_base === TRUE) ? $this->_ci_library_paths : $this->_cIdea_model_paths;
+		return ($include_base === TRUE) ? $this->_ci_library_paths : $this->_cIdea_cache_paths;
 	}
 
 	// --------------------------------------------------------------------
@@ -821,7 +821,7 @@ class CI_Loader {
 		if ($path === '')
 		{
 			array_shift($this->_ci_library_paths);
-			array_shift($this->_cIdea_model_paths);
+			array_shift($this->_cIdea_cache_paths);
 			array_shift($this->_ci_helper_paths);
 			array_shift($this->_ci_view__paths);
 			array_pop($config->_config_paths);
@@ -829,7 +829,7 @@ class CI_Loader {
 		else
 		{
 			$path = rtrim($path, '/').'/';
-			foreach (array('_ci_library_paths', '_cIdea_model_paths', '_ci_helper_paths') as $var)
+			foreach (array('_ci_library_paths', '_cIdea_cache_paths', '_ci_helper_paths') as $var)
 			{
 				if (($key = array_search($path, $this->{$var})) !== FALSE)
 				{
@@ -851,7 +851,7 @@ class CI_Loader {
 		// make sure the application default paths are still in the array
 		$this->_ci_library_paths = array_unique(array_merge($this->_ci_library_paths, array(APPPATH, BASEPATH)));
 		$this->_ci_helper_paths = array_unique(array_merge($this->_ci_helper_paths, array(APPPATH, BASEPATH)));
-		$this->_cIdea_model_paths = array_unique(array_merge($this->_cIdea_model_paths, array(APPPATH)));
+		$this->_cIdea_cache_paths = array_unique(array_merge($this->_cIdea_cache_paths, array(APPPATH)));
 		$this->_ci_view__paths = array_merge($this->_ci_view__paths, array(APPPATH.'views/' => TRUE));
 		$config->_config_paths = array_unique(array_merge($config->_config_paths, array(APPPATH)));
 

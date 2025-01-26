@@ -10,7 +10,7 @@ if($player_e['e__id']){
 } else {
 
     $random_cover = random_cover(12279);
-    $player_result = $this->Source_model->add_member(view__random_title(), null, null, $random_cover);
+    $player_result = $this->Source_cache->add_member(view__random_title(), null, null, $random_cover);
     js_php_redirect(( $i__hashtag ? view__memory(42903,33286).$i__hashtag : view__memory(42903,42902).$player_result['e']['e__handle'] ), 13);
 
 }

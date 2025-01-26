@@ -3,7 +3,7 @@
 $sign_i = array();
 
 if(isset($_GET['i__hashtag']) && strlen($_GET['i__hashtag'])){
-    $sign_i = $this->Idea_model->fetch(array(
+    $sign_i = $this->Idea_cache->fetch(array(
         'LOWER(i__hashtag)' => strtolower($_GET['i__hashtag']),
     ));
 }
@@ -24,14 +24,14 @@ if(superpower_unlocked()) {
 
 } elseif(isset($_GET['e__handle']) && $_GET['e__handle']!='SuccessfulWhale' && isset($_GET['e__hash']) && isset($_GET['e__time']) && view__hash($_GET['e__time'].$_GET['e__handle'])==$_GET['e__hash']){
 
-    $es = $this->Source_model->fetch(array(
+    $es = $this->Source_cache->fetch(array(
         'LOWER(e__handle)' => strtolower($_GET['e__handle']),
         'e__privacy IN (' . join(',', $this->config->item('n___7357')) . ')' => null, //PUBLIC/OWNER
     ));
 
     if(count($es)){
         //Assign session & log transaction:
-        $this->Source_model->activate_session($es[0], false, true);
+        $this->Source_cache->activate_session($es[0], false, true);
     }
 
     js_php_redirect($next_url, 13);
@@ -87,7 +87,7 @@ if(superpower_unlocked()) {
     if(count($current_sign_i_attempt)==0){
 
         //Log transaction:
-        $current_sign_i_attempt = $this->Interaction_model->create($this_attempt);
+        $current_sign_i_attempt = $this->Mench_ledger->create($this_attempt);
 
         //Grow the array:
         array_push($current_sign_i_attempts, $current_sign_i_attempt);

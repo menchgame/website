@@ -15,7 +15,7 @@ if(isset($_POST['list_emails']) && strlen($_POST['list_emails'])){
             $total_emails++;
             //echo $email.'<hr />';
 
-            foreach($this->Interaction_model->fetch(array(
+            foreach($this->Mench_ledger->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                 'x__following' => 3288, //Email
@@ -25,7 +25,7 @@ if(isset($_POST['list_emails']) && strlen($_POST['list_emails'])){
                 $found_emails++;
 
                 //Do we need to add?
-                if(isset($_POST['import_e__id']) && intval($_POST['import_e__id']) && !count($this->Interaction_model->fetch(array(
+                if(isset($_POST['import_e__id']) && intval($_POST['import_e__id']) && !count($this->Mench_ledger->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
                     'x__following' => $_POST['import_e__id'],
@@ -33,7 +33,7 @@ if(isset($_POST['list_emails']) && strlen($_POST['list_emails'])){
                 )))){
 
                     $added_emails++;
-                    $this->Interaction_model->create(array(
+                    $this->Mench_ledger->create(array(
                         'x__type' => 4251,
                         'x__player' => $player_e['e__id'],
                         'x__following' => $_POST['import_e__id'],

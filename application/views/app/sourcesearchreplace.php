@@ -14,7 +14,7 @@ $replace_with_confirmed = false;
 
 if($search_for_set){
 
-    $matching_results = $this->Source_model->fetch(array(
+    $matching_results = $this->Source_cache->fetch(array(
         'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE
         'e__title LIKE \'%'.$_GET['search_for'].'%\'' => null,
     ));
@@ -44,7 +44,7 @@ if($search_for_set){
 
                 if($replace_with_confirmed){
                     //Update idea:
-                    $res = $this->Source_model->update($en['e__id'], array(
+                    $res = $this->Source_cache->update($en['e__id'], array(
                         'e__title' => $en['e__title'],
                     ), true, $player_e['e__id']);
                     $replaced++;

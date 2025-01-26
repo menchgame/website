@@ -11,7 +11,7 @@ echo '<div class="row justify-content margin-top-down">';
 foreach($this->config->item('e___14599') as $app_e__id => $cache_apps){
 
     //Fetch Last Cache
-    $latest_cache = $this->Interaction_model->fetch(array(
+    $latest_cache = $this->Mench_ledger->fetch(array(
         'x__type' => 14599, //Cache App
         'x__following' => $app_e__id,
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC

@@ -3,7 +3,7 @@
 //List CronJobs command:
 $longest_time = 0;
 $longest_id = 0;
-$cron_jobs = $this->Interaction_model->fetch(array(
+$cron_jobs = $this->Mench_ledger->fetch(array(
     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
     'e__privacy IN (' . join(',', $this->config->item('n___7358')) . ')' => null, //ACTIVE

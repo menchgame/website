@@ -2,7 +2,7 @@
 
 //Sync All Adding followers:
 $counter = 0;
-foreach ($this->Interaction_model->fetch(array(
+foreach ($this->Mench_ledger->fetch(array(
     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
     'x__type' => 7545,
     'x__following NOT IN (' . join(',', $this->config->item('n___43048')) . ')' => null, //No need to add these special ones... SourceNickname
@@ -10,7 +10,7 @@ foreach ($this->Interaction_model->fetch(array(
 
     $is_found = false;
     //Fetch everyone who has discovered this idea:
-    foreach ($this->Interaction_model->fetch(array(
+    foreach ($this->Mench_ledger->fetch(array(
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
         'x__previous' => $addition_sync['x__next'],
@@ -18,7 +18,7 @@ foreach ($this->Interaction_model->fetch(array(
 
         //Any responses by this user?
         $set_x__message = $dicovered['x__message'];
-        foreach($this->Interaction_model->fetch(array(
+        foreach($this->Mench_ledger->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
             'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
             'x__type' => 33532, //Share Idea
