@@ -2869,14 +2869,14 @@ function view__card_x($x, $has_x__reference = false)
     $ui = '<div class="x-list">';
     foreach($CI->config->item('e___4341') as $e__id => $m) {
 
-        if(in_array(6160 , $m['m__following']) && intval($x[$e___32088[$e__id]['m__message']])>0){
+        if(in_array(6160 , $m['m__following']) && isset($x[$e___32088[$e__id]['m__message']]) && intval($x[$e___32088[$e__id]['m__message']])>0){
 
             //SOURCE
             foreach($CI->Source_model->fetch(array('e__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_e){
                 $ui .= '<div class="simple-line"><a href="'.view__memory(42903,42902).$focus_e['e__handle'].'" data-toggle="tooltip" data-placement="top" title="'.$m['m__title'].'" class="main__title"><span class="icon-block">'.$m['m__cover']. '</span>'.'<span class="icon-block">'.view__cover($focus_e['e__cover'], true). '</span>'.$focus_e['e__title'].'</a></div>';
             }
 
-        } elseif(in_array(6202 , $m['m__following']) && intval($x[$e___32088[$e__id]['m__message']])>0){
+        } elseif(in_array(6202 , $m['m__following']) && isset($x[$e___32088[$e__id]['m__message']]) && intval($x[$e___32088[$e__id]['m__message']])>0){
 
             //IDEA
             foreach($CI->Idea_model->fetch(array('i__id' => $x[$e___32088[$e__id]['m__message']])) as $focus_i){
@@ -2884,7 +2884,7 @@ function view__card_x($x, $has_x__reference = false)
             }
 
 
-        } elseif(in_array(4367 , $m['m__following']) && intval($x[$e___32088[$e__id]['m__message']])>0){
+        } elseif(in_array(4367 , $m['m__following']) && isset($x[$e___32088[$e__id]['m__message']]) && intval($x[$e___32088[$e__id]['m__message']])>0){
 
             //TRANSACTION
             if(!$has_x__reference){
