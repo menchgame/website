@@ -15,7 +15,7 @@ if(!count($list_settings['list_config'][34513])){
 }
 
 
-foreach($this->X_model->fetch(array(
+foreach($this->Interaction_model->fetch(array(
     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
     'x__type IN (' . join(',', $this->config->item('n___42991')) . ')' => null, //Active Writes
     'x__following IN (' . join(',', $list_settings['list_config'][34513]) . ')' => null, //Active Writes

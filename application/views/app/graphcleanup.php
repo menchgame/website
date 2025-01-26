@@ -19,7 +19,7 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
 
     $edited = 0;
     $edited_sources = 0;
-    foreach($this->I_model->fetch(array(
+    foreach($this->Idea_model->fetch(array(
         'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
     ), 0) as $i_fix){
 
@@ -67,16 +67,16 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
     //Import Discoveries?
     $flash_message = '';
     if(isset($_GET['e__handle'])){
-        foreach($this->E_model->fetch(array(
+        foreach($this->Source_model->fetch(array(
             'LOWER(e__handle)' => strtolower($_GET['e__handle']),
         )) as $e_append){
             $completed = 0;
-            foreach($this->X_model->fetch(array(
+            foreach($this->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
                 'x__previous' => $is[0]['i__id'],
             ), array(), 0) as $x){
-                if(!count($this->X_model->fetch(array(
+                if(!count($this->Interaction_model->fetch(array(
                     'x__following' => $e_append['e__id'],
                     'x__follower' => $x['x__player'],
                     'x__message' => $x['x__message'],
@@ -85,7 +85,7 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
                 )))){
                     //Increment source link:
                     $completed++;
-                    $this->X_model->create(array(
+                    $this->Interaction_model->create(array(
                         'x__player' => ($player_e ? $player_e['e__id'] : $x['x__player']),
                         'x__following' => $e_append['e__id'],
                         'x__follower' => $x['x__player'],
@@ -102,17 +102,17 @@ if(isset($_GET['action']) && $_GET['action']=='i_messages'){
 } elseif(isset($_GET['action']) && $_GET['action']=='link_update') {
 
     $count = 0;
-    foreach($this->X_model->fetch(array(
+    foreach($this->Interaction_model->fetch(array(
         //'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type' => 42243,
     ), array('x__previous'), 0) as $prev_i){
         if($prev_i['i__privacy']!=42626 || $prev_i['x__type']!=4228){
             $count++;
-            $this->X_model->update($prev_i['x__id'], array(
+            $this->Interaction_model->update($prev_i['x__id'], array(
                 'x__type' => 4228,
             ));
-            $this->I_model->update($prev_i['i__id'], array(
+            $this->Idea_model->update($prev_i['i__id'], array(
                 'i__privacy' => 42626,
             ));
         }

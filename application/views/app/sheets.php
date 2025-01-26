@@ -38,7 +38,7 @@ foreach($list_settings['query_string_filtered'] as $x){
     $name = '';
     foreach($list_settings['column_i'] as $i_var){
 
-        $discoveries = $this->X_model->fetch(array(
+        $discoveries = $this->Interaction_model->fetch(array(
             'x__previous' => $i_var['i__id'],
             'x__player' => $x['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___6255')) . ')' => null, //DISCOVERIES
@@ -64,7 +64,7 @@ foreach($list_settings['query_string_filtered'] as $x){
         $i_content .= '<td title="'.$x['e__title'].' x '.view__i_title($i_var, true).'">'.( count($discoveries) ? ( strlen($discoveries[0]['x__message']) > 0 ? ( isset($_GET['expand']) ? '<p title="'.view__i_title($i_var, true).': '.$discoveries[0]['x__message'].'" data-placement="top" '.$underdot_class.'>'.$discoveries[0]['x__message'].'</p>' : '<span title="'.view__i_title($i_var, true).': '.$discoveries[0]['x__message'].' ['.$discoveries[0]['x__time'].']" '.$underdot_class.'>✔️</span>'  ) : '<span title="'.view__i_title($i_var, true).' ['.$discoveries[0]['x__time'].']">✔️</span>' ).( $discoveries[0]['x__type']==26595 && $x__metadata['mc_gross']!=0 && strlen($x__metadata['txn_id'])>0 ? '<a href="https://www.paypal.com/activity/payment/'.$x__metadata['txn_id'].'" target="_blank" data-toggle="tooltip" data-placement="top" title="View Paypal Transaction"><i class="fab fa-paypal" style="font-size:1em !important;"></i></a> ' : '' )  : '').'</td>';
 
 
-        if(count($discoveries) && (!count($i_var['must_follow']) || count($i_var['must_follow'])!=count($this->X_model->fetch(array(
+        if(count($discoveries) && (!count($i_var['must_follow']) || count($i_var['must_follow'])!=count($this->Interaction_model->fetch(array(
                     'x__follower' => $x['e__id'],
                     'x__following IN (' . join(',', $i_var['must_follow']) . ')' => null,
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -92,14 +92,14 @@ foreach($list_settings['query_string_filtered'] as $x){
     //SOURCES
     foreach($list_settings['column_e'] as $e){
 
-        $require_writing = count($this->X_model->fetch(array(
+        $require_writing = count($this->Interaction_model->fetch(array(
             'x__following IN (' . join(',', $this->config->item('n___43510')) . ')' => null, //Require Written Answers
             'x__follower' => $e['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         )));
 
-        $fetch_data = $this->X_model->fetch(array(
+        $fetch_data = $this->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__follower' => $x['e__id'],
             'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -134,7 +134,7 @@ foreach($list_settings['query_string_filtered'] as $x){
                 $count_totals['e'][$e['e__id']] = 0;
             }
 
-            $count_totals['e'][$e['e__id']] = $count_totals['e'][$e['e__id']] + ( count($this->X_model->fetch(array(
+            $count_totals['e'][$e['e__id']] = $count_totals['e'][$e['e__id']] + ( count($this->Interaction_model->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__follower' => $e['e__id'],
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
@@ -163,7 +163,7 @@ foreach($list_settings['column_e'] as $e){
 }
 foreach($list_settings['column_i'] as $i_var){
 
-    $max_available = $this->X_model->fetch(array(
+    $max_available = $this->Interaction_model->fetch(array(
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type IN (' . join(',', $this->config->item('n___42991')) . ')' => null, //Active Writes
         'x__next' => $i_var['i__id'],

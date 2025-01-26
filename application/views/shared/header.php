@@ -147,6 +147,11 @@ if($website_id==39599){
             event.stopPropagation();
         });
 
+        $(".add_hashtag_44169").click(function (e) {
+            console.log('added2');
+            insertText($(".save_i__message"), '#');
+        });
+
     </script>
     <link href="https://unpkg.com/cloudinary-video-player@1.10.5/dist/cld-video-player.min.css" rel="stylesheet">
     <script src="https://unpkg.com/cloudinary-video-player@1.10.5/dist/cld-video-player.min.js" type="text/javascript"></script>
@@ -316,17 +321,17 @@ if(isset($_POST['payment_status']) && isset($_POST['item_number'])){
     $item_numbers['e_player'] = strtolower(trim(str_replace('@','',$item_parts[( count($item_parts)==4 ? 3 : 2 )])));
 
     //Fetch Objects based on handles:
-    $player_es = $this->E_model->fetch(array(
+    $player_es = $this->Source_model->fetch(array(
         'LOWER(e__handle)' => $item_numbers['e_player'],
     ));
-    $website_es = $this->E_model->fetch(array(
+    $website_es = $this->Source_model->fetch(array(
         'LOWER(e__handle)' => $item_numbers['e_wesbite'],
     ));
-    $next_is = $this->I_model->fetch(array(
+    $next_is = $this->Idea_model->fetch(array(
         'LOWER(i__hashtag)' => $item_numbers['i_destination'],
         'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
     ));
-    $target_is = ($item_numbers['i_target'] ? $this->I_model->fetch(array(
+    $target_is = ($item_numbers['i_target'] ? $this->Idea_model->fetch(array(
         'LOWER(i__hashtag)' => $item_numbers['i_target'],
         'i__privacy IN (' . join(',', $this->config->item('n___31871')) . ')' => null, //ACTIVE
     )) : false);
@@ -344,7 +349,7 @@ if(isset($_POST['payment_status']) && isset($_POST['item_number'])){
             $x__type = ( $is_pending ? 35572 /* Pending Payment */ : 26595 );
 
             //Log Payment:
-            $completion_status = $this->X_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
+            $completion_status = $this->Interaction_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
                 'x__weight' => intval($_POST['quantity']),
                 'x__metadata' => $_POST,
             ));
@@ -354,14 +359,14 @@ if(isset($_POST['payment_status']) && isset($_POST['item_number'])){
             $x__type = ( $is_pending ? 39597 /* Pending Refund */ : 31967 );
 
             //Find issued tickets:
-            $original_payment = $this->X_model->fetch(array(
+            $original_payment = $this->Interaction_model->fetch(array(
                 'x__type' => 26595,
                 'x__player' => $player_es[0]['e__id'],
                 'x__previous' => $next_is[0]['i__id'],
             ));
 
             //Log Refund:
-            $completion_status = $this->X_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
+            $completion_status = $this->Interaction_model->mark_complete($x__type, $player_es[0]['e__id'], ( isset($target_is[0]['i__id']) ? $target_is[0]['i__id'] : 0 ), $next_is[0], array(), array(
                 'x__weight' => (-1 * ( isset($original_payment[0]['x__weight']) ? $original_payment[0]['x__weight'] : 1 )),
                 'x__metadata' => $_POST,
                 'x__reference' => ( isset($original_payment[0]['x__id']) ? $original_payment[0]['x__id'] : 0 ),
@@ -976,7 +981,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
                             <!-- Idea Links -->
                             <div class="dynamic_editing_input idea_link_type hidden hidden_superpower__10939" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view__single_select_form(4486, 4228, false, false); ?></div>
+                                <div class="dynamic_selector"><?= view__single_select_form(4486, 4228); ?></div>
                             </div>
 
                             <!-- Unlink -->
@@ -991,7 +996,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
 
                         </div>
-                        <button type="button" class="btn btn-default i_editor_save post_button" onclick="i_editor_save()">SAVE</button>
+                        <button type="button" class="btn btn-default i_editor_save post_button" onclick="i_editor_save()">POST</button>
                     </div>
 
                     <div class="modal-body">
@@ -1010,7 +1015,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                         <!-- Idea Creator(s) -->
                         <div class="creator_box">
                             <?php
-                            foreach($this->X_model->fetch(array(
+                            foreach($this->Interaction_model->fetch(array(
                                 'x__following' => $player_e['e__id'],
                                 'x__type' => 41011, //PINNED FOLLOWER
                                 'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
@@ -1026,7 +1031,7 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
 
                         <!-- Idea Message -->
                         <div class="dynamic_editing_input" style="margin: 0 !important;">
-                            <textarea class="form-control nodte-textarea algolia_finder new-note editing-mode unsaved_warning algolia__e algolia__i save_i__message" placeholder="<?= ( strlen($e___6201[4736]['m__message']) ? $e___6201[4736]['m__message'] : $e___6201[4736]['m__title'].'...' ) ?>" style="margin:0; width:100%; background-color: #FFFFFF !important;"></textarea>
+                            <textarea class="form-control note-textarea algolia_finder new-note editing-mode unsaved_warning algolia__e algolia__i save_i__message" placeholder="<?= ( strlen($e___6201[4736]['m__message']) ? $e___6201[4736]['m__message'] : $e___6201[4736]['m__title'].'...' ) ?>" style="margin:0; width:100%; background-color: #FFFFFF !important;"></textarea>
                             <div class="media_outer_frame hideIfEmpty" style="margin-left: 40px;">
                                 <div id="media_editor_frame" class="media_frame hideIfEmpty"></div>
                                 <div class="doclear">&nbsp;</div>
@@ -1037,34 +1042,48 @@ if($player_e && ( !isset($basic_header_footer) || !$basic_header_footer )){
                             <div class="idea_list_previous hideIfEmpty"></div>
                         </div>
 
+
                         <div class="inner_message left_padded">
+                            <?php
+                            foreach($this->config->item('e___44168') as $e__id => $m){
 
-                            <!-- EMOJI -->
-                            <div class="dynamic_editing_input no_padded float_right">
-                                <div class="dropdown emoji_selector">
-                                    <button type="button" class="btn no-left-padding no-right-padding icon-block" id="emoji_i" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-face-smile"></i></button>
-                                    <div class="dropdown-menu emoji_i" aria-labelledby="emoji_i"></div>
-                                </div>
-                            </div>
+                                if($e__id==44169){ //Idea Reference
 
-                            <!-- Upload -->
-                            <div class="dynamic_editing_input no_padded float_right">
-                                <a class="uploader_13572 icon-block" href="javascript:void(0);" title="<?= $e___11035[13572]['m__title'] ?>"><?= $e___11035[13572]['m__cover'] ?></a>
-                            </div>
+                                    echo '<div class="dynamic_editing_input no_padded">
+                                        <a class="add_hashtag_44169 icon-block" href="javascript:void(0)" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                    </div>';
 
+                                } elseif($e__id==4737){ //Source Reference
 
-                            <!-- Idea Privacy -->
-                            <div class="dynamic_editing_input" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view__single_select_form(31004, 31005, false, true); ?></div>
-                            </div>
+                                    echo '<div class="dynamic_editing_input " style="margin: 0 !important;">
+                                        <div class="dynamic_selector">'.view__single_select_form(4737, 6677).'</div>
+                                    </div>';
 
-                            <!-- Idea Type -->
-                            <div class="dynamic_editing_input hidden_superpower__10939" style="margin: 0 !important;">
-                                <div class="dynamic_selector"><?= view__single_select_form(4737, 6677, false, true); ?></div>
-                            </div>
+                                } elseif($e__id==31004){ //Idea Privacy
 
+                                    echo '<div class="dynamic_editing_input" style="margin: 0 !important;">
+                                        <div class="dynamic_selector">'.view__single_select_form(31004, 31005).'</div>
+                                    </div>';
+
+                                } elseif($e__id==13572){ //Upload File
+
+                                    echo '<div class="dynamic_editing_input no_padded">
+                                        <a class="uploader_13572 icon-block" href="javascript:void(0)" title="'.$m['m__title'].'">'.$m['m__cover'].'</a>
+                                    </div>';
+
+                                } elseif($e__id==44170){ //ADD EMOJI
+
+                                    echo '<div class="dynamic_editing_input no_padded">
+                                        <div class="dropdown emoji_selector">
+                                            <button type="button" class="btn no-left-padding no-right-padding icon-block" id="emoji_i" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="'.$m['m__title'].'">'.$m['m__cover'].'</button>
+                                            <div class="dropdown-menu emoji_i" aria-labelledby="emoji_i"></div>
+                                        </div>
+                                    </div>';
+
+                                }
+                            }
+                            ?>
                             <div class="doclear">&nbsp;</div>
-
                         </div>
 
                         <div class="hidden_superpower__10939 left_padded">

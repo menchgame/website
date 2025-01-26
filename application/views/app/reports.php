@@ -59,9 +59,9 @@ if($player_http_request && !isset($_GET['email_trigger'])){
 
     $email_recipients = 0;
     //Send email to all subscribers:
-    foreach($this->X_model->fetch($subscriber_filters, array('x__follower')) as $subscribed_u){
+    foreach($this->Interaction_model->fetch($subscriber_filters, array('x__follower')) as $subscribed_u){
 
-        $this->X_model->send_dm($subscribed_u['e__id'], $subject, $html_message);
+        $this->Interaction_model->send_dm($subscribed_u['e__id'], $subject, $html_message);
         $email_recipients++;
 
     }

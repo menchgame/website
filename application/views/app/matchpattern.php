@@ -1,13 +1,13 @@
 <?php
 
 if(isset($_GET['i__hashtag'])){
-    foreach($this->I_model->fetch(array(
+    foreach($this->Idea_model->fetch(array(
         'LOWER(i__hashtag)' => strtolower($_GET['i__hashtag']),
     )) as $i){
 
         echo '<h2>' . view__i_title($i) . '</h2>';
 
-        $preg_query = $this->X_model->fetch(array(
+        $preg_query = $this->Interaction_model->fetch(array(
             'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
             'x__type IN (' . join(',', $this->config->item('n___42991')) . ')' => null, //Active Writes
             'x__next' => $i['i__id'],
@@ -21,7 +21,7 @@ if(isset($_GET['i__hashtag'])){
 
             echo '<p>Mismatches against ['.$preg_query[0]['x__message'].'] are:</p>';
 
-            foreach($this->X_model->fetch(array(
+            foreach($this->Interaction_model->fetch(array(
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type' => 6144, //Written Response
                 'x__previous' => $i['i__id'],
@@ -30,7 +30,7 @@ if(isset($_GET['i__hashtag'])){
                 if(!preg_match($preg_query[0]['x__message'], $x['x__message'])) {
                     $failed++;
                     if(isset($_GET['delete'])){
-                        $this->X_model->update($x['x__id'], array(
+                        $this->Interaction_model->update($x['x__id'], array(
                             'x__privacy' => 6173,
                         ));
                         echo 'Deleted! ';

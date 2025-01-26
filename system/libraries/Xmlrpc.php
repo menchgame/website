@@ -1129,7 +1129,7 @@ class XML_RPC_Message extends CI_Xmlrpc
 		// Display HTTP content for debugging
 		if ($this->debug === TRUE)
 		{
-			echo "<pre>---DATA---\n".htmlspecialchars($data)."\n---END DATA---\n\n</pre>";
+			echo "<pre>---DATA---\n".htmlspecialchars($data)."\n___END DATA---\n\n</pre>";
 		}
 
 		// Check for data
@@ -1197,7 +1197,7 @@ class XML_RPC_Message extends CI_Xmlrpc
 		{
 			if ($this->debug === TRUE)
 			{
-				echo "---Invalid Return---\n".$this->xh[$pname]['isf_reason']."---Invalid Return---\n\n";
+				echo "---Invalid Return___\n".$this->xh[$pname]['isf_reason']."---Invalid Return___\n\n";
 			}
 
 			return new XML_RPC_Response(0, $this->xmlrpcerr['invalid_return'], $this->xmlrpcstr['invalid_return'].' '.$this->xh[$pname]['isf_reason']);
@@ -1222,9 +1222,9 @@ class XML_RPC_Message extends CI_Xmlrpc
 				echo "---END HEADERS---\n\n";
 			}
 
-			echo "---DATA---\n".htmlspecialchars($data)."\n---END DATA---\n\n---PARSED---\n";
+			echo "---DATA---\n".htmlspecialchars($data)."\n___END DATA---\n\n___PARSED---\n";
 			var_dump($this->xh[$pname]['value']);
-			echo "\n---END PARSED---</pre>";
+			echo "\n___END PARSED---</pre>";
 		}
 
 		// Send response

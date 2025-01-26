@@ -102,7 +102,7 @@ if ( ! is_php('5.4'))
 			'HTTP_RAW_POST_DATA',
 			'system_path',
 			'application_folder',
-			'view___folder',
+			'view__folder',
 			'_protected',
 			'_registered'
 		);

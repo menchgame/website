@@ -3,18 +3,17 @@
 $e__handle = ( isset($_GET['e__handle']) ? $_GET['e__handle'] : null );
 $i__hashtag = ( !$e__handle && isset($_GET['i__hashtag']) ? $_GET['i__hashtag'] : null );
 $e___11035 = $this->config->item('e___11035'); //Encyclopedia
-$e___42225 = $this->config->item('e___42225'); //MENCH Points
 $e___42263 = $this->config->item('e___42263'); //Link Groups
 
 
 if($e__handle){
-    foreach($this->E_model->fetch(array(
+    foreach($this->Source_model->fetch(array(
         'LOWER(e__handle)' => strtolower($e__handle),
     )) as $e){
         echo '<h2 class="center"><a href="'.view__memory(42903,42902).$e__handle.'"><span class="icon-block">'.view__cover($e['e__cover']).'</span> <u>' . $e['e__title'] . '</u></a> <a href="'.view__memory(42903,33286).$this->uri->segment(1).'"><i class="far fa-filter-slash"></i></a></h2>';
     }
 } elseif($i__hashtag){
-    foreach($this->I_model->fetch(array(
+    foreach($this->Idea_model->fetch(array(
         'LOWER(i__hashtag)' => strtolower($i__hashtag),
     )) as $i){
         echo '<h2 class="center"><a href="'.view__memory(42903,33286).$i__hashtag.'"><u>' . view__i_title($i, true) . '</u></a> <a href="'.view__memory(42903,33286).$this->uri->segment(1).'"><i class="far fa-filter-slash"></i></a></h2>';
@@ -26,13 +25,13 @@ echo '<div class="center miscstats hideIfEmpty"></div>';
 
 foreach($this->config->item('e___33292') as $e__id1 => $m1) {
 
-    echo '<h3 class="center centerh advanced-stats hidden main__title" title="@'.$m1['m__handle'].'"><div class="large-cover">'.$m1['m__cover'].'</div><b class="card_count_'.$e__id1.'"><i class="fas fa-yin-yang fa-spin"></i></b> '.$m1['m__title'].':</h3>';
+    echo '<div class="mid-text-line"><span><b class="card_count_'.$e__id1.'"><i class="fas fa-yin-yang fa-spin"></i></b> '.$m1['m__title'].':</span></div>';
 
     echo '<div class="row justify-content list-covers">';
     
     foreach($this->config->item('e___'.$e__id1) as $e__id2 => $m2) {
 
-        echo '<div class="card_cover no-padding col-6 '.( !in_array($e__id2, $this->config->item('n___14874')) ? ' advanced-stats hidden ' : '' ).'">';
+        echo '<div class="card_cover no-padding col-6">';
         echo '<div class="card_frame dropdown_d'.$e__id1.' dropdown_'.$e__id2.'" e__id="'.$e__id2.'">';
 
         echo '<div title="'.$m2['m__message'].'">';
@@ -50,16 +49,16 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
         }
         foreach($this->config->item('e___'.$e_pinned) as $e__id3 => $m3) {
 
+            /*
             foreach(array_intersect($m3['m__following'], $this->config->item('n___42263')) as $headline_link){
                 if ($headline_link > 0){
                     if(!$focus_link_group || $focus_link_group!=$headline_link){
 
                         echo '<tr class="mobile-shrink">';
                         echo '<td class="center" colspan="2" title="@'.$e___42263[$headline_link]['m__handle'].'">';
-
                         //Search for sibling If Has Family:
                         if(in_array($e__id2, $this->config->item('n___42792'))){
-                            foreach($this->X_model->fetch(array(
+                            foreach($this->Interaction_model->fetch(array(
                                 'x__follower' => $headline_link,
                                 'x__type' => 42570, //Family
                                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
@@ -76,9 +75,10 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
                     }
                 }
             }
+            */
 
             echo '<tr class="mobile-shrink" title="'.$m3['m__message'].'" data-toggle="tooltip" data-placement="top">';
-            echo '<td style="text-align: left;" title="@'.$m3['m__handle'].'"><a href="'.view__memory(42903,42902).$m3['m__handle'].'"><span class="icon-block-sm">'.$m3['m__cover'].'</span>'.$m3['m__title'].'</a><span class="last-right-col"><b class="card_count_'.$e__id3.'"><i class="fas fa-yin-yang fa-spin"></i></b></span><span class="second-right-col points_frame hidden">'.( isset($e___42225[$e__id3]['m__message']) && intval($e___42225[$e__id3]['m__message'])>0 ? $e___42225[$e__id3]['m__message'].'<span class="icon-block-xs">'.$e___11035[42225]['m__cover'].'</span>' : '' ).'</span></td>';
+            echo '<td style="text-align: left;" title="@'.$m3['m__handle'].'"><a href="'.view__memory(42903,42902).$m3['m__handle'].'"><span class="icon-block-sm">'.$m3['m__cover'].'</span>'.$m3['m__title'].'</a><span class="last-right-col"><b class="card_count_'.$e__id3.'"><i class="fas fa-yin-yang fa-spin"></i></b></span></td>';
             echo '</tr>';
 
         }
@@ -106,7 +106,6 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
             js_request_uri: js_request_uri, //Always append to AJAX Calls
         }, function (data) {
 
-
             $.each(data.return_array, function (key, val) {
                 var formatted = String(val).replace(/(.)(?=(\d{3})+$)/g,'$1,');
                 if (formatted != $(".card_count_"+key+":first").text()){
@@ -124,8 +123,6 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
 
     $(document).ready(function () {
 
-        $("h1").append('<a class="icon-block" href="javascript:void(0);" onclick="$(\'.advanced-stats\').toggleClass(\'hidden\');"><i class="far fa-search-plus advanced-stats" style="font-size: 0.34em !important;"></i><i class="far fa-search-minus advanced-stats hidden" style="font-size: 0.34em !important;"></i></a>').append('<a class="icon-block-sm advanced-stats hidden" href="javascript:void(0);" onclick="$(\'.points_frame\').toggleClass(\'hidden\');"><span class="points_frame"><?= $e___11035[42225]['m__cover'] ?></span></a>');
-
         //Load initial stats:
         x__refresh_gameplay();
 
@@ -133,6 +130,8 @@ foreach($this->config->item('e___33292') as $e__id1 => $m1) {
         $(".card_frame").click(function (e) {
             $('.card_subcat_'+$(this).attr('e__id')).toggleClass('hidden');
         });
+
+
 
         //Update stats live:
         $(function () {

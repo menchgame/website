@@ -7,7 +7,7 @@ if(isset($_GET['e__handle'])){
     //Find Link Content Duplicates for this Source:
     $main_index = array();
     $duplicates_found = array();
-    foreach($this->X_model->fetch(array(
+    foreach($this->Interaction_model->fetch(array(
         'LOWER(e__handle)' => strtolower($_GET['e__handle']),
         'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
         'x__privacy IN (' . join(',', $this->config->item('n___7360')) . ')' => null, //ACTIVE
