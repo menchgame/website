@@ -839,6 +839,9 @@ class App extends CI_Controller
                 }
 
                 $input_parts = explode('____', $_POST['save_dynamic_' . $p], 3);
+                if(!isset($input_parts[0]) || !isset($input_parts[1])){
+                    continue;
+                }
                 $d_x__id = $input_parts[0];
                 $dynamic_e__id = $input_parts[1];
                 $dynamic_value = trim($input_parts[2]);
