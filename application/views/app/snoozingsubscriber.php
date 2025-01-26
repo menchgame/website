@@ -25,8 +25,8 @@ foreach($this->config->item('e___28917') as $x__type => $m) {
                 //Add to subscribers:
                 $this->X_model->create(array(
                     'x__type' => 4251,
-                    'x__following' => 4430, //Active Member
                     'x__player' => $x['x__player'],
+                    'x__following' => 4430, //Active Member
                     'x__follower' => $x['x__player'],
                 ));
 

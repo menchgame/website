@@ -329,18 +329,6 @@ class App extends CI_Controller
         }
 
 
-        //Log Interaction:
-        $this->X_model->create(array(
-            'x__player' => $x__player,
-            'x__type' => $app_e__id,
-
-            'x__metadata' => $x__metadata,
-            'x__follower' => $x__follower,
-            'x__previous' => $x__previous,
-            'x__next' => $x__next,
-        ));
-
-
         //App title?
         if(in_array($app_e__id, $this->config->item('n___42928'))){
             $ui = '<h1>'.$e___6287[$app_e__id]['m__title'].'</h1>'.$ui;

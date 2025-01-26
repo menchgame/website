@@ -4238,9 +4238,6 @@ function view__card_i($x__type, $i, $previous_i = null, $target_i__hashtag = nul
 
     //Search to see if an idea has a thumbnail:
     $CI =& get_instance();
-    if(!in_array($x__type, $CI->config->item('n___13369'))){
-        return 'Invalid x__type i '.$x__type;
-    }
 
     $x__id = ( isset($i['x__id']) && $i['x__id']>0 ? $i['x__id'] : 0 );
     $e___11035 = $CI->config->item('e___11035'); //Encyclopedia
@@ -5141,11 +5138,6 @@ function view__card_e($x__type, $e, $extra_class = null)
 {
 
     $CI =& get_instance();
-
-    if(!in_array($x__type, $CI->config->item('n___14690'))){
-        //Not a valid Source List
-        return 'Invalid x__type e @'.$x__type.' is missing from @14690';
-    }
 
     if(!isset($e['e__id']) || !isset($e['e__title'])){
         $CI->X_model->create(array(

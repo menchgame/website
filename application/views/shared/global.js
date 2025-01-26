@@ -2721,7 +2721,7 @@ function e_delete(x__id, x__type) {
 function x_link_toggle(x__type, i__id){
 
     $('.btn_toggle_'+x__type).toggleClass('hidden');
-    var x__id = parseInt($('.btn_control_'+x__type).attr('current_x_id'));
+    var x__id = parseInt($('.btn_control_'+x__type).attr('current_x__id'));
 
     if(!x__id){
         //Add:
@@ -2736,7 +2736,7 @@ function x_link_toggle(x__type, i__id){
                 $('.btn_toggle_'+x__type).toggleClass('hidden');
             } else {
                 //Update new link ID:
-                $('.btn_control_'+x__type).attr('current_x_id', data.x__id);
+                $('.btn_control_'+x__type).attr('current_x__id', data.x__id);
             }
         });
     } else {
@@ -2752,7 +2752,7 @@ function x_link_toggle(x__type, i__id){
                 $('.btn_toggle_'+x__type).toggleClass('hidden');
             } else {
                 //Update new link ID:
-                $('.btn_control_'+x__type).attr('current_x_id', 0);
+                $('.btn_control_'+x__type).attr('current_x__id', 0);
             }
         });
     }
