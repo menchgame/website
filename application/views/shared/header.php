@@ -18,10 +18,6 @@ $domain_cover = get_domain('m__cover');
 $domain_logo = ( substr_count($domain_cover, '"')>0 ? one_two_explode('"','"', $domain_cover) : $domain_cover );
 $is_emoji = ( !filter_var($domain_logo, FILTER_VALIDATE_URL) && !string_is_icon($domain_logo) );
 
-if(!isset($_GET['skip'])){
-    die('Will be back soon...');
-}
-
 //Generate Body Class String:
 $body_class = ' app__'.$app_e__id.' '; //Always append current coin
 foreach($this->config->item('e___13890') as $e__id => $m){
