@@ -1420,14 +1420,14 @@ class Mench_ledger extends CIdea_cache
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type' => 7545, //Following Add
                 'x__next' => $i['i__id'],
-            ), array('x__following')) as $x_tag){
+            ), array('x__following')) as $this_tag){
 
                 //Check if special profile add?
-                if(in_array($x_tag['x__following'], $this->config->item('n___43048'))){
+                if(in_array($this_tag['x__following'], $this->config->item('n___43048'))){
 
                     //Special Addition:
 
-                    if($x_tag['x__following']==6197 && strlen(trim($x_data['x__message']))>=2){
+                    if($this_tag['x__following']==6197 && strlen(trim($x_data['x__message']))>=2){
 
                         //Update Source Title:
                         $this->Source_cache->update($x_data['x__player'], array(
@@ -1438,7 +1438,7 @@ class Mench_ledger extends CIdea_cache
                         $es_creator[0]['e__title'] = $x_data['x__message'];
                         $this->Source_cache->activate_session($es_creator[0], true);
 
-                    } elseif($x_tag['x__following']==6198 && isset($media_stats['media_e__cover']) && filter_var($media_stats['media_e__cover'], FILTER_VALIDATE_URL)){
+                    } elseif($this_tag['x__following']==6198 && isset($media_stats['media_e__cover']) && filter_var($media_stats['media_e__cover'], FILTER_VALIDATE_URL)){
 
                         //Update Source Cover:
                         //Update profile picture for current user:
@@ -1455,7 +1455,7 @@ class Mench_ledger extends CIdea_cache
                 } else {
 
                     //Assign tag if following/follower transaction NOT previously assigned:
-                    $append_source = append_source($x_tag['x__following'], $x_data['x__player'], ( isset($focus_i_data['i__text']) ? $focus_i_data['i__text'] : null ), $i['i__id']);
+                    $append_source = append_source($this_tag['x__following'], $x_data['x__player'], ( isset($focus_i_data['i__text']) ? $focus_i_data['i__text'] : null ), $i['i__id']);
 
                     //See if Session needs to be updated:
                     $player_e = superpower_unlocked();
@@ -1472,13 +1472,13 @@ class Mench_ledger extends CIdea_cache
                 'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                 'x__type' => 26599, //Following Remove
                 'x__next' => $i['i__id'],
-            )) as $x_tag){
+            )) as $this_tag){
 
                 //Remove Following IF previously assigned:
                 foreach($this->Mench_ledger->fetch(array(
                     'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
                     'x__type IN (' . join(',', $this->config->item('n___32292')) . ')' => null, //SOURCE LINKS
-                    'x__following' => $x_tag['x__following'], //CERTIFICATES saved here
+                    'x__following' => $this_tag['x__following'], //CERTIFICATES saved here
                     'x__follower' => $x_data['x__player'],
                 )) as $existing_x){
 

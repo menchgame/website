@@ -20,8 +20,8 @@ foreach($this->Idea_cache->fetch(array(
         'x__privacy IN (' . join(',', $this->config->item('n___7359')) . ')' => null, //PUBLIC
         'x__type' => 7545, //Following Add
         'x__next' => $i['i__id'],
-    ), array('x__following')) as $x_tag){
-        array_push($apply_to, intval($x_tag['x__following']));
+    ), array('x__following')) as $this_tag){
+        array_push($apply_to, intval($this_tag['x__following']));
     }
 
 
