@@ -4537,10 +4537,6 @@ main {
     cursor: pointer;
 }
 
-.card_frame:hover{
-    background-color: #E6E6E6;
-}
-
 .isSelected {
     border:1px solid #FC1B44 !important;
 }
