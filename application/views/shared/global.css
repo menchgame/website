@@ -3055,6 +3055,9 @@ h4.main__title{
     font-size: 1.08em !important;
     margin-top: -24%;
 }
+.list-covers {
+    border-bottom: 1px solid #000;
+}
 .list-covers .card_cover {
     text-align: center;
     padding:0 5px !important;
@@ -3885,7 +3888,9 @@ a,
 
 
 
-
+.compact-midline {
+    margin: -16px 0 0px !important;
+}
 
 
 
