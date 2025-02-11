@@ -3057,6 +3057,8 @@ h4.main__title{
 }
 .list-covers {
     border-bottom: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
 }
 .list-covers .card_cover {
     text-align: center;
@@ -3889,7 +3891,7 @@ a,
 
 
 .compact-midline {
-    margin: -16px 0 0px !important;
+    margin: -17px 0 0px !important;
 }
 
 
